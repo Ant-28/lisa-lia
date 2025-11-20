@@ -1,0 +1,6 @@
+.metals/*
+.scala-build/*
+.vscode/*
+.bsp/*
+src/*.code-workspace
+theoremgen/
