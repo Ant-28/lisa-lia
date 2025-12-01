@@ -410,6 +410,19 @@ object Rings extends lisa.Main:
     have(thesis) by Congruence.from(s9, s8, s7, s6, s5, s4)
   }
 
+  val double_negation_elimination = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), (x ∈ R)) |- (`-`(`-`(x)) === x)){
+    assume(ring(R, <=, `+`, *, `-`, `0`, `1`), (x ∈ R))
+    val n1 = have(`-`(x) ∈ R) by Tautology.from(neg_closure of (x := x))
+    val n2 = have(`-`(`-`(x)) ∈ R) by Tautology.from(neg_closure of (x := `-`(x)), n1)
+
+    have(`-`(x) + `-`(`-`(x)) === `0`) by Tautology.from(add_inv of (x := `-`(x)), n1)
+   
+    have(((x + `-`(x)) + `-`(`-`(x))) === x) by Congruence.from(lastStep, x_zero_x of (x := x), n1, n2, 
+                                                               add_assoc of (x := x, y := `-`(x), z := `-`(`-`(x))))
+    have(`-`(`-`(x)) === x) by Congruence.from(lastStep, add_inv of (x := x), zero_x_x of (x := `-`(`-`(x))), n1, n2)
+    have(thesis) by Tautology.from(n1, n2, lastStep)
+  }
+
   
   val neg_x_y_neg_xy = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), (x ∈ R), (y ∈ R)) |- (`-`(x) * y) === `-`(x * y)){
     assume(ring(R, <=, `+`, *, `-`, `0`, `1`), (x ∈ R), (y ∈ R))
@@ -437,7 +450,72 @@ object Rings extends lisa.Main:
     have(thesis) by Tautology.from(lastStep, h1, h2, h3, h4, h5)
   }
 
+  val neg_x_neg_y_xy = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), (x ∈ R), (y ∈ R)) |- (`-`(x) * `-`(y)) === (x * y)){
+    assume(ring(R, <=, `+`, *, `-`, `0`, `1`), (x ∈ R), (y ∈ R))
+    val h1 = have((x * y) ∈ R) by Tautology.from(mul_closure)
+    val h2 = have(`-`(x * y) ∈ R) by Tautology.from(neg_closure of (x := (x * y)), h1)
+    val h3 = have(`-`(x) ∈ R) by Tautology.from(neg_closure)
+    val h4 = have(`-`(y) ∈ R) by Tautology.from(neg_closure of (x := y))
+    val h5 = have((`-`(x) * `-`(y)) ∈ R) by Tautology.from(h3, mul_closure of (x:= `-`(x), y := `-`(y)), h3, h4)
+    val h6 = have(`0` ∈ R) by Tautology.from(additive_id)
 
+    have((`-`(x) * `-`(y)) === `-`(x * `-`(y))) by Tautology.from(neg_x_y_neg_xy of (y := `-`(y)), h4)
+    have((`-`(x) * `-`(y)) === (x * y)) by Congruence.from(lastStep, mul_comm of (y := `-`(y)), h1, h2, h3, h4, 
+                                                                  mul_comm, 
+                                                                  neg_x_y_neg_xy of (x := y, y := x),
+                                                                  double_negation_elimination of (x := (x * y)))
+    have(thesis) by Tautology.from(lastStep, h1, h2, h3, h4, h5)
+
+  
+  }
+
+  val negation_dist_add = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), (x ∈ R), (y ∈ R)) |- `-`(x + y) === `-`(x) + `-`(y)){
+    assume(ring(R, <=, `+`, *, `-`, `0`, `1`), (x ∈ R), (y ∈ R))
+    val h1 = have((x + y) ∈ R) by Tautology.from(add_closure)
+    val h2 = have(`-`(x + y) ∈ R) by Tautology.from(neg_closure of (x := (x + y)), h1)
+    val h3 = have(`-`(x) ∈ R) by Tautology.from(neg_closure)
+    val h4 = have(`-`(y) ∈ R) by Tautology.from(neg_closure of (x := y))
+    val h5 = have((`-`(x) + `-`(y)) ∈ R) by Tautology.from(h3, add_closure of (x:= `-`(x), y := `-`(y)), h3, h4)
+    val h6 = have(`0` ∈ R) by Tautology.from(additive_id)
+    val h7 = have((x + `-`(x)) ∈ R) by Tautology.from(add_closure of (x := x, y := `-`(x)), h3)
+    val h8 = have((y + `-`(y)) ∈ R) by Tautology.from(add_closure of (x := y, y := `-`(y)), h4)
+
+    have((x + `-`(x)) === `0`) by Tautology.from(add_inv)
+    have((x + `-`(x)) + (y + `-`(y)) === `0`) by Congruence.from(lastStep, 
+                                                    add_inv of (x := y), 
+                                                    zero_x_x of (x := (y + `-`(y))))
+    have(((x + `-`(x)) + y) + `-`(y) === `0`) by Congruence.from(lastStep, 
+                                                                 add_assoc of (x := (x + `-`(x)), y := y, z := `-`(y)),
+                                                                h7, h4)
+    // have((x + y) + (`-`(x) + `-`(y)) === `0`)  by Congruence.from(lastStep, 
+    have((x + (y + `-`(x))) + `-`(y) === `0`)  by Congruence.from(lastStep, 
+                                                          add_assoc of (x := (x), y := `-`(x), z := y),
+                                                          add_comm of (x := `-`(x), y := y),
+                                                          // add_assoc of (x := x, y := y, z := (`-`(x))),
+                                                          // add_assoc of (x := (x + y), y := `-`(x), z := `-`(y)),
+                                                          h1, h2, h3, h4, h5, h6, h7, h8)
+    have((x + y) + (`-`(x) + `-`(y)) === `0`) by Congruence.from(lastStep, 
+                                                          add_assoc of (x := x, y := y, z := (`-`(x))),
+                                                          add_assoc of (x := (x + y), y := `-`(x), z := `-`(y)),
+                                                          h1, h2, h3, h4, h5, h6, h7, h8)
+
+    have((`-`(x) + `-`(y))  === `-`(x + y)) by Congruence.from(lastStep,
+                                                                        x_zero_x of (x := `-`(x + y)),
+                                                                        add_assoc of (x := `-`(x + y), y := (x + y), z := (`-`(x) + `-`(y))),
+                                                                        add_comm of (x := `-`(x + y), y := (x + y)),
+                                                                        add_inv of (x := (x + y)),
+                                                                        zero_x_x of (x := (`-`(x) + `-`(y))),
+                                                                        h1, h2, h3, h4, h5, h6, h7, h8)
+    have(thesis) by Tautology.from(lastStep, h1, h2, h3, h4, h5, h6, h7, h8)
+
+  }
+  val negation_zero = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`)) |- `-`(`0`) === `0`){
+    assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
+    val h6 = have(`0` ∈ R) by Tautology.from(additive_id) 
+    val h7 = have(`-`(`0`) ∈ R) by Tautology.from(neg_closure of (x := `0`), h6)
+    have(`-`(`0`) === `0`) by Congruence.from(lastStep, add_inv of (x := `0`), h6, h7, zero_x_x of (x := `-`(`0`)))
+    have(thesis) by Tautology.from(lastStep, h6, h7)
+  }
   object BigIntToRingElem:
     def i(x : BigInt) : Expr[Ind] = {
       if x < 0 then 
@@ -491,6 +569,12 @@ object Rings extends lisa.Main:
       case `1`    => have(`1` ∈ R) by Tautology.from(mult_id)
       case  x     => have(x ∈ R |- x ∈ R) by Restate
 
+  inline def TacticSubproofWithResult[A](using proof: Library#Proof)(inline computeProof: proof.InnerProof ?=> Unit): (proof.ProofTacticJudgement, A) =
+    val iProof: proof.InnerProof = new proof.InnerProof(None)
+    computeProof(using iProof)
+    SUBPROOF(using proof)(None)(iProof).judgement.asInstanceOf[proof.ProofTacticJudgement]
+
+
   val succ_succ_defn = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), (x ∈ R), (y ∈ R)) |- (`1` + x) + (`1` + y) === (`1` + (`1` + (x + y)))){
     assume(ring(R, <=, `+`, *, `-`, `0`, `1`), (x ∈ R), (y ∈ R))
     // have(`1` ∈ R) by Restate.from(additive_id)
@@ -524,8 +608,8 @@ object Rings extends lisa.Main:
 
 
 
-  object evalRingEq extends ProofTactic:
-
+  object evalRingEq extends ProofTactic:  
+    // FIXME: Try to use collect
     def getTypingsInAntecedent(x: SSet[Expr[Prop]]): SSet[Expr[Ind]] = x.flatMap(
       (y) => y match {
         case ys ∈ R => SSet(ys)
@@ -541,7 +625,7 @@ object Rings extends lisa.Main:
             assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
             if(!is_eq(goalElem)) then proof.InvalidProofTactic("I can't prove anything other than equality!")
             else 
-              val sol = evalAdd(goalElem)
+              val sol = eval(goalElem)
 
               println(have(sol).bot)
               if !sol.isValid then proof.InvalidProofTactic("Checking sums failed!") else 
@@ -554,15 +638,248 @@ object Rings extends lisa.Main:
 
 
    
+    def removeZeros(using lib: library.type, proof: lib.Proof)(ex: Expr[Ind]): (Expr[Ind], proof.ProofTacticJudgement) = {
+      // this @unchecked will probably be the bane of my existence
+      (ex : @unchecked) match {
+      // removeZeros Zero = Zero
+        case `0` => {
+            val proofRes = TacticSubproof { 
+              assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
+              have(`0` ∈ R |- `0` === `0`) by Restate }
+            val res = `0`
+            (res, proofRes)
+        }
+      // removeZeros One = One
+        case `1` => {
+          val proofRes = TacticSubproof { 
+            assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
+            have(`1` ∈ R |- `1` === `1`) by Restate }
+          val res = `1`
+          (res, proofRes)
+        }
+      // removeZeros (Plus x Zero) = removeZeros x
+        case xs + `0` => {
+            // simpl(xs)
+            val prf = TacticSubproof{ 
+              assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
+              val (result, prf) = removeZeros(xs)
+              if !prf.isValid then proof.InvalidProofTactic("simplification failed!") 
+              else 
+                val newstmt = ((`0`∈ R, xs ∈ R, result ∈ R) |- xs + `0` === result) 
+                val stmt = newstmt ++<< have(prf).bot
+                have(newstmt) by Congruence.from(x_zero_x of (x := xs), have(prf))
+            }
+            (removeZeros(xs)._1, prf)
+        }
+      // removeZeros (Plus Zero x) = removeZeros x
+        case `0` + xs => {
+            // simpl(xs)
+            val prf = TacticSubproof{ 
+              assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
+              val (result, prf) = removeZeros(xs)
+              if !prf.isValid then proof.InvalidProofTactic("simplification failed!") 
+              else 
+                val newstmt = ((`0`∈ R, xs ∈ R, result ∈ R) |- `0` + xs === result) 
+                val stmt = newstmt ++<< have(prf).bot
+                have(newstmt) by Congruence.from(zero_x_x of (x := xs), have(prf))
+            }
+            (removeZeros(xs)._1, prf)
+          }
+      // removeZeros (Plus x y) = Plus (removeZeros x) (removeZeros y) 
+        case xs + ys   => {
+          val prf = TacticSubproof{ 
+              assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
+              val (resultx, prfx) = removeZeros(xs)
+              val (resulty, prfy) = removeZeros(ys)
+              if !(prfx.isValid && prfy.isValid) then proof.InvalidProofTactic("removeZeros failed!") 
+              else 
+                val newstmt = ((`0`∈ R, xs ∈ R, resultx ∈ R, resulty ∈ R, ys ∈ R) |- xs + ys === resultx + resulty) 
+                val stmt = newstmt ++<< have(prfx).bot ++<< have(prfy).bot
+                have(newstmt) by Congruence.from(zero_x_x of (x := xs), have(prfy), have(prfx))
+            }
+          (removeZeros(xs)._1 + removeZeros(ys)._1, prf)
+        } 
+      // removeZeros (Neg x) = Neg (removeZeros x)
+        case `-`(xs)  => {
+          val prf = TacticSubproof{ 
+            assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
+            val (resultx, prfx) = removeZeros(xs)
+            
+            if !(prfx.isValid) then proof.InvalidProofTactic("removeZeros failed!") 
+            else 
+              val newstmt = ((`0`∈ R, xs ∈ R, resultx ∈ R )|- `-`(xs)  === `-`(resultx)) 
+              val stmt = newstmt ++<< have(prfx).bot
+              have(newstmt) by Congruence.from(have(prfx))
+            }
+          (`-`(removeZeros(xs)._1), prf)
+        }
+      // removeZeros (Mult x y) = Mult (removeZeros x) (removeZeros y) 
+        case xs * ys   => {
+            val prf = TacticSubproof{ 
+              assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
+              val (resultx, prfx) = removeZeros(xs)
+              val (resulty, prfy) = removeZeros(ys)
+              if !(prfx.isValid && prfy.isValid) then proof.InvalidProofTactic("removeZeros failed!") 
+              else 
+                val newstmt = ((`0`∈ R, xs ∈ R, resultx ∈ R, resulty ∈ R, ys ∈ R) |- xs * ys === resultx * resulty) 
+                val stmt = newstmt ++<< have(prfx).bot ++<< have(prfy).bot
+                have(newstmt) by Congruence.from(have(prfy), have(prfx))
+            }
+            (removeZeros(xs)._1 * removeZeros(ys)._1, prf)
+          }
+        } 
+    }
+      
     
 
-    def simplify(using lib: library.type, proof: lib.Proof)(ex: Expr[Ind]): (Expr[Ind], proof.ProofTacticJudgement) = {
+    def rightBias(using lib: library.type, proof: lib.Proof)(ex: Expr[Ind]): (Expr[Ind], proof.ProofTacticJudgement) = {
+      (ex: @unchecked) match {
+        // rightBias (Plus (Plus x y) z) = rightBias (Plus  (rightBias x) (Plus(rightBias y) (rightBias z)))
+        case (xs + ys) + zs => {
+            val prf = TacticSubproof{ 
+              assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
+              val (resultx, prfx) = rightBias(xs)
+              val (resulty, prfy) = rightBias(ys)
+              val (resultz, prfz) = rightBias(zs)
+              if !(prfx.isValid && prfy.isValid && prfz.isValid) then proof.InvalidProofTactic("rightBiasDef failed!") 
+              else 
+                val newstmt = ((`0`∈ R, `1` ∈ R,  xs ∈ R, resultx ∈ R, resulty ∈ R, ys ∈ R, resultz ∈ R, zs ∈ R) |- (x + y) + z === resultx + (resulty + resultz)) 
+                val stmt = newstmt ++<< have(prfx).bot ++<< have(prfy).bot ++<< have(prfz).bot
+                have(newstmt) by Congruence.from(have(prfy), have(prfx), have(prfz), add_assoc of (x := xs, y := ys, z := zs))
+            }
+            (rightBias(xs)._1 + (rightBias(ys)._1 + rightBias(zs)._1), prf)
+        }
+        // rightBias (Plus x z) = Plus (rightBias x) (rightBias z) -- x should be One, Zero or Neg One here
+        case (xs + zs) => 
+            val prf = TacticSubproof{ 
+              assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
+              val (resultx, prfx) = rightBias(xs)
+              val (resultz, prfz) = rightBias(zs)
+              if !(prfx.isValid && prfz.isValid) then proof.InvalidProofTactic("rightBiasDef failed!") 
+              else 
+                val newstmt = ((`0`∈ R, `1` ∈ R,  xs ∈ R, resultx ∈ R, resultz ∈ R, zs ∈ R) |- x + z === resultx + resultz)
+                val stmt = newstmt ++<< have(prfx).bot ++<< have(prfz).bot
+                have(newstmt) by Congruence.from(have(prfx), have(prfz))
+            }
+            (rightBias(xs)._1 + rightBias(zs)._1, prf)
+        // rightBias x = x
+        case xs => {
+          val prf = TacticSubproof{
+          assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
+          val (resultx, prfx) = rightBias(xs)
+          if !(prfx.isValid) then proof.InvalidProofTactic("rightBiasDef failed!") 
+          else 
+            val newstmt = ((`0`∈ R, `1` ∈ R,  xs ∈ R, resultx ∈ R) |- x === resultx)
+            val stmt = newstmt ++<< have(prfx).bot 
+            have(newstmt) by Congruence.from(have(prfx))
+          }
+          (rightBias(xs)._1, prf)
+        }
+      }
+    }
+    
+
+    def negElim(using lib: library.type, proof: lib.Proof)(ex: Expr[Ind]): (Expr[Ind], proof.ProofTacticJudgement) = {
+      (ex : @unchecked) match {
+        // negElim (Neg Zero) = Zero
+        case `-`(`0`) => {???}
+        // negElim (Neg (Neg x)) = negElim x
+        case `-`(`-`(x)) => {???}
+        // negElim (Neg (Plus x y)) = Plus (negElim (Neg x)) (negElim (Neg y))
+        case `-`(x + y) => {???}
+        // negElim (Neg (Mult x y)) =  Mult (negElim (Neg x)) (negElim y)
+        case `-`(x * y) => {???}
+        // negElim (Mult (Neg x) (Neg y)) = negElim (Mult x y)
+        case (`-`(x) * `-`(y)) => {???}
+        // negElim (Plus x y) = Plus (negElim x) (negElim y)
+        case (x + y) => {???}
+        // negElim (Mult x y) = Mult (negElim x) (negElim y)
+        case x * y => {???}
+        // negElim x = x
+        case x => {???}
+      }
+    }
+
+    def cancellation(using lib: library.type, proof: lib.Proof)(ex: Expr[Ind]): (Expr[Ind], proof.ProofTacticJudgement) = {
+      (ex : @unchecked) match {
+        // cancellation (Plus (Neg One) One) = Zero
+        case `-`(`1`) + `1` => {???}
+        // cancellation (Plus One (Neg One)) = Zero
+        case `1` + `-`(`1`) => {???}
+        case x + (y + z) => 
+        // cancellation (Plus x (Plus y z)) = case (x, y, z) of 
+          (x, y, z) match {
+        //     (One, Neg One, z) -> cancellation z
+            case (`1`, `-`(`1`), z) => {???}
+        //     (One, y, Neg One) -> cancellation y
+            case (`1`, y, `-`(`1`)) => {???}
+        //     (Neg One, One, z) -> cancellation z
+            case (`-`(`1`), `1`, z) => {???}
+        //     (Neg One, y, One) -> cancellation y
+            case (`-`(`1`), y, `1`) => {???}
+        //     (x, One, Neg One) -> cancellation x
+            case (x, `1`, `-`(`1`)) => {???}
+        //     (x, Neg One, One) -> cancellation x
+            case (x, `-`(`1`), `1`) => {???}
+        //     (x, y, z) -> Plus (cancellation x) (cancellation (Plus y z))
+            case (x, y, z) => {???}
+          }
+        //   cancellation x = x
+        case x => {???}
+        
+      }
+    }
+
+
+    def pushDownMult(using lib: library.type, proof: lib.Proof)(ex: Expr[Ind]): (Expr[Ind], proof.ProofTacticJudgement) = {
+    (ex : @unchecked) match {
+      // pushDownMult (Mult x Zero) = Zero 
+      case x * `0` => {???}
+      // pushDownMult (Mult Zero x) = Zero
+      case `0` * x => {???}
+      // pushDownMult (Mult x One) = pushDownMult x
+      case  x * `1` => {???}
+      // pushDownMult (Mult One x) = pushDownMult x 
+      case  `1` * x => {???}
+      // pushDownMult (Mult x (Plus y z)) = Plus (pushDownMult (Mult x y)) (pushDownMult (Mult x z))
+      case  (x * (y + z)) => {???}
+      // pushDownMult (Mult (Plus y z) x) = Plus (pushDownMult (Mult x y)) (pushDownMult (Mult x z))
+      case (y + z) * x => {???}
+      // pushDownMult (Plus x y) = Plus (pushDownMult x) (pushDownMult y)
+      case x + y => {???}
+      // pushDownMult (Mult x y) = Mult (pushDownMult x) (pushDownMult y)
+      case x * y => {???}
+      // pushDownMult (Neg x) = Neg (pushDownMult x)
+      case `-`(y) => {???}
+      // pushDownMult x = x
+      case x => {???}
+      }
+    }
+
+    // allFns = pushDownMult . cancellation. negElim . rightBias. removeZeros
+    // fixpointify f x = if f x == x then x else fixpointify f (f x)
+    // need to check for any invalidProoftactic when returning fixpointified
+    // ultimateOpt = fixpointify allFns
+    /**
+     *  
+     * returns canonical form of ex, as i(n) for some n ∈ ℕ
+     * 
+     * and a proof that ring(...), ex ∈ R, i(n) ∈ R |- ex === i(n)
+     * 
+     * @param ex     
+     * @example
+     */
+    sealed trait Biased
+    case class RB(x : Expr[Ind]) extends Biased
+    case class NRB(x: Expr[Ind]) extends Biased
+    def simplify(using lib: library.type, proof: lib.Proof)(ex: Expr[Ind]): (RB, proof.ProofTacticJudgement) = {
+
         (ex : @unchecked) match {
           case `0` => {
             val proofRes = TacticSubproof { 
               assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
               have(`0` ∈ R |- `0` === `0`) by Restate }
-            val res = `0`
+            val res = RB(`0`)
             (res, proofRes)
           }
           case `1` => {
@@ -577,14 +894,13 @@ object Rings extends lisa.Main:
             val prf = TacticSubproof{ 
               assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
               val (result, prf) = simplify(xs)
-              if !prf.isValid then proof.InvalidProofTactic("simplification failed!") 
+              if !prf.isValid then proof.InvalidProofTactic("simplification failed!") // TODO: check if invalidprooftactic needs .validate or st 
               else 
                 val newstmt = ((`0`∈ R, xs ∈ R, result ∈ R) |- `0` + xs === result) 
                 val stmt = newstmt ++<< have(prf).bot
-                // println(stmt.toString)
-                // println("0 + x")
-                // println(stmt.toString)
-                // println(have(prf).bot.toString)
+                // TODO: change to one substitute instead
+                // use tactic RightSubstEq
+                // provide a lambda like (\y -> y === result) and substitute with 0 + xs === xs 
                 have(newstmt) by Congruence.from(zero_x_x of (x := xs), have(prf))
             }
             (simplify(xs)._1, prf)
@@ -613,6 +929,8 @@ object Rings extends lisa.Main:
               val (rxs, prfxs) = simplify(xs)
               val (rys, prfys) = simplify(ys)
               val (rzs, prfzs) = simplify(zs)
+              // FIXME: have should be after you ahve checked the proof step
+              // it consumes the ProofTacticResult, and may throw
               val h1 = have(prfxs) // have(xs === rxs) 
               val h2 = have(prfys) // have(ys === rys)
               val h3 = have(prfzs) // have(zs === rzs)
@@ -623,6 +941,12 @@ object Rings extends lisa.Main:
               if !(prfxs.isValid && prfys.isValid && prfzs.isValid && prfsimp.isValid) 
               then proof.InvalidProofTactic("simplification failed!") 
               else
+                // TODO:
+                //  can be done in two subst steps
+                //  |- (x + y) + z = (x + y) + z by Restate
+                //  |- (x + y) + z = (rx + ry) + rz by RightSubstEq(\ sx sy sz -> (x + y) + z = (sx + sy) + sz, x -> rx, y -> ry, z -> rz)
+                //  |- (x + y) + z = rx + (ry + rz) by RightSubstEq(\ ss -> (x + y) + z = ss, theWhole -> theWholeAssoc)
+                //  |- (x + y) + z = rsimp by RightSubstEq(\ ss -> (x + y) + z = ss, theWholeAssoc -> rsimp)
                 val newstmt = ((xs ∈ R, ys ∈ R, zs ∈ R, rxs ∈ R, rys ∈ R, rzs ∈ R) |- (xs + ys) + zs === rsimp)
                 val stmt = newstmt ++<< h1.bot ++<< h2.bot ++<< h3.bot  ++<< hsimp.bot // ++<< associ.bot 
                 // println("x + y + z")
@@ -663,7 +987,7 @@ object Rings extends lisa.Main:
       }
     }
 
-    def evalAdd(using lib: library.type, proof: lib.Proof)(goal: Expr[Prop]): proof.ProofTacticJudgement = {
+    def eval(using lib: library.type, proof: lib.Proof)(goal: Expr[Prop]): proof.ProofTacticJudgement = {
       assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
       TacticSubproof{
       goal match
@@ -689,7 +1013,7 @@ object Rings extends lisa.Main:
       }
     }
       
-    //   ???
+    //   {???}
     // }
 
   import BigIntToRingElem.i
@@ -699,14 +1023,14 @@ object Rings extends lisa.Main:
   }
 
 
-  val evalTest2 = Theorem(ring(R, <=, `+`, *, `-`, `0`, `1`) |- i(2) + i(4) === i(6)){
+  val evalTest2 = Theorem(ring(R, <=, `+`, *, `-`, `0`, `1`) |- i(10) + i(5) === i(15)){
     have(thesis) by evalRingEq.apply
 
 
   }
-  // val evalAdd_test2 = Theorem(ring(R, <=, `+`, *, `-`, `0`, `1`) |- i(2) + i(2) === i(4)){
-  //   have(thesis) by evalRingEq.apply
-  // }
+  val evalAdd_test2 = Theorem(ring(R, <=, `+`, *, `-`, `0`, `1`) |- i(2) + i(2) === i(4)){
+    have(thesis) by evalRingEq.apply
+  }
   // val two_two_four = Theorem(ring(R, <=, `+`, *, `-`, `0`, `1`) |- i(2) + i(2) === i(4)){
   //   sorry
   // }
