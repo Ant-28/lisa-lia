@@ -128,13 +128,6 @@ trait RingEqReasoning { self: Rings.type =>
       }(res)
     }
 
-// evalPlus (RightBiased (Plus o1 x)) (RightBiased (Plus o2 y)) = case (o1, o2) of 
-//     (One, Neg One) -> evalPlus (RightBiased x) (RightBiased y)
-//     (Neg One, One) -> evalPlus (RightBiased x) (RightBiased y)
-//     (One, One) -> evalPlus (RightBiased x) (RightBiased (Plus One (Plus One y)))
-//     (Neg One, Neg One) -> evalPlus (RightBiased x) (RightBiased (Plus (Neg One) (Plus (Neg One) y)))
-//     _ -> error "Violates right-biased invariant"
-// evalPlus _ _ = error "Violates right-biased invariant"
     
 
     // for the love of god ant, don't name your parameters the same as your axiom variables
@@ -251,11 +244,39 @@ trait RingEqReasoning { self: Rings.type =>
             (Seq(a), a === ures)
           )
           have(xs + `-`(`1`) === ures) by Tautology.from(lastStep, h0, h1)
+      }
+      case (RB(o1 + x), RB(o2 + y)) => {
+        (o1, o2) match {
+          case (`-`(`1`), `1`) => {}
+          case (`1`, `-`(`1`)) => {}
+          case (`-`(`1`), `-`(`1`)) => {}
+          case (`1`, `1`) => {}
+          case (o1, _) => {
+            res = NRB(o1)
+            return (res, proof.InvalidProofTactic("Violates right-biased invariant"))
+          }
+        }
+      }
+
+// evalPlus (RightBiased (Plus o1 x)) (RightBiased (Plus o2 y)) = case (o1, o2) of 
+//     (One, Neg One) -> evalPlus (RightBiased x) (RightBiased y)
+//     (Neg One, One) -> evalPlus (RightBiased x) (RightBiased y)
+//     (One, One) -> evalPlus (RightBiased x) (RightBiased (Plus One (Plus One y)))
+//     (Neg One, Neg One) -> evalPlus (RightBiased x) (RightBiased (Plus (Neg One) (Plus (Neg One) y)))
+//     _ -> error "Violates right-biased invariant"
+      // evalPlus _ _ = error "Violates right-biased invariant"
+        case (x, _) => {
+          res = NRB(unapply(x))
+          return (res, proof.InvalidProofTactic("Violates right-biased invariant"))
         }
       
       } 
     }(res)
 }
+
+    sealed trait Sign
+    case object P extends Sign
+    case object M extends Sign
 
     def simplify(using lib: library.type, proof: lib.Proof)(goal: Expr[Prop]): (proof.ProofTacticJudgement) = {
       assume(ring(R, <=, `+`, *, `-`, `0`, `1`))

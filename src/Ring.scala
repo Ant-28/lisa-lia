@@ -552,10 +552,80 @@ trait RingStructure { self: Rings.type =>
     assume(y ∈ R)
     val h1 = have(`0` ∈ R) by Tautology.from(additive_id) 
     val h2 = have(`1` ∈ R) by Tautology.from(mult_id)
+    
     val h3 = have(`-`(`1`) ∈ R) by Tautology.from(neg_closure of (x := `1`), h2)
-  
+    val h4 = have(`1` + x === x + `1`) by Tautology.from(add_comm of (x := `1`, y := x), h2)
+    val h5 = have((x + `1`) ∈ R) by Tautology.from(add_closure of (x := x, y := `1`), h2)
+    val h6 = have((`-`(`1`) + y) ∈ R) by Tautology.from(add_closure of (x := `-`(`1`), y := y), h3)
+    val h7 = have(((x + `1`) + (`-`(`1`) + y)) === (x + (`1` + (`-`(`1`) + y)))) by Tautology.from(h5, h6, h2, add_assoc of (x := x, y := `1`, z := (`-`(`1`) + y)))
+    val h8 = have(`1` + (`-`(`1`) + y) === y) by Tautology.from(one_mone_xs_xs of (x := y))
+    have((`1` + x) + (`-`(`1`) + y) === x + y) by Congruence.from(h1, h2, h3, h4, h5, h6, h7, h8)
+    have(thesis) by Tautology.from(lastStep, h1, h2, h3, h4, h5, h6, h7, h8)
   }
 
+  val addPlusHelper2 = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), x ∈ R, y ∈ R) |- (`-`(`1`) + x) + (`1` + y) === x + y){
+    assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
+    assume(x ∈ R)
+    assume(y ∈ R)
+    val h1 = have(`0` ∈ R) by Tautology.from(additive_id) 
+    val h2 = have(`1` ∈ R) by Tautology.from(mult_id)
+    val h3 = have(`-`(`1`) ∈ R) by Tautology.from(neg_closure of (x := `1`), h2)
+    val h4 = have(((`1`) + y) ∈ R) by Tautology.from(add_closure of (x := `1`, y := y), h2)
+    val h5 = have((`-`(`1`) + x) ∈ R) by Tautology.from(add_closure of (x := `-`(`1`), y := x), h3)
+    val h6 = have((`-`(`1`) + x) + ((`1`) + y)  === ((`1`) + y)  + (`-`(`1`) + x)) by Tautology.from(h4, h5, add_comm of (x := ((`1`) + y) , y := (`-`(`1`) + x)))
+    val h7 = have(((`1`) + y)  + (`-`(`1`) + x) === y + x) by Tautology.from(addPlusHelper1 of (x := y, y := x))
+    have((`-`(`1`) + x) + (`1` + y) === x + y) by Congruence.from(h1, h2, h3, h4, h5, h6, h7, add_comm)
+    have(thesis) by Tautology.from(lastStep, h1, h2, h3, h4, h5, h6, h7, add_comm)
+  }
+
+  val addPlusHelper3p = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), x ∈ R, y ∈ R, z ∈ R) |- (z + x) + (z + y) === z + ( z+ (x + y))){
+    assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
+    assume(x ∈ R)
+    assume(y ∈ R)
+    assume(z ∈ R)
+    val h1 = have(`0` ∈ R) by Tautology.from(additive_id) 
+    val h3 = have(`-`(z) ∈ R) by Tautology.from(neg_closure of (x := z))
+    val h4 = have((z + x) ∈ R) by Tautology.from(add_closure of (x := z, y := x))
+    val h5 = have((z + y) ∈ R) by Tautology.from(add_closure of (x := z, y := y))
+    val h6 = have((z + x)  === (x + z)) by Tautology.from(add_comm of (x := z, y := x))
+    val h7 = have((z + x) + (z + y) === z + (x + (z + y))) by Tautology.from(add_assoc of (x := z, y := x, z := (z + y)), h5)
+    val h8 = have(x + (z + y) === ((x + z) + y)) by Tautology.from(add_assoc of (x := x, y := z, z := y))
+    val h2 = have(((x + z) + y) === (z + x) + y) by Congruence.from(h6)
+    val h9 = have(z + (x + y) === ((z + x) + y)) by Tautology.from(add_assoc of (x := z, y := x, z := y))
+    have((z + x) + (z + y) === z + (z + (x + y))) by Congruence.from(h1, h2, h3, h4, h5, h6, h7, h8, h9)
+    have(thesis) by Tautology.from(h1, h2, h3, h4, h5, h6, h7, h8, h9, lastStep)
+  }
+
+  val addPlusHelper3 = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), x ∈ R, y ∈ R) |- (`1` + x) + (`1` + y) === `1` + (`1` + (x + y))){
+    assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
+    assume(x ∈ R)
+    assume(y ∈ R)
+    val h1 = have(`0` ∈ R) by Tautology.from(additive_id) 
+    val h2 = have(`1` ∈ R) by Tautology.from(mult_id)
+    val h3 = have(`-`(`1`) ∈ R) by Tautology.from(neg_closure of (x := `1`), h2)
+    have(thesis) by Tautology.from(addPlusHelper3p of (x := x, y := y, z := `1`), h2)
+  }
+  val addPlusHelper4 = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), x ∈ R, y ∈ R) |- (`-`(`1`) + x) + (`-`(`1`) + y) === `-`(`1`) + (`-`(`1`) + (x + y))){
+    assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
+    assume(x ∈ R)
+    assume(y ∈ R)
+    val h1 = have(`0` ∈ R) by Tautology.from(additive_id) 
+    val h2 = have(`1` ∈ R) by Tautology.from(mult_id)
+    val h3 = have(`-`(`1`) ∈ R) by Tautology.from(neg_closure of (x := `1`), h2)
+    have(thesis) by Tautology.from(addPlusHelper3p of (x := x, y := y, z := `-`(`1`)), h3)
+  }
+
+  val multHelper1 = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), x ∈ R) |- `-`(`1`)*x === `-`(x)){
+    assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
+    assume(x ∈ R)
+    val h1 = have(`0` ∈ R) by Tautology.from(additive_id) 
+    val h2 = have(`1` ∈ R) by Tautology.from(mult_id)
+    val h3 = have(`-`(`1`) ∈ R) by Tautology.from(neg_closure of (x := `1`), h2)
+    val h5 = have((`-`(`1`))*x === `-`(`1` * x)) by Tautology.from(neg_x_y_neg_xy of (x := (`1`), y := x), h2)
+    val h6 = have(`1` * x === x) by Tautology.from(mul_id_right)
+    have(`-`(`1`)*x === `-`(x)) by Congruence.from(h1, h2, h3, h5, h6)
+    have(thesis) by Tautology.from(lastStep, h1, h2, h3, h5, h6)
+  }
 
   object BigIntToRingElem:
     def i(x : BigInt) : Expr[Ind] = {

@@ -57,6 +57,7 @@ evalPlus (RightBiased One) (RightBiased x) = case x of
     Plus (Neg One) x -> RightBiased x
     _ -> error "Violates right-biased invariant"
 evalPlus (RightBiased x) (RightBiased One) = evalPlus (RightBiased One) (RightBiased x)
+-- create helper lemmas for base cases and use RightSubst for inductive cases
 evalPlus (RightBiased (Neg One)) (RightBiased x) = case x of 
     -- One -> RightBiased Zero
     Neg One -> RightBiased (Plus (Neg One) (Neg One))
