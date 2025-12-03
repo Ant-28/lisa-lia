@@ -1,4 +1,3 @@
-
 import lisa.maths.SetTheory.Base.Pair.{*, given}
 import lisa.maths.SetTheory.Base.Singleton.{*, given}
 import lisa.maths.SetTheory.Functions.Function.{*, given}
