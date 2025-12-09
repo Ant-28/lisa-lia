@@ -15,6 +15,7 @@ data RingAst =  Zero
             | Neg RingAst
             | Mult RingAst RingAst
     deriving (Show, Eq)
+            -- | Var String -- -- don't 
 
 data Sign = P | M deriving Show
 
@@ -40,6 +41,7 @@ isRightBiased x = case x of
 evalRing :: RingAst -> RbRing
 evalRing Zero = RightBiased Zero
 evalRing One = RightBiased One
+-- evalRing (Var x) = RightBiased (Var x)
 evalRing (Plus a b) = evalPlus (evalRing a) (evalRing b)
 evalRing (Neg a)    = evalNeg   (evalRing a)
 evalRing (Mult a b) = evalMult  (evalRing a) (evalRing b)
@@ -55,6 +57,7 @@ evalPlus (RightBiased One) (RightBiased x) = case x of
     Neg One -> RightBiased Zero
     Plus One x -> RightBiased (Plus One (Plus One x))
     Plus (Neg One) x -> RightBiased x
+    -- Var x -> RightBiased (Plus One (Var x))
     _ -> error "Violates right-biased invariant"
 evalPlus (RightBiased x) (RightBiased One) = evalPlus (RightBiased One) (RightBiased x)
 -- create helper lemmas for base cases and use RightSubst for inductive cases
@@ -63,13 +66,20 @@ evalPlus (RightBiased (Neg One)) (RightBiased x) = case x of
     Neg One -> RightBiased (Plus (Neg One) (Neg One))
     Plus One x -> RightBiased x
     Plus (Neg One) x -> RightBiased (Plus (Neg One) (Plus (Neg One) x))
+    -- Var x -> RightBiased (Plus (Neg One) (Var x))
     _ -> error "Violates right-biased invariant"
 evalPlus (RightBiased x) (RightBiased (Neg One)) = evalPlus (RightBiased (Neg One)) (RightBiased x)
+-- evalPlus (RightBiased (Var ex)) (RightBiased (Var ey)) = if ex < ey 
+                        -- then RightBiased (Plus (Var ex) (Var ey)) 
+                        -- else RightBiased (Plus (Var ey) (Var ex))
 evalPlus (RightBiased (Plus o1 x)) (RightBiased (Plus o2 y)) = case (o1, o2) of 
     (One, Neg One) -> evalPlus (RightBiased x) (RightBiased y)
     (Neg One, One) -> evalPlus (RightBiased x) (RightBiased y)
     (One, One) -> evalPlus (RightBiased x) (RightBiased (Plus One (Plus One y)))
-    (Neg One, Neg One) -> evalPlus (RightBiased x) (RightBiased (Plus (Neg One) (Plus (Neg One) y)))
+    (Neg One, Neg One) -> evalPlus (RightBiased x) (RightBiased (Plus (Neg One) (Plus (Neg One) y))) 
+    -- (Var ex, Var ey) -> if ex < ey 
+                        -- then evalPlus (RightBiased x) (RightBiased (Plus (Var ex) (Plus (Var ey) y))) 
+                        -- else evalPlus (RightBiased x) (RightBiased (Plus (Var ey) (Plus (Var ex) y)))
     _ -> error "Violates right-biased invariant"
 evalPlus _ _ = error "Violates right-biased invariant"
 

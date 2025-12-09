@@ -11,7 +11,8 @@ import lisa.utils.prooflib.Library
 import SubProofWithRes.{TacticSubproofWithResult, DebugRightSubstEq}
 // import lisa.utils.prooflib.WithTheorems.Proof.InvalidProofTactic
 // import lisa.utils.prooflib.WithTheorems.Proof.ValidProofTactic
-trait RingStructure { self: Rings.type =>
+trait RingStructure {
+  self: Rings.type =>
   import self.* 
 
   val x   = variable[Ind]
@@ -98,10 +99,16 @@ trait RingStructure { self: Rings.type =>
   
   // Enables infix notation
   extension (left: Expr[Ind]) {
+    // infix def <=(right : Expr[Ind]): Expr[Prop]  = RingStructure.<=.construct(left, right)
+    // infix def |(right: Expr[Ind]):Expr[Prop]     = RingStructure.|.construct(left, right)
+    // // this is probably not right?
+    // def  `-` :Expr[Ind]                          = RingStructure.-.construct(left)
+    // infix def  +(right : Expr[Ind]): Expr[Ind]   = RingStructure.+.construct(left, right)
+    // infix def  *(right : Expr[Ind]): Expr[Ind]   = RingStructure.*.construct(left, right)
     infix def <=(right : Expr[Ind]): Expr[Prop]  = Rings.<=.construct(left, right)
-    infix def |(right: Expr[Ind]):Expr[Prop] = Rings.|.construct(left, right)
+    infix def |(right: Expr[Ind]):Expr[Prop]     = Rings.|.construct(left, right)
     // this is probably not right?
-    def  `-` :Expr[Ind]                    = Rings.-.construct(left)
+    def  `-` :Expr[Ind]                          = Rings.-.construct(left)
     infix def  +(right : Expr[Ind]): Expr[Ind]   = Rings.+.construct(left, right)
     infix def  *(right : Expr[Ind]): Expr[Ind]   = Rings.*.construct(left, right)
   }
@@ -275,6 +282,11 @@ trait RingStructure { self: Rings.type =>
   val mult_id = Theorem(ring(R, <=, `+`, *, `-`, `0`, `1`) |- `1` ∈ R){
     have(thesis) by byRingDefn.apply
   }
+  val nmult_id =Theorem(ring(R, <=, `+`, *, `-`, `0`, `1`) |- `-`(`1`) ∈ R){
+    assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
+    have(`1` ∈ R) by Tautology.from(mult_id)
+    have(`-`(`1`) ∈ R) by Tautology.from(lastStep, neg_closure of (x := `1`))
+  } 
   val order_refl = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), x ∈ R) |- x <= x) {
     have(thesis) by byRingDefn.apply
   }
@@ -578,7 +590,7 @@ trait RingStructure { self: Rings.type =>
     have(thesis) by Tautology.from(lastStep, h1, h2, h3, h4, h5, h6, h7, add_comm)
   }
 
-  val addPlusHelper3p = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), x ∈ R, y ∈ R, z ∈ R) |- (z + x) + (z + y) === z + ( z+ (x + y))){
+  val addPlusHelper3p = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), x ∈ R, y ∈ R, z ∈ R) |- (z + x) + (z + y) === x + (z + (z + y))){
     assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
     assume(x ∈ R)
     assume(y ∈ R)
@@ -588,15 +600,15 @@ trait RingStructure { self: Rings.type =>
     val h4 = have((z + x) ∈ R) by Tautology.from(add_closure of (x := z, y := x))
     val h5 = have((z + y) ∈ R) by Tautology.from(add_closure of (x := z, y := y))
     val h6 = have((z + x)  === (x + z)) by Tautology.from(add_comm of (x := z, y := x))
-    val h7 = have((z + x) + (z + y) === z + (x + (z + y))) by Tautology.from(add_assoc of (x := z, y := x, z := (z + y)), h5)
-    val h8 = have(x + (z + y) === ((x + z) + y)) by Tautology.from(add_assoc of (x := x, y := z, z := y))
-    val h2 = have(((x + z) + y) === (z + x) + y) by Congruence.from(h6)
-    val h9 = have(z + (x + y) === ((z + x) + y)) by Tautology.from(add_assoc of (x := z, y := x, z := y))
-    have((z + x) + (z + y) === z + (z + (x + y))) by Congruence.from(h1, h2, h3, h4, h5, h6, h7, h8, h9)
-    have(thesis) by Tautology.from(h1, h2, h3, h4, h5, h6, h7, h8, h9, lastStep)
+    val h6p = have((z + x) + (z + y) === (z + x) + (z + y)) by Restate
+    val h7 = have((z + x) + (z + y) === (x + z) + (z + y)) by Congruence.from(h6, h6p)
+    val h7p = have((x + z) + (z + y) === x + (z + (z + y))) by Tautology.from(add_assoc of (x := x, y := z, z := z + y), h5)
+
+    have((z + x) + (z + y) === x + (z + (z + y))) by Congruence.from(h1, h3, h4, h5, h6, h6p, h7, h7p)
+    have(thesis) by Tautology.from(h1, h3, h4, h5, h6, h7, h7p, lastStep)
   }
 
-  val addPlusHelper3 = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), x ∈ R, y ∈ R) |- (`1` + x) + (`1` + y) === `1` + (`1` + (x + y))){
+  val addPlusHelper3 = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), x ∈ R, y ∈ R) |- (`1` + x) + (`1` + y) === x + (`1` + (`1` + y))){
     assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
     assume(x ∈ R)
     assume(y ∈ R)
@@ -605,7 +617,7 @@ trait RingStructure { self: Rings.type =>
     val h3 = have(`-`(`1`) ∈ R) by Tautology.from(neg_closure of (x := `1`), h2)
     have(thesis) by Tautology.from(addPlusHelper3p of (x := x, y := y, z := `1`), h2)
   }
-  val addPlusHelper4 = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), x ∈ R, y ∈ R) |- (`-`(`1`) + x) + (`-`(`1`) + y) === `-`(`1`) + (`-`(`1`) + (x + y))){
+  val addPlusHelper4 = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), x ∈ R, y ∈ R) |- (`-`(`1`) + x) + (`-`(`1`) + y) === x + (`-`(`1`) + (`-`(`1`) + y))){
     assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
     assume(x ∈ R)
     assume(y ∈ R)
@@ -711,3 +723,4 @@ trait RingStructure { self: Rings.type =>
     }
   }
 }
+// end RingStructure
