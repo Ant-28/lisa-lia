@@ -419,22 +419,12 @@ trait RingEqReasoning { self: Rings.type =>
               }
               //     (One, One) -> evalPlus (RightBiased x) (RightBiased (Plus One (Plus One y)))
               case (`1`, `1`) => {
-                // println("call")
-                // println(ex)
-                // println(ey)
+                
                 val temp = evalPlus(RB(xs), RB(`1` + (`1` + ys)))
                 val prf = temp._2
                 res = temp._1
                 val ures = unapply(res)
-                // println("ex, ey, o1, o2, xs, ys, error")
-                // println(ex)
-                // println(ey)
-                // println(o1)
-                // println(o2)
-                // println(xs)
-                // println(ys)
-                // println(have(prf).bot)
-          
+                
                 val h0 = have(prf)
                 val h1 = have((xs ∈ R, ys ∈ R) |- (`1` + xs) + (`1` + ys) === xs + (`1` + (`1` + ys))) by Tautology.from(addPlusHelper3 of (x := xs, y := ys))
                 val stmt = 
@@ -468,10 +458,49 @@ trait RingEqReasoning { self: Rings.type =>
                   h1
                 )
                 println(fin.bot)
-                println("here 3")
+                // println("here 3")
               }
               //     (Neg One, Neg One) -> evalPlus (RightBiased x) (RightBiased (Plus (Neg One) (Plus (Neg One) y)))
-              case (`-`(`1`), `-`(`1`)) => {}
+              case (`-`(`1`), `-`(`1`)) => { 
+                val temp = evalPlus(RB(xs), RB(`-`(`1`) + (`-`(`1`) + ys)))
+                val prf = temp._2
+                res = temp._1
+                val ures = unapply(res)
+            
+                val h0 = have(prf)
+                val h1 = have((xs ∈ R, ys ∈ R) |- (`-`(`1`) + xs) + (`-`(`1`) + ys) === xs + (`-`(`1`) + (`-`(`1`) + ys))) by Tautology.from(addPlusHelper4 of (x := xs, y := ys))
+                val stmt = 
+                  val newStatement =((xs ∈ R, ys ∈ R) |- (`-`(`1`) + xs) + (`-`(`1`) + ys) === ures)
+                  newStatement ++<< h0.bot ++<< h1.bot
+                println("h0 and h1")
+                println(h0.bot.toString)
+                println(h1.bot.toString)
+                println(ures)
+                val eqs = Set(h1.bot, h0.bot).map(_.firstElemR)
+                val typings = getTypings(h0.bot.left) ++ getTypings(h1.bot.left)
+                have(
+                  eqs |- (`1` + xs) + (`1` + ys) === (`1` + xs) + (`1` + ys)
+                ) by Restate
+                thenHave(
+                  eqs |- (`1` + xs) + (`1` + ys) === xs + (`1` + (`1` + ys)) 
+                ) by RightSubstEq.withParameters(
+                  Seq((((`1` + xs) + (`1` + ys)), xs + (`1` + (`1` + ys)) )),
+                  (Seq(a), (`1` + xs) + (`1` + ys) === a)
+                )
+                thenHave(
+                  eqs |- (`1` + xs) + (`1` + ys) === ures
+                ) by RightSubstEq.withParameters(
+                  Seq((xs + (`1` + (`1` + ys)) , ures)),
+                  (Seq(a), (`1` + xs) + (`1` + ys) === a)
+                )
+                println("here")
+                val fin = have(stmt) by Tautology.from(
+                  lastStep,
+                  h0,
+                  h1
+                )
+                println(fin.bot)
+              }
               //     _ -> error "Violates right-biased invariant"
               case (o1, _) => {
                 res = NRB(o1)
@@ -504,7 +533,7 @@ trait RingEqReasoning { self: Rings.type =>
         goal: Expr[Prop]
     ): (proof.ProofTacticJudgement) = {
       assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
-      TacticSubproof {
+      val w = TacticSubproof {
         goal match
           case x `equality` y if canonicalInt(x) && canonicalInt(y) => {
             have(x === y) by Tautology
@@ -513,17 +542,64 @@ trait RingEqReasoning { self: Rings.type =>
           case x `equality` y => {
             val (lval, lprf) = evalRingEq.evalRing(x)
             val (rval, rprf) = evalRingEq.evalRing(y)
+            val ulval = unapply(lval)
+            val urval = unapply(rval)
             println("blerg")
+            val lprfseq = have(lprf)
+            val rprfseq = have(rprf)
             val typingAssumptions = typeChecking(
-              getTypingsInAntecedent(have(lprf).bot.left) ++
-              getTypingsInAntecedent(have(rprf).bot.left)
+              getTypingsInAntecedent(lprfseq.bot.left) ++
+              getTypingsInAntecedent(rprfseq.bot.left)
             )
+            println(typingAssumptions.size)
             println("blerg2")
-            val seqs = typingAssumptions + have(lprf) + have(rprf)
-            // FIXME: frickass congruence
-            have(goal) by Congruence.from(seqs.toSeq*)
+            
+            val eqs = SSet(lprfseq.bot, rprfseq.bot).map(_.firstElemR)
+            // println(eqs.)
+            println(eqs.size)
             println("blerg3")
-    
+            have(eqs |- ulval === urval) by Restate
+            println("blerg4")
+            thenHave(eqs |- ulval === y) by RightSubstEq.withParameters(
+                  Seq((y , urval)),
+                  (Seq(a), ulval === a)
+                )
+            println("blerg5")
+            thenHave(eqs |- x === y) by RightSubstEq.withParameters(
+                  Seq((x , ulval)),
+                  (Seq(a), a === y)
+                )
+            println("blerg6")
+            // and you may ask yourself, why are you not using the scala debugger? 
+            // and you may ask yourself, why are there all of these print statements? 
+            // and you my ask yourself, why is it stuck on Tautology?
+            println(lprfseq.bot.left.size)
+            println(rprfseq.bot.left.size)
+            val seqs1 = typingAssumptions + lprfseq
+            val seqs  = seqs1 + rprfseq
+            println("blerg7")
+            println(lprfseq.bot)
+            println(rprfseq.bot)
+            println(lastStep.bot)
+            // val typingAssumptions: SSet[contextual$4.InstantiatedFact | contextual$4.ProofStep]
+            typingAssumptions.map(x => 
+                println(x.getClass())
+                x match
+                    case x : Library#Proof#InnerProof#InstantiatedFact => println(x.result)
+                    case x : Library#Proof#InnerProof#ProofStep        => println(x.bot)
+
+                    // case x : proof.iP
+            )
+            // FIXME, maybe
+            // this gives you a compile time error
+            // typingAssumptions.foreach: x => proof.getSequent(a)
+            // case x : proof.iP
+            
+            scala.Console.flush()
+            println(((seqs + lastStep).toSeq).size)
+            // TODO: replace with cuts
+            have(goal) by Tautology.from((seqs + lastStep).toSeq*)
+            println("blerg8")
 
             // val leftCongruence = have(x === simplify(x)) by Tautology
             // val rightCongruence = have(y === simplify(y)) by Tautology
@@ -533,6 +609,9 @@ trait RingEqReasoning { self: Rings.type =>
             proof.InvalidProofTactic("incomplete")
 
       }
+      println("blerg9")
+      w
+      // TODO: Tautology by sorry
     }
 
     //   {???}
@@ -544,9 +623,9 @@ trait RingEqReasoning { self: Rings.type =>
     have(thesis) by evalRingEq.apply
   }
 
-  val evalTest2 = Theorem(ring(R, <=, `+`, *, `-`, `0`, `1`) |- i(10) + i(5) === i(15)){
-    have(thesis) by evalRingEq.apply
-  }
+  // val evalTest2 = Theorem(ring(R, <=, `+`, *, `-`, `0`, `1`) |- i(10) + i(5) === i(15)){
+  //   have(thesis) by evalRingEq.apply
+  // }
 
   val evalAdd_test2 = Theorem(ring(R, <=, `+`, *, `-`, `0`, `1`) |- i(2) + i(2) === i(4)){
     have(thesis) by evalRingEq.apply
@@ -554,6 +633,12 @@ trait RingEqReasoning { self: Rings.type =>
   val evalAdd_test3 = Theorem(ring(R, <=, `+`, *, `-`, `0`, `1`) |- i(2) + i(3) === i(5)){
     have(thesis) by evalRingEq.apply
   }
+//   val evalAdd_test4 = Theorem(ring(R, <=, `+`, *, `-`, `0`, `1`) |- i(4) + i(3) === i(7)){
+//     have(thesis) by evalRingEq.apply
+//   }
+//   val evalAdd_test5 = Theorem(ring(R, <=, `+`, *, `-`, `0`, `1`) |- i(5) + i(5) === i(10)){
+//     have(thesis) by evalRingEq.apply
+//   }
   // val two_two_four = Theorem(ring(R, <=, `+`, *, `-`, `0`, `1`) |- i(2) + i(2) === i(4)){
   //   sorry
   // }
