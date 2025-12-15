@@ -592,7 +592,7 @@ trait RingEqReasoning { self: Rings.type =>
             )
             // FIXME, maybe
             // this gives you a compile time error
-            // typingAssumptions.foreach: x => proof.getSequent(a)
+            // typingAssumptions.foreach: x => println(proof.getSequent(x))
             // case x : proof.iP
             
             scala.Console.flush()
