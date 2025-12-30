@@ -4,3 +4,4 @@
 .bsp/*
 src/*.code-workspace
 theoremgen/
+out/
