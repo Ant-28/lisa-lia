@@ -1,0 +1,22 @@
+package build
+import mill.*, scalalib.*
+import mill.api.Task.Simple
+object Cooper extends ScalaModule {
+    def scalaVersion = "3.7.2"
+    def mainClass: T[Option[String]] = Some("Rings")
+    def unmanagedClasspath = Task {
+        if (Task.offline) Task.fail("Cannot download classpath when in offline-mode") 
+        else {
+            os.write(
+                Task.dest / "lisa.jar",
+                requests.get.stream(
+                "https://github.com/epfl-lara/lisa/releases/download/0.9.3/lisa_3-0.9.3.jar"
+                )
+            )
+            Seq(PathRef(Task.dest / "lisa.jar"))
+        }
+
+    }
+
+    override def scalacOptions: Simple[Seq[String]] = Seq("-experimental")
+}
