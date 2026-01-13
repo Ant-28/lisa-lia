@@ -84,10 +84,18 @@ evalPlus _ _ = error "Violated right-biased invariant"
 u :: RbRing -> RingAst
 u (RB x) = x
 
+
+-- var or nvar : ringast -> Bool
 evalInsert :: RingAst -> RingAst -> RbRing
 evalInsert x@(Var z) y@(Var a) = if z < a then RB (Plus x y) else RB (Plus y x)
+evalInsert x@(Var z) y@(Neg (Var a)) = if z < a then RB (Plus x y) else RB (Plus y x)
+evalInsert x@(Neg (Var z)) y@(Var a) = if z < a then RB (Plus x y) else RB (Plus y x)
+evalInsert x@(Neg (Var z)) y@(Neg (Var a)) = if z < a then RB (Plus x y) else RB (Plus y x)
 evalInsert x@(Var z) y@(Plus av@One ys) = RB (Plus av (u (evalInsert x ys)))
 evalInsert x@(Var z) y@(Plus av@(Neg One) ys) = RB (Plus av (u (evalInsert x ys)))
+evalInsert x@(Neg (Var z)) y@(Plus av@One ys) = RB (Plus av (u (evalInsert x ys)))
+evalInsert x@(Neg (Var z)) y@(Plus av@(Neg One) ys) = RB (Plus av (u (evalInsert x ys)))
+
 evalInsert x@(Var z) y@(Plus av@(Var a) ys) = if z < a 
     then RB (Plus x y) 
     else RB (Plus av (u (evalInsert x ys)))
