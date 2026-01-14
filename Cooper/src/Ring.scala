@@ -11,10 +11,8 @@ import lisa.utils.prooflib.Library
 import SubProofWithRes.{TacticSubproofWithResult, DebugRightSubstEq}
 // import lisa.utils.prooflib.WithTheorems.Proof.InvalidProofTactic
 // import lisa.utils.prooflib.WithTheorems.Proof.ValidProofTactic
-trait RingStructure {
-  self: Rings.type =>
-  import self.* 
-
+object RingStructure extends lisa.Main {
+  
   val x   = variable[Ind]
   val y   = variable[Ind]
   val z   = variable[Ind]
@@ -105,12 +103,12 @@ trait RingStructure {
     // def  `-` :Expr[Ind]                          = RingStructure.-.construct(left)
     // infix def  +(right : Expr[Ind]): Expr[Ind]   = RingStructure.+.construct(left, right)
     // infix def  *(right : Expr[Ind]): Expr[Ind]   = RingStructure.*.construct(left, right)
-    infix def <=(right : Expr[Ind]): Expr[Prop]  = Rings.<=.construct(left, right)
-    infix def |(right: Expr[Ind]):Expr[Prop]     = Rings.|.construct(left, right)
+    infix def <=(right : Expr[Ind]): Expr[Prop]  = this.<=.construct(left, right)
+    infix def |(right: Expr[Ind]):Expr[Prop]     = this.|.construct(left, right)
     // this is probably not right?
-    def  `-` :Expr[Ind]                          = Rings.-.construct(left)
-    infix def  +(right : Expr[Ind]): Expr[Ind]   = Rings.+.construct(left, right)
-    infix def  *(right : Expr[Ind]): Expr[Ind]   = Rings.*.construct(left, right)
+    def  `-` :Expr[Ind]                          = this.-.construct(left)
+    infix def  +(right : Expr[Ind]): Expr[Ind]   = this.+.construct(left, right)
+    infix def  *(right : Expr[Ind]): Expr[Ind]   = this.*.construct(left, right)
   }
 
   extension (s: Sequent)

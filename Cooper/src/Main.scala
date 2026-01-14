@@ -1,11 +1,30 @@
+import scala.collection.immutable.{Set => SSet}
+import scala.collection.immutable.{List => LList, :: => Cons}
+import lisa.maths.SetTheory.Base.Predef.{*, given}
+import lisa.maths.SetTheory.Functions.Predef.{R => _, *, given}
+import lisa.maths.SetTheory.Base.Pair.{pair, given}
+import lisa.maths.SetTheory.Functions.BasicTheorems.{appTyping}
+import lisa.automation.Substitution.Apply as Substitution
+import lisa.utils.prooflib.ProofTacticLib.ProofTactic
+import lisa.utils.prooflib.Library
+import SubProofWithRes.{TacticSubproofWithResult, DebugRightSubstEq}
+import RingStructure.{_}
 // object Rings extends lisa.Main: 
 //     import RingStructure.{*}
 //     import RingEqReasoning.{*} 
 
 object Rings extends lisa.Main 
-    with RingStructure
-    with RingEqReasoning 
 {
+    val t = variable[Ind]
+    val _ = RingStructure
+
+  
+
+    val w : THM = RingStructure.add_closure
+    println(w.statement)
+    val dummy = Theorem(ring(R, <=, `+`, *, `-`, `0`, `1`) |- `1` ∈ R) {
+        have(thesis) by Restate.from(mult_id)
+    }
     // import scala.collection.immutable.{Set => SSet}
     // val xx = variable[Ind]
     // val yy = variable[Ind]
@@ -63,5 +82,9 @@ object Rings extends lisa.Main
     //     // sorry
     // }
     println("Hello!")
+    RingStructure.main(Array())
+    override def main(args: Array[String]): Unit = {
+        println(om.stringWriter.toString)
+    }
 }
 // end Rings
