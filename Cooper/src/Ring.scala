@@ -9,6 +9,7 @@ import Base.{IBinFun, IUnFun, IRel, infixBinaryFunction, infixUnaryFunction}
 import lisa.utils.prooflib.ProofTacticLib.ProofTactic
 import lisa.utils.prooflib.Library
 import SubProofWithRes.{TacticSubproofWithResult, DebugRightSubstEq}
+import Utils.*
 // import lisa.utils.prooflib.WithTheorems.Proof.InvalidProofTactic
 // import lisa.utils.prooflib.WithTheorems.Proof.ValidProofTactic
 object RingStructure extends lisa.Main {
@@ -16,11 +17,12 @@ object RingStructure extends lisa.Main {
   val x   = variable[Ind]
   val y   = variable[Ind]
   val z   = variable[Ind]
+  val c   = variable[Ind]
   val `0` = variable[Ind]
   val `1` = variable[Ind]
 
   val R = variable[Ind] // ring base set
-
+  val P = variable[Ind >>: Prop]
   
   // We introduce the signature of rings first. maybe PIDs?
 
@@ -75,7 +77,7 @@ object RingStructure extends lisa.Main {
         case _ => None
   
   
-  object `-` extends Variable[Ind]("-"):
+  object - extends Variable[Ind]("-"):
     val unaryneg = this
     def construct(a: Expr[Ind]): Expr[Ind] = IUnFun(unaryneg, a)
     def unapply(e: Expr[Ind]): Option[(Expr[Ind])] = 
@@ -100,16 +102,19 @@ object RingStructure extends lisa.Main {
     // infix def <=(right : Expr[Ind]): Expr[Prop]  = RingStructure.<=.construct(left, right)
     // infix def |(right: Expr[Ind]):Expr[Prop]     = RingStructure.|.construct(left, right)
     // // this is probably not right?
-    // def  `-` :Expr[Ind]                          = RingStructure.-.construct(left)
+    // def  - :Expr[Ind]                          = RingStructure.-.construct(left)
     // infix def  +(right : Expr[Ind]): Expr[Ind]   = RingStructure.+.construct(left, right)
     // infix def  *(right : Expr[Ind]): Expr[Ind]   = RingStructure.*.construct(left, right)
     infix def <=(right : Expr[Ind]): Expr[Prop]  = this.<=.construct(left, right)
     infix def |(right: Expr[Ind]):Expr[Prop]     = this.|.construct(left, right)
     // this is probably not right?
-    def  `-` :Expr[Ind]                          = this.-.construct(left)
+    def  - :Expr[Ind]                          = this.-.construct(left)
     infix def  +(right : Expr[Ind]): Expr[Ind]   = this.+.construct(left, right)
     infix def  *(right : Expr[Ind]): Expr[Ind]   = this.*.construct(left, right)
+    def unary_- = this.-.construct(left)
+    
   }
+
 
   extension (s: Sequent)
     def firstElemL: Expr[Prop] = s.left.toList(0)
@@ -119,7 +124,7 @@ object RingStructure extends lisa.Main {
   // the properties are listed here in full for reference
   object ring:
     // wrap the curried definition for convenience
-    protected val ring = DEF( λ(R, λ(<=, λ(+, λ(*, λ(-, λ(`0`, λ(`1`,
+    protected val ring = DEF( λ(R, λ(<=, λ(+, λ(*, λ(-, λ(|, λ(`0`, λ(`1`,
       <= ⊆ (R × R) /\
       (`+` :: (R × R -> R)) /\
       (* :: (R × R -> R)) /\
@@ -145,7 +150,7 @@ object RingStructure extends lisa.Main {
       // identity on addition
         ∀(x, x ∈ R ==> (x === (`0` + x))) /\
       // additive inverse
-        ∀(x,  x ∈ R ==> ((x + (`-`(x))) === `0`)) 
+        ∀(x,  x ∈ R ==> ((x + (-(x))) === `0`)) 
       // cancellation law?
       // monoid
       // associativity
@@ -173,15 +178,19 @@ object RingStructure extends lisa.Main {
       // create a very modest milestone
       // linear arithmetic normalization in rings
       // proofs such as x * 0 = x * (0 + 0)
+      // divisibility axioms
+      /\ ∀(x, ∀(y, (y | x) <=> ∃(c, (c ∈ R) /\ (x === y * c))))
+      /\ ∀(x, x | `0`)
+      // /\ 
 
       
-    )))))))).printAs(args => s"ring(${args.mkString(", ")})")
+    ))))))))).printAs(args => s"ring(${args.mkString(", ")})")
 
-    inline def apply(R: Expr[Ind], leq: Expr[Ind], pl: Expr[Ind], st: Expr[Ind], mi: Expr[Ind], zero: Expr[Ind], one: Expr[Ind]): Expr[Prop] = ring(R)(leq)(pl)(st)(mi)(zero)(one)
+    inline def apply(R: Expr[Ind], leq: Expr[Ind], pl: Expr[Ind], st: Expr[Ind], mi: Expr[Ind], div: Expr[Ind], zero: Expr[Ind], one: Expr[Ind]): Expr[Prop] = ring(R)(leq)(pl)(st)(mi)(div)(zero)(one)
 
-    def unapply(e: Expr[Prop]): Option[(Expr[Ind], Expr[Ind], Expr[Ind], Expr[Ind], Expr[Ind], Expr[Ind], Expr[Ind])] = {
+    def unapply(e: Expr[Prop]): Option[(Expr[Ind], Expr[Ind], Expr[Ind], Expr[Ind], Expr[Ind], Expr[Ind], Expr[Ind], Expr[Ind])] = {
       e match
-        case App(App(App(App(App(App(App(`ring`, r), leq), pl), st), mi), zero), one) => Some((r, leq, pl, st, mi, zero, one))
+        case App(App(App(App(App(App(App(App(`ring`, r), leq), pl), st), mi), div), zero), one) => Some((r, leq, pl, st, mi, div, zero, one))
         case _ => None
       
     }
@@ -223,7 +232,7 @@ object RingStructure extends lisa.Main {
         // println(fvs)
         val statement: Expr[Prop] = goal.right.head
         val res = TacticSubproof:
-          assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
+          assume(ring(R, <=, +, *, -, |, `0`, `1`))
           val assumptions = goal.left.filterNot(isRingElem)
           // println(assumptions)
           assumptions.map(x => assume(x))
@@ -243,18 +252,18 @@ object RingStructure extends lisa.Main {
 
     }
   
-  val add_closure = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), x ∈ R, y ∈ R) |- ((x + y) ∈ R)){
-    assume(ring(R, <=, `+`, *, `-`, `0`, `1`), x ∈ R, y ∈ R)
-    have(app(`+`)((x, y)) ∈ R) by Tautology.from(
+  val add_closure = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- ((x + y) ∈ R)){
+    assume(ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R)
+    have(app(+)((x, y)) ∈ R) by Tautology.from(
       ring.definition, 
-      appTyping of (f := `+`, x := (x, y), A := R × R, B := R), 
+      appTyping of (f := +, x := (x, y), A := R × R, B := R), 
       CartesianProduct.membershipSufficientCondition of (A := R, B := R)
     )
-    thenHave(thesis) by Substitution(infixBinaryFunction.definition of (f := `+`))
+    thenHave(thesis) by Substitution(infixBinaryFunction.definition of (f := +))
   }
 
-  val mul_closure = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), x ∈ R, y ∈ R) |- ((x * y) ∈ R)){
-    assume(ring(R, <=, `+`, *, `-`, `0`, `1`), x ∈ R, y ∈ R)
+  val mul_closure = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- ((x * y) ∈ R)){
+    assume(ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R)
     have(app(*)((x, y)) ∈ R) by Tautology.from(
       ring.definition, 
       appTyping of (f := *, x := (x, y), A := R × R, B := R), 
@@ -263,80 +272,80 @@ object RingStructure extends lisa.Main {
     thenHave(thesis) by Substitution(infixBinaryFunction.definition of (f := *))
   }
 
-  val neg_closure = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), x ∈ R) |- (`-`(x) ∈ R)){
-    assume(ring(R, <=, `+`, *, `-`, `0`, `1`), x ∈ R)
-    have(app(`-`)(x) ∈ R) by Tautology.from(
+  val neg_closure = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R) |- (-(x) ∈ R)){
+    assume(ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R)
+    have(app(-)(x) ∈ R) by Tautology.from(
       ring.definition, 
-      appTyping of (f := `-`, x := x, A := R, B := R), 
+      appTyping of (f := -, x := x, A := R, B := R), 
       // CartesianProduct.membershipSufficientCondition of (A := R, B := R)
     )
-    thenHave(thesis) by Substitution(infixUnaryFunction.definition of (f := `-`))
+    thenHave(thesis) by Substitution(infixUnaryFunction.definition of (f := -))
   }
 
-  val additive_id = Theorem(ring(R, <=, `+`, *, `-`, `0`, `1`) |- `0` ∈ R){
+  val add_id_closure = Theorem(ring(R, <=, +, *, -, |, `0`, `1`) |- `0` ∈ R){
     have(thesis) by byRingDefn.apply
   }
 
-  val mult_id = Theorem(ring(R, <=, `+`, *, `-`, `0`, `1`) |- `1` ∈ R){
+  val mul_id_closure = Theorem(ring(R, <=, +, *, -, |, `0`, `1`) |- `1` ∈ R){
     have(thesis) by byRingDefn.apply
   }
-  val nmult_id =Theorem(ring(R, <=, `+`, *, `-`, `0`, `1`) |- `-`(`1`) ∈ R){
-    assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
-    have(`1` ∈ R) by Tautology.from(mult_id)
-    have(`-`(`1`) ∈ R) by Tautology.from(lastStep, neg_closure of (x := `1`))
+  val nmul_id_closure =Theorem(ring(R, <=, +, *, -, |, `0`, `1`) |- -(`1`) ∈ R){
+    assume(ring(R, <=, +, *, -, |, `0`, `1`))
+    have(`1` ∈ R) by Tautology.from(mul_id_closure)
+    have(-(`1`) ∈ R) by Tautology.from(lastStep, neg_closure of (x := `1`))
   } 
-  val order_refl = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), x ∈ R) |- x <= x) {
+  val order_refl = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R) |- x <= x) {
     have(thesis) by byRingDefn.apply
   }
   
-  val order_antisym = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), x ∈ R, y ∈ R, x <= y, y <= x) |- x === y){
+  val order_antisym = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R, x <= y, y <= x) |- x === y){
     have(thesis) by byRingDefn.apply
   }
 
 
-  val order_trans = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), (x ∈ R) , (y ∈ R) , (z ∈ R) , (x <= y) , (y <= z)) |- x <= z){
+  val order_trans = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R) , (y ∈ R) , (z ∈ R) , (x <= y) , (y <= z)) |- x <= z){
     have(thesis) by byRingDefn.apply
   }
 
-  val order_tot = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), (x ∈ R) , (y ∈ R)) |- (x <= y) \/ (y <= x)){
+  val order_tot = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R) , (y ∈ R)) |- (x <= y) \/ (y <= x)){
     have(thesis) by byRingDefn.apply
   }
 
 // ∀(x, y, z)
-  val add_comm = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), (x ∈ R) , (y ∈ R)) |- (x `+` y) === (y `+` x)){
+  val add_comm = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R) , (y ∈ R)) |- (x + y) === (y + x)){
     have(thesis) by byRingDefn.apply
   }
 
-  val add_assoc = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), (x ∈ R) , (y ∈ R), (z ∈ R)) |- ((x + y) + z) === (x + (y + z))){
+  val add_assoc = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R) , (y ∈ R), (z ∈ R)) |- ((x + y) + z) === (x + (y + z))){
     have(thesis) by byRingDefn.apply
   }
 
-  val add_id    = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), (x ∈ R)) |- (x === (`0` + x))){ 
+  val add_id    = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R)) |- (x === (`0` + x))){ 
     have(thesis) by byRingDefn.apply 
   }
 
-  val add_inv   = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), (x ∈ R)) |- ((x + (`-`(x))) === `0`)){
+  val add_inv   = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R)) |- ((x + (-(x))) === `0`)){
     have(thesis) by byRingDefn.apply 
   }
 
 
-  val mul_assoc = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), (x ∈ R), (y ∈ R), (z ∈ R)) |- ((x * (y * z)) === ((x * y) * z))){
+  val mul_assoc = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R), (z ∈ R)) |- ((x * (y * z)) === ((x * y) * z))){
     have(thesis) by byRingDefn.apply
   }
   
-  val mul_id_right = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), (x ∈ R)) |- (x === (`1` * x))){
+  val mul_id_right = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R)) |- (x === (`1` * x))){
     have(thesis) by byRingDefn.apply 
   }
   
-  val mul_comm = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), (x ∈ R), (y ∈ R)) |- (x * y) === (y * x)){
+  val mul_comm = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R)) |- (x * y) === (y * x)){
     have(thesis) by byRingDefn.apply 
   }
 
-  val mul_id_left =  Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), (x ∈ R)) |- (x === (x * `1`))){
-    assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
+  val mul_id_left =  Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R)) |- (x === (x * `1`))){
+    assume(ring(R, <=, +, *, -, |, `0`, `1`))
     assume(x ∈ R)
     val v1 = have(x === (`1` * x)) by Tautology.from(mul_id_right)
-    val v2 = have(`1` ∈ R) by Tautology.from(mult_id)
+    val v2 = have(`1` ∈ R) by Tautology.from(mul_id_closure)
     val v3 = have((`1` * x === x * `1`)) by Tautology.from(v2, mul_comm of (x := x, y := `1`))
     have(thesis) by Congruence.from(v1, v3)
   }
@@ -344,12 +353,12 @@ object RingStructure extends lisa.Main {
   // /\ ∀(x, ∀(y, ∀(z, x ∈ R /\ y ∈ R /\ z ∈ R ==> ((x * (y + z)) === ((x * y) + (x * z))))))
   //     /\ ∀(x, ∀(y, ∀(z, x ∈ R /\ y ∈ R /\ z ∈ R ==> (((y + z) * x) === ((x * y) + (x * z))))))
 
-  val mul_dist_left = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), (x ∈ R), (y ∈ R), (z ∈ R)) |- ((x * (y + z)) === ((x * y) + (x * z)))){
+  val mul_dist_left = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R), (z ∈ R)) |- ((x * (y + z)) === ((x * y) + (x * z)))){
     have(thesis) by byRingDefn.apply 
   }
 
-  val mul_dist_right = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), (x ∈ R), (y ∈ R), (z ∈ R)) |- (((y + z) * x) === ((y * x) + (z * x)))){
-    assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
+  val mul_dist_right = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R), (z ∈ R)) |- (((y + z) * x) === ((y * x) + (z * x)))){
+    assume(ring(R, <=, +, *, -, |, `0`, `1`))
     assume(x ∈ R)
     assume(y ∈ R)
     assume(z ∈ R)
@@ -360,33 +369,61 @@ object RingStructure extends lisa.Main {
     val v2 = have((x * (y + z)) === ((y + z) * x)) by Tautology.from(v0, mul_comm of (x := x, y := (y + z)))
     have(thesis) by Congruence.from(v1, v2, v0x, v0y)
   } 
- 
-  val zero_x_x  = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), (x ∈ R)) |- (x === (`0` + x))){ 
+
+  val divisibility_defn = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R)) |- ((y | x) <=> ∃(c, (c ∈ R) /\ (x === y * c)))){
+    have(thesis) by byRingDefn.apply
+  }
+
+  val div_prod  =  Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R)) |- (y | (y * x))){
+    assume(ring(R, <=, +, *, -, |, `0`, `1`))
+    assume(x ∈ R)
+    assume(y ∈ R)
+
+    val xyinR = have((y * x) ∈ R) by Tautology.from(mul_closure of (x := y, y := x))
+    have(x ∈ R /\ (y*x === y*x)) by Tautology
+    thenHave(∃(c, c ∈ R /\ (y*x === y*c))) by RightExists
+    have(y | (y * x)) by Tautology.from(lastStep, xyinR, divisibility_defn of (x := (y * x), y := y, c := x))
+  }
+  // val all_div_zero = Theorem()
+  val div_lcm_removal = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (y ∈ R), ∃(x, (x ∈ R) /\ P(y * x))) |- ∃(x, (x ∈ R) /\ (y | x) /\ P(x))){
+    assume(ring(R, <=, +, *, -, |, `0`, `1`))
+    assume(y ∈ R)
+
+    val xyinR = have((x ∈ R) |- (y * x) ∈ R) by Tautology.from(mul_closure of (x := y, y := x))
+    val v = have((x ∈ R) |- (y | (y * x))) by Tautology.from(div_prod)
+    have((x ∈ R) /\ P(y * x) |- P(y * x)) by Restate
+    have((x ∈ R) /\ P(y * x) |- P(y * x) /\ (y | (y * x))) by Tautology.from(v, lastStep)
+    have((x ∈ R) /\ P(y * x) |- (y * x) ∈ R /\ P(y * x) /\ (y | (y * x))) by Tautology.from(xyinR, lastStep)
+    thenHave((x ∈ R) /\ P(y * x) |- ∃(x, x ∈ R /\ P(x) /\ (y | x))) by RightExists
+    thenHave(thesis) by LeftExists
+  }
+
+  val zero_x_x  = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R)) |- (x === (`0` + x))){ 
     have(thesis) by Tautology.from(add_id)
   }
 
-  val x_zero_x  = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), (x ∈ R)) |- (x === (x + `0`))){ 
-    assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
+  val x_zero_x  = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R)) |- (x === (x + `0`))){ 
+    assume(ring(R, <=, +, *, -, |, `0`, `1`))
     assume(x ∈ R)
-    val a = have(`0` ∈ R) by Tautology.from(additive_id)
+    val a = have(`0` ∈ R) by Tautology.from(add_id_closure)
     val b = have((x + `0`) ∈ R) by Tautology.from(add_closure of (x := x, y := `0`), a)
     have(x === (x + `0`)) by Congruence.from(add_id, add_comm of (x := x, y := `0`), a, b)
     have(thesis) by Tautology.from(lastStep, a, b)
   }
   
-  val cong_test = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), (x ∈ R), (y ∈ R), (z ∈ R), (x === y)) |- (x + z) === (y + z)){
-    assume(ring(R, <=, `+`, *, `-`, `0`, `1`), (x ∈ R), (y ∈ R), (z ∈ R), (x === y))
+  val cong_test = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R), (z ∈ R), (x === y)) |- (x + z) === (y + z)){
+    assume(ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R), (z ∈ R), (x === y))
     val v1 = have((x + z) ∈ R) by Tautology.from(add_closure of (x:= x, y:=z))
     val v2 = have((y + z) ∈ R) by Tautology.from(add_closure of (x:= y, y:=z))
     have(thesis) by Congruence.from(v1, v2)
   }
 
-  val zero_times = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), (x ∈ R)) |- (`0` * x === `0`)) {
+  val zero_times = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R)) |- (`0` * x === `0`)) {
     assume(x ∈ R)
-    assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
-    val zero_r = have(`0` ∈ R) by Tautology.from(additive_id)
+    assume(ring(R, <=, +, *, -, |, `0`, `1`))
+    val zero_r = have(`0` ∈ R) by Tautology.from(add_id_closure)
     val p0xr = have((`0` * x) ∈ R) by Tautology.from(zero_r, mul_closure of (x := `0`, y := x))
-    val m0xr = have(`-`(`0` * x) ∈ R) by Tautology.from(neg_closure of (x := (`0` * x)), lastStep)
+    val m0xr = have(-(`0` * x) ∈ R) by Tautology.from(neg_closure of (x := (`0` * x)), lastStep)
     
     have(`0` === (`0` + `0`)) by Tautology.from(add_id of (x := `0`), zero_r)
     val s1 = have((`0` + `0`) * x === `0` * x) by Congruence.from(lastStep)
@@ -400,63 +437,63 @@ object RingStructure extends lisa.Main {
     // tactic should e.g. 2 + 3 === 5 or 2 * 3 === 6? 2 + (-3) === -1
     // all *ground* linear equalities over Z for linearization into "canonical form"
     val s3 = have((`0` * x) === (`0` * x) + (`0` * x)) by Congruence.from(s1, s2)
-    val s4 = have((`0` * x) + `-`(`0` * x) === ((`0` * x) + (`0` * x)) + `-`(`0` * x)) by Congruence.from(lastStep)
-    val s5 = have((`0` * x) + `-`(`0` * x) === `0`) by Tautology.from(add_inv of (x := (`0` * x)), p0xr, m0xr)
-    val s6 = have((( (`0` * x) + (`0` * x) ) + (`-`(`0` * x))) === ( (`0` * x) + ( (`0` * x) + (`-`(`0` * x)) ))) by Tautology.from(p0xr, m0xr, add_assoc of (x := (`0` * x), y := (`0` * x), z := (`-`(`0` * x))))
-    val s7 = have(((`0` * x) + ((`0` * x) + `-`(`0` * x))) === ((`0` * x) + `0`)) by Congruence.from(s5)
+    val s4 = have((`0` * x) + -(`0` * x) === ((`0` * x) + (`0` * x)) + -(`0` * x)) by Congruence.from(lastStep)
+    val s5 = have((`0` * x) + -(`0` * x) === `0`) by Tautology.from(add_inv of (x := (`0` * x)), p0xr, m0xr)
+    val s6 = have((( (`0` * x) + (`0` * x) ) + (-(`0` * x))) === ( (`0` * x) + ( (`0` * x) + (-(`0` * x)) ))) by Tautology.from(p0xr, m0xr, add_assoc of (x := (`0` * x), y := (`0` * x), z := (-(`0` * x))))
+    val s7 = have(((`0` * x) + ((`0` * x) + -(`0` * x))) === ((`0` * x) + `0`)) by Congruence.from(s5)
     val s8 = have((`0` * x) === (`0` + (`0` * x))) by Tautology.from(p0xr, add_id of (x := (`0` * x)), zero_r)
     val s9 = have( (`0` + (`0` * x)) ===  ((`0` * x) + `0`)) by Tautology.from(add_comm of (x:= `0`, y := (`0` * x)), zero_r, p0xr)
     have(thesis) by Congruence.from(s9, s8, s7, s6, s5, s4)
   }
 
-  val double_negation_elimination = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), (x ∈ R)) |- (`-`(`-`(x)) === x)){
-    assume(ring(R, <=, `+`, *, `-`, `0`, `1`), (x ∈ R))
-    val n1 = have(`-`(x) ∈ R) by Tautology.from(neg_closure of (x := x))
-    val n2 = have(`-`(`-`(x)) ∈ R) by Tautology.from(neg_closure of (x := `-`(x)), n1)
+  val double_negation_elimination = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R)) |- (-(-(x)) === x)){
+    assume(ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R))
+    val n1 = have(-(x) ∈ R) by Tautology.from(neg_closure of (x := x))
+    val n2 = have(-(-(x)) ∈ R) by Tautology.from(neg_closure of (x := -(x)), n1)
 
-    have(`-`(x) + `-`(`-`(x)) === `0`) by Tautology.from(add_inv of (x := `-`(x)), n1)
+    have(-(x) + -(-(x)) === `0`) by Tautology.from(add_inv of (x := -(x)), n1)
    
-    have(((x + `-`(x)) + `-`(`-`(x))) === x) by Congruence.from(lastStep, x_zero_x of (x := x), n1, n2, 
-                                                               add_assoc of (x := x, y := `-`(x), z := `-`(`-`(x))))
-    have(`-`(`-`(x)) === x) by Congruence.from(lastStep, add_inv of (x := x), zero_x_x of (x := `-`(`-`(x))), n1, n2)
+    have(((x + -(x)) + -(-(x))) === x) by Congruence.from(lastStep, x_zero_x of (x := x), n1, n2, 
+                                                               add_assoc of (x := x, y := -(x), z := -(-(x))))
+    have(-(-(x)) === x) by Congruence.from(lastStep, add_inv of (x := x), zero_x_x of (x := -(-(x))), n1, n2)
     have(thesis) by Tautology.from(n1, n2, lastStep)
   }
 
   
-  val neg_x_y_neg_xy = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), (x ∈ R), (y ∈ R)) |- (`-`(x) * y) === `-`(x * y)){
-    assume(ring(R, <=, `+`, *, `-`, `0`, `1`), (x ∈ R), (y ∈ R))
+  val neg_x_y_neg_xy = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R)) |- (-(x) * y) === -(x * y)){
+    assume(ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R))
     val h1 = have((x * y) ∈ R) by Tautology.from(mul_closure)
     // Discharge(h1)
-    val h2 = have(`-`(x * y) ∈ R) by Tautology.from(neg_closure of (x := (x * y)), h1)
-    val h3 = have(`-`(x) ∈ R) by Tautology.from(neg_closure)
-    val h4 = have((`-`(x) * y) ∈ R) by Tautology.from(h3, mul_closure of (x:= `-`(x)))
-    val h5 = have(`0` ∈ R) by Tautology.from(additive_id)
-    have((x + `-`(x)) === `0`) by Tautology.from(add_inv)
-    val v2 = have((x + `-`(x)) * y === `0` * y) by Congruence.from(lastStep)
+    val h2 = have(-(x * y) ∈ R) by Tautology.from(neg_closure of (x := (x * y)), h1)
+    val h3 = have(-(x) ∈ R) by Tautology.from(neg_closure)
+    val h4 = have((-(x) * y) ∈ R) by Tautology.from(h3, mul_closure of (x:= -(x)))
+    val h5 = have(`0` ∈ R) by Tautology.from(add_id_closure)
+    have((x + -(x)) === `0`) by Tautology.from(add_inv)
+    val v2 = have((x + -(x)) * y === `0` * y) by Congruence.from(lastStep)
     have(`0` * y  === `0`) by Tautology.from(zero_times of (x := y))
-    have((x + `-`(x)) * y === `0`) by Congruence.from(lastStep, v2)
-    have(((x * y) + (`-`(x) * y)) === `0`) by Congruence.from(lastStep, h3, mul_dist_right of (y := x, z := `-`(x), x := y))
-    have(((`-`(x) * y) + (x * y)) === `0`) by Congruence.from(h1, h2, h3, h4, add_comm of (x := (x * y), y:= (`-`(x) * y)), lastStep)
-    have(((`-`(x) * y) + (x * y)) + `-`(x * y) === `-`(x * y)) by Congruence.from(lastStep, h1, h2, h3, h4, h5, add_id of (x := (`-`(x * y))))
-    have((`-`(x) * y) + ((x * y) + `-`(x * y)) === `-`(x * y)) by Congruence.from(lastStep, h1, h2, h3, h4, add_assoc of (x := (`-`(x) * y), y := (x * y), z :=`-`(x * y)))
-    have((`-`(x) * y) + ((x * y) + `-`(x * y)) === `-`(x * y)) by Congruence.from(lastStep, h1, h2, h3, h4, add_assoc of (x := (`-`(x) * y), y := (x * y), z :=`-`(x * y)))
-    have((`-`(x) * y) + (`0`) === `-`(x * y)) by Congruence.from(lastStep, h1, h2, h3, h4, add_inv of (x := (x * y)))
-    have(`0` + (`-`(x) * y) === `-`(x * y)) by Congruence.from(lastStep, h1, h2, h3, h4, h5, add_comm of (x := (`-`(x) * y), y := `0`))
-    have((`-`(x) * y) === `-`(x * y)) by Congruence.from(lastStep, add_id of (x := (`-`(x) * y)), h1, h2, h3, h4, h5)     
+    have((x + -(x)) * y === `0`) by Congruence.from(lastStep, v2)
+    have(((x * y) + (-(x) * y)) === `0`) by Congruence.from(lastStep, h3, mul_dist_right of (y := x, z := -(x), x := y))
+    have(((-(x) * y) + (x * y)) === `0`) by Congruence.from(h1, h2, h3, h4, add_comm of (x := (x * y), y:= (-(x) * y)), lastStep)
+    have(((-(x) * y) + (x * y)) + -(x * y) === -(x * y)) by Congruence.from(lastStep, h1, h2, h3, h4, h5, add_id of (x := (-(x * y))))
+    have((-(x) * y) + ((x * y) + -(x * y)) === -(x * y)) by Congruence.from(lastStep, h1, h2, h3, h4, add_assoc of (x := (-(x) * y), y := (x * y), z := -(x * y)))
+    have((-(x) * y) + ((x * y) + -(x * y)) === -(x * y)) by Congruence.from(lastStep, h1, h2, h3, h4, add_assoc of (x := (-(x) * y), y := (x * y), z := -(x * y)))
+    have((-(x) * y) + (`0`) === -(x * y)) by Congruence.from(lastStep, h1, h2, h3, h4, add_inv of (x := (x * y)))
+    have(`0` + (-(x) * y) === -(x * y)) by Congruence.from(lastStep, h1, h2, h3, h4, h5, add_comm of (x := (-(x) * y), y := `0`))
+    have((-(x) * y) === -(x * y)) by Congruence.from(lastStep, add_id of (x := (-(x) * y)), h1, h2, h3, h4, h5)     
     have(thesis) by Tautology.from(lastStep, h1, h2, h3, h4, h5)
   }
 
-  val neg_x_neg_y_xy = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), (x ∈ R), (y ∈ R)) |- (`-`(x) * `-`(y)) === (x * y)){
-    assume(ring(R, <=, `+`, *, `-`, `0`, `1`), (x ∈ R), (y ∈ R))
+  val neg_x_neg_y_xy = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R)) |- (-(x) * -(y)) === (x * y)){
+    assume(ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R))
     val h1 = have((x * y) ∈ R) by Tautology.from(mul_closure)
-    val h2 = have(`-`(x * y) ∈ R) by Tautology.from(neg_closure of (x := (x * y)), h1)
-    val h3 = have(`-`(x) ∈ R) by Tautology.from(neg_closure)
-    val h4 = have(`-`(y) ∈ R) by Tautology.from(neg_closure of (x := y))
-    val h5 = have((`-`(x) * `-`(y)) ∈ R) by Tautology.from(h3, mul_closure of (x:= `-`(x), y := `-`(y)), h3, h4)
-    val h6 = have(`0` ∈ R) by Tautology.from(additive_id)
+    val h2 = have(-(x * y) ∈ R) by Tautology.from(neg_closure of (x := (x * y)), h1)
+    val h3 = have(-(x) ∈ R) by Tautology.from(neg_closure)
+    val h4 = have(-(y) ∈ R) by Tautology.from(neg_closure of (x := y))
+    val h5 = have((-(x) * -(y)) ∈ R) by Tautology.from(h3, mul_closure of (x:= -(x), y := -(y)), h3, h4)
+    val h6 = have(`0` ∈ R) by Tautology.from(add_id_closure)
 
-    have((`-`(x) * `-`(y)) === `-`(x * `-`(y))) by Tautology.from(neg_x_y_neg_xy of (y := `-`(y)), h4)
-    have((`-`(x) * `-`(y)) === (x * y)) by Congruence.from(lastStep, mul_comm of (y := `-`(y)), h1, h2, h3, h4, 
+    have((-(x) * -(y)) === -(x * -(y))) by Tautology.from(neg_x_y_neg_xy of (y := -(y)), h4)
+    have((-(x) * -(y)) === (x * y)) by Congruence.from(lastStep, mul_comm of (y := -(y)), h1, h2, h3, h4, 
                                                                   mul_comm, 
                                                                   neg_x_y_neg_xy of (x := y, y := x),
                                                                   double_negation_elimination of (x := (x * y)))
@@ -465,136 +502,161 @@ object RingStructure extends lisa.Main {
   
   }
 
-  val negation_dist_add = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), (x ∈ R), (y ∈ R)) |- `-`(x + y) === `-`(x) + `-`(y)){
-    assume(ring(R, <=, `+`, *, `-`, `0`, `1`), (x ∈ R), (y ∈ R))
+  val negation_dist_add = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R)) |- -(x + y) === -(x) + -(y)){
+    assume(ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R))
     val h1 = have((x + y) ∈ R) by Tautology.from(add_closure)
-    val h2 = have(`-`(x + y) ∈ R) by Tautology.from(neg_closure of (x := (x + y)), h1)
-    val h3 = have(`-`(x) ∈ R) by Tautology.from(neg_closure)
-    val h4 = have(`-`(y) ∈ R) by Tautology.from(neg_closure of (x := y))
-    val h5 = have((`-`(x) + `-`(y)) ∈ R) by Tautology.from(h3, add_closure of (x:= `-`(x), y := `-`(y)), h3, h4)
-    val h6 = have(`0` ∈ R) by Tautology.from(additive_id)
-    val h7 = have((x + `-`(x)) ∈ R) by Tautology.from(add_closure of (x := x, y := `-`(x)), h3)
-    val h8 = have((y + `-`(y)) ∈ R) by Tautology.from(add_closure of (x := y, y := `-`(y)), h4)
+    val h2 = have(-(x + y) ∈ R) by Tautology.from(neg_closure of (x := (x + y)), h1)
+    val h3 = have(-(x) ∈ R) by Tautology.from(neg_closure)
+    val h4 = have(-(y) ∈ R) by Tautology.from(neg_closure of (x := y))
+    val h5 = have((-(x) + -(y)) ∈ R) by Tautology.from(h3, add_closure of (x:= -(x), y := -(y)), h3, h4)
+    val h6 = have(`0` ∈ R) by Tautology.from(add_id_closure)
+    val h7 = have((x + -(x)) ∈ R) by Tautology.from(add_closure of (x := x, y := -(x)), h3)
+    val h8 = have((y + -(y)) ∈ R) by Tautology.from(add_closure of (x := y, y := -(y)), h4)
 
-    have((x + `-`(x)) === `0`) by Tautology.from(add_inv)
-    have((x + `-`(x)) + (y + `-`(y)) === `0`) by Congruence.from(lastStep, 
+    have((x + -(x)) === `0`) by Tautology.from(add_inv)
+    have((x + -(x)) + (y + -(y)) === `0`) by Congruence.from(lastStep, 
                                                     add_inv of (x := y), 
-                                                    zero_x_x of (x := (y + `-`(y))))
-    have(((x + `-`(x)) + y) + `-`(y) === `0`) by Congruence.from(lastStep, 
-                                                                 add_assoc of (x := (x + `-`(x)), y := y, z := `-`(y)),
+                                                    zero_x_x of (x := (y + -(y))))
+    have(((x + -(x)) + y) + -(y) === `0`) by Congruence.from(lastStep, 
+                                                                 add_assoc of (x := (x + -(x)), y := y, z := -(y)),
                                                                 h7, h4)
-    // have((x + y) + (`-`(x) + `-`(y)) === `0`)  by Congruence.from(lastStep, 
-    have((x + (y + `-`(x))) + `-`(y) === `0`)  by Congruence.from(lastStep, 
-                                                          add_assoc of (x := (x), y := `-`(x), z := y),
-                                                          add_comm of (x := `-`(x), y := y),
-                                                          // add_assoc of (x := x, y := y, z := (`-`(x))),
-                                                          // add_assoc of (x := (x + y), y := `-`(x), z := `-`(y)),
+    // have((x + y) + (-(x) + -(y)) === `0`)  by Congruence.from(lastStep, 
+    have((x + (y + -(x))) + -(y) === `0`)  by Congruence.from(lastStep, 
+                                                          add_assoc of (x := (x), y := -(x), z := y),
+                                                          add_comm of (x := -(x), y := y),
+                                                          // add_assoc of (x := x, y := y, z := (-(x))),
+                                                          // add_assoc of (x := (x + y), y := -(x), z := -(y)),
                                                           h1, h2, h3, h4, h5, h6, h7, h8)
-    have((x + y) + (`-`(x) + `-`(y)) === `0`) by Congruence.from(lastStep, 
-                                                          add_assoc of (x := x, y := y, z := (`-`(x))),
-                                                          add_assoc of (x := (x + y), y := `-`(x), z := `-`(y)),
+    have((x + y) + (-(x) + -(y)) === `0`) by Congruence.from(lastStep, 
+                                                          add_assoc of (x := x, y := y, z := (-(x))),
+                                                          add_assoc of (x := (x + y), y := -(x), z := -(y)),
                                                           h1, h2, h3, h4, h5, h6, h7, h8)
 
-    have((`-`(x) + `-`(y))  === `-`(x + y)) by Congruence.from(lastStep,
-                                                                        x_zero_x of (x := `-`(x + y)),
-                                                                        add_assoc of (x := `-`(x + y), y := (x + y), z := (`-`(x) + `-`(y))),
-                                                                        add_comm of (x := `-`(x + y), y := (x + y)),
+    have((-(x) + -(y))  === -(x + y)) by Congruence.from(lastStep,
+                                                                        x_zero_x of (x := -(x + y)),
+                                                                        add_assoc of (x := -(x + y), y := (x + y), z := (-(x) + -(y))),
+                                                                        add_comm of (x := -(x + y), y := (x + y)),
                                                                         add_inv of (x := (x + y)),
-                                                                        zero_x_x of (x := (`-`(x) + `-`(y))),
+                                                                        zero_x_x of (x := (-(x) + -(y))),
                                                                         h1, h2, h3, h4, h5, h6, h7, h8)
     have(thesis) by Tautology.from(lastStep, h1, h2, h3, h4, h5, h6, h7, h8)
   }
-  val negation_zero = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`)) |- `-`(`0`) === `0`){
-    assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
-    val h6 = have(`0` ∈ R) by Tautology.from(additive_id) 
-    val h7 = have(`-`(`0`) ∈ R) by Tautology.from(neg_closure of (x := `0`), h6)
-    have(`-`(`0`) === `0`) by Congruence.from(lastStep, add_inv of (x := `0`), h6, h7, zero_x_x of (x := `-`(`0`)))
+  val negation_zero = Theorem((ring(R, <=, +, *, -, |, `0`, `1`)) |- -(`0`) === `0`){
+    assume(ring(R, <=, +, *, -, |, `0`, `1`))
+    val h6 = have(`0` ∈ R) by Tautology.from(add_id_closure) 
+    val h7 = have(-(`0`) ∈ R) by Tautology.from(neg_closure of (x := `0`), h6)
+    have(-(`0`) === `0`) by Congruence.from(lastStep, add_inv of (x := `0`), h6, h7, zero_x_x of (x := -(`0`)))
     have(thesis) by Tautology.from(lastStep, h6, h7)
   }
 
-  val one_mone_xs_xs = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), x ∈ R) |- `1` + (`-`(`1`) + x) === x){
-    assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
+  val one_mone_xs_xs = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R) |- `1` + (-(`1`) + x) === x){
+    assume(ring(R, <=, +, *, -, |, `0`, `1`))
     assume(x ∈ R)
-    val h1 = have(`0` ∈ R) by Tautology.from(additive_id) 
-    val h2 = have(`1` ∈ R) by Tautology.from(mult_id)
-    val h3 = have(`-`(`1`) ∈ R) by Tautology.from(neg_closure of (x := `1`), h2)
-    val h4 = have(`1` + (`-`(`1`) + x) === (`1` + `-`(`1`)) + x) by Tautology.from(h2, h3, add_assoc of (x := `1`, y := `-`(`1`), z := x))
-    val h5 = have((`1` + `-`(`1`)) === `0`) by Tautology.from(add_inv of (x := `1`), h2)
+    val h1 = have(`0` ∈ R) by Tautology.from(add_id_closure) 
+    val h2 = have(`1` ∈ R) by Tautology.from(mul_id_closure)
+    val h3 = have(-(`1`) ∈ R) by Tautology.from(neg_closure of (x := `1`), h2)
+    val h4 = have(`1` + (-(`1`) + x) === (`1` + -(`1`)) + x) by Tautology.from(h2, h3, add_assoc of (x := `1`, y := -(`1`), z := x))
+    val h5 = have((`1` + -(`1`)) === `0`) by Tautology.from(add_inv of (x := `1`), h2)
     val h6 = have(`0` + x === x) by Tautology.from(zero_x_x)
-    val res1 = have((`1` + `-`(`1`)) + x === (`1` + `-`(`1`)) + x).bot
+    val res1 = have((`1` + -(`1`)) + x === (`1` + -(`1`)) + x).bot
     // assume equalities
     val equalities = Seq(h4.bot, h5.bot, h6.bot).map(x => x.firstElemR).toSet
-    have(equalities |- (`1` + `-`(`1`)) + x === (`1` + `-`(`1`)) + x) by Tautology
-    thenHave(equalities |- ((`1` + `-`(`1`)) + x  === `0` + x)) by RightSubstEq.withParameters(
-      Seq(((`1` + `-`(`1`)), `0`)),
-      (Seq(a), (`1` + `-`(`1`)) + x === a + x)
+    have(equalities |- (`1` + -(`1`)) + x === (`1` + -(`1`)) + x) by Tautology
+    thenHave(equalities |- ((`1` + -(`1`)) + x  === `0` + x)) by RightSubstEq.withParameters(
+      Seq(((`1` + -(`1`)), `0`)),
+      (Seq(a), (`1` + -(`1`)) + x === a + x)
     )
-    thenHave(equalities |- `1` + (`-`(`1`) + x) === `0` + x) by RightSubstEq.withParameters(
-      Seq((`1` + (`-`(`1`) + x), (`1` + `-`(`1`)) + x)),
+    thenHave(equalities |- `1` + (-(`1`) + x) === `0` + x) by RightSubstEq.withParameters(
+      Seq((`1` + (-(`1`) + x), (`1` + -(`1`)) + x)),
       (Seq(a), a === `0` + x)
     )
-    thenHave(equalities |- `1` + (`-`(`1`) + x) === x) by RightSubstEq.withParameters(
+    thenHave(equalities |- `1` + (-(`1`) + x) === x) by RightSubstEq.withParameters(
       Seq((`0` + x, x)),
-      (Seq(a), `1` + (`-`(`1`) + x) === a)
+      (Seq(a), `1` + (-(`1`) + x) === a)
     )
   
     have(thesis) by Tautology.from(lastStep, h4, h5, h6)
   }
   
-  val mone_one_xs_xs =  Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), x ∈ R) |- `-`(`1`) + (`1` + x) === x){
-    assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
+  val mone_one_xs_xs =  Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R) |- -(`1`) + (`1` + x) === x){
+    assume(ring(R, <=, +, *, -, |, `0`, `1`))
     assume(x ∈ R)
-    val h1 = have(`0` ∈ R) by Tautology.from(additive_id) 
-    val h2 = have(`1` ∈ R) by Tautology.from(mult_id)
-    val h3 = have(`-`(`1`) ∈ R) by Tautology.from(neg_closure of (x := `1`), h2)
-    val h4 = have(`-`(`1`) + (`1` + x) === (`-`(`1`) + `1`) + x) by Tautology.from(h2, h3, add_assoc of (x := `-`(`1`), y := `1`, z := x))
-    val h5 = have((`-`(`1`) + `1`) === (`1` + `-`(`1`))) by Tautology.from(h2, h3, add_comm of (x := `1`, y := `-`(`1`)))
-    val h6 = have(`1` + (`-`(`1`) + x) === (`1` + `-`(`1`)) + x) by Tautology.from(h2, h3, add_assoc of (x := `1`, y := `-`(`1`), z := x))
+    val h1 = have(`0` ∈ R) by Tautology.from(add_id_closure) 
+    val h2 = have(`1` ∈ R) by Tautology.from(mul_id_closure)
+    val h3 = have(-(`1`) ∈ R) by Tautology.from(neg_closure of (x := `1`), h2)
+    val h4 = have(-(`1`) + (`1` + x) === (-(`1`) + `1`) + x) by Tautology.from(h2, h3, add_assoc of (x := -(`1`), y := `1`, z := x))
+    val h5 = have((-(`1`) + `1`) === (`1` + -(`1`))) by Tautology.from(h2, h3, add_comm of (x := `1`, y := -(`1`)))
+    val h6 = have(`1` + (-(`1`) + x) === (`1` + -(`1`)) + x) by Tautology.from(h2, h3, add_assoc of (x := `1`, y := -(`1`), z := x))
 
-    have(`-`(`1`) + (`1` + x) === `1` + (`-`(`1`) + x)) by Congruence.from(h1, h2, h3, h4, h5, h6)
-    have(`-`(`1`) + (`1` + x) === x) by Congruence.from(lastStep, one_mone_xs_xs)
+    have(-(`1`) + (`1` + x) === `1` + (-(`1`) + x)) by Congruence.from(h1, h2, h3, h4, h5, h6)
+    have(-(`1`) + (`1` + x) === x) by Congruence.from(lastStep, one_mone_xs_xs)
     have(thesis) by Tautology.from(lastStep, h1, h2, h3, h4, h5, h6)
   }
 
-  val addPlusHelper1 = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), x ∈ R, y ∈ R) |- (`1` + x) + (`-`(`1`) + y) === x + y){
-    assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
+
+  // val z_mz_x_x = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R, z ∈ R) |- -(z) + (z + x) === x) {
+  //   assume(ring(R, <=, +, *, -, |, `0`, `1`))
+  //   assume(x ∈ R)
+  //   assume(z ∈ R)
+  //   // val = 3
+  //   val h2 = have(-(z) ∈ R) by Tautology.from(neg_closure of (x := z))
+
+  //   val h4 = have(-(z) + (z + x) === (-(z) + z) + x) by Tautology.from(h2, add_assoc of (x := -(z), y := z, z := x))
+  //   val h5 = have((-(z) + z) === (z + -(z))) by Tautology.from(h2, add_comm of (x := z, y := -(z)))
+  //   val h6 = have(z + (-(z) + x) === (z + -(z)) + x) by Tautology.from(h2, add_assoc of (x := z, y := -(z), z := x))
+
+  //   val h7 = have((z + -(z)) === `0`) by Tautology.from(add_inv of )
+
+  // }
+
+  // val addPlusHelper1p = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R, z ∈ R) |- (z + x) + (-(z) + y) === x + y){
+  //   assume(ring(R, <=, +, *, -, |, `0`, `1`))
+  //   assume(x ∈ R)
+  //   assume(y ∈ R)
+  //   assume(z ∈ R)
+
+
+  // }
+
+  val addPlusHelper1 = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- (`1` + x) + (-(`1`) + y) === x + y){
+    assume(ring(R, <=, +, *, -, |, `0`, `1`))
     assume(x ∈ R)
     assume(y ∈ R)
-    val h1 = have(`0` ∈ R) by Tautology.from(additive_id) 
-    val h2 = have(`1` ∈ R) by Tautology.from(mult_id)
+    val h1 = have(`0` ∈ R) by Tautology.from(add_id_closure) 
+    val h2 = have(`1` ∈ R) by Tautology.from(mul_id_closure)
     
-    val h3 = have(`-`(`1`) ∈ R) by Tautology.from(neg_closure of (x := `1`), h2)
+    val h3 = have(-(`1`) ∈ R) by Tautology.from(neg_closure of (x := `1`), h2)
     val h4 = have(`1` + x === x + `1`) by Tautology.from(add_comm of (x := `1`, y := x), h2)
     val h5 = have((x + `1`) ∈ R) by Tautology.from(add_closure of (x := x, y := `1`), h2)
-    val h6 = have((`-`(`1`) + y) ∈ R) by Tautology.from(add_closure of (x := `-`(`1`), y := y), h3)
-    val h7 = have(((x + `1`) + (`-`(`1`) + y)) === (x + (`1` + (`-`(`1`) + y)))) by Tautology.from(h5, h6, h2, add_assoc of (x := x, y := `1`, z := (`-`(`1`) + y)))
-    val h8 = have(`1` + (`-`(`1`) + y) === y) by Tautology.from(one_mone_xs_xs of (x := y))
-    have((`1` + x) + (`-`(`1`) + y) === x + y) by Congruence.from(h1, h2, h3, h4, h5, h6, h7, h8)
+    val h6 = have((-(`1`) + y) ∈ R) by Tautology.from(add_closure of (x := -(`1`), y := y), h3)
+    val h7 = have(((x + `1`) + (-(`1`) + y)) === (x + (`1` + (-(`1`) + y)))) by Tautology.from(h5, h6, h2, add_assoc of (x := x, y := `1`, z := (-(`1`) + y)))
+    val h8 = have(`1` + (-(`1`) + y) === y) by Tautology.from(one_mone_xs_xs of (x := y))
+    have((`1` + x) + (-(`1`) + y) === x + y) by Congruence.from(h1, h2, h3, h4, h5, h6, h7, h8)
     have(thesis) by Tautology.from(lastStep, h1, h2, h3, h4, h5, h6, h7, h8)
   }
 
-  val addPlusHelper2 = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), x ∈ R, y ∈ R) |- (`-`(`1`) + x) + (`1` + y) === x + y){
-    assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
+  val addPlusHelper2 = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- (-(`1`) + x) + (`1` + y) === x + y){
+    assume(ring(R, <=, +, *, -, |, `0`, `1`))
     assume(x ∈ R)
     assume(y ∈ R)
-    val h1 = have(`0` ∈ R) by Tautology.from(additive_id) 
-    val h2 = have(`1` ∈ R) by Tautology.from(mult_id)
-    val h3 = have(`-`(`1`) ∈ R) by Tautology.from(neg_closure of (x := `1`), h2)
+    val h1 = have(`0` ∈ R) by Tautology.from(add_id_closure) 
+    val h2 = have(`1` ∈ R) by Tautology.from(mul_id_closure)
+    val h3 = have(-(`1`) ∈ R) by Tautology.from(neg_closure of (x := `1`), h2)
     val h4 = have(((`1`) + y) ∈ R) by Tautology.from(add_closure of (x := `1`, y := y), h2)
-    val h5 = have((`-`(`1`) + x) ∈ R) by Tautology.from(add_closure of (x := `-`(`1`), y := x), h3)
-    val h6 = have((`-`(`1`) + x) + ((`1`) + y)  === ((`1`) + y)  + (`-`(`1`) + x)) by Tautology.from(h4, h5, add_comm of (x := ((`1`) + y) , y := (`-`(`1`) + x)))
-    val h7 = have(((`1`) + y)  + (`-`(`1`) + x) === y + x) by Tautology.from(addPlusHelper1 of (x := y, y := x))
-    have((`-`(`1`) + x) + (`1` + y) === x + y) by Congruence.from(h1, h2, h3, h4, h5, h6, h7, add_comm)
+    val h5 = have((-(`1`) + x) ∈ R) by Tautology.from(add_closure of (x := -(`1`), y := x), h3)
+    val h6 = have((-(`1`) + x) + ((`1`) + y)  === ((`1`) + y)  + (-(`1`) + x)) by Tautology.from(h4, h5, add_comm of (x := ((`1`) + y) , y := (-(`1`) + x)))
+    val h7 = have(((`1`) + y)  + (-(`1`) + x) === y + x) by Tautology.from(addPlusHelper1 of (x := y, y := x))
+    have((-(`1`) + x) + (`1` + y) === x + y) by Congruence.from(h1, h2, h3, h4, h5, h6, h7, add_comm)
     have(thesis) by Tautology.from(lastStep, h1, h2, h3, h4, h5, h6, h7, add_comm)
   }
 
-  val addPlusHelper3p = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), x ∈ R, y ∈ R, z ∈ R) |- (z + x) + (z + y) === x + (z + (z + y))){
-    assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
+  val addPlusHelper3p = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R, z ∈ R) |- (z + x) + (z + y) === x + (z + (z + y))){
+    assume(ring(R, <=, +, *, -, |, `0`, `1`))
     assume(x ∈ R)
     assume(y ∈ R)
     assume(z ∈ R)
-    val h1 = have(`0` ∈ R) by Tautology.from(additive_id) 
-    val h3 = have(`-`(z) ∈ R) by Tautology.from(neg_closure of (x := z))
+    val h1 = have(`0` ∈ R) by Tautology.from(add_id_closure) 
+    val h3 = have(-(z) ∈ R) by Tautology.from(neg_closure of (x := z))
     val h4 = have((z + x) ∈ R) by Tautology.from(add_closure of (x := z, y := x))
     val h5 = have((z + y) ∈ R) by Tautology.from(add_closure of (x := z, y := y))
     val h6 = have((z + x)  === (x + z)) by Tautology.from(add_comm of (x := z, y := x))
@@ -606,47 +668,47 @@ object RingStructure extends lisa.Main {
     have(thesis) by Tautology.from(h1, h3, h4, h5, h6, h7, h7p, lastStep)
   }
 
-  val addPlusHelper3 = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), x ∈ R, y ∈ R) |- (`1` + x) + (`1` + y) === x + (`1` + (`1` + y))){
-    assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
+  val addPlusHelper3 = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- (`1` + x) + (`1` + y) === x + (`1` + (`1` + y))){
+    assume(ring(R, <=, +, *, -, |, `0`, `1`))
     assume(x ∈ R)
     assume(y ∈ R)
-    val h1 = have(`0` ∈ R) by Tautology.from(additive_id) 
-    val h2 = have(`1` ∈ R) by Tautology.from(mult_id)
-    val h3 = have(`-`(`1`) ∈ R) by Tautology.from(neg_closure of (x := `1`), h2)
+    val h1 = have(`0` ∈ R) by Tautology.from(add_id_closure) 
+    val h2 = have(`1` ∈ R) by Tautology.from(mul_id_closure)
+    val h3 = have(-(`1`) ∈ R) by Tautology.from(neg_closure of (x := `1`), h2)
     have(thesis) by Tautology.from(addPlusHelper3p of (x := x, y := y, z := `1`), h2)
   }
-  val addPlusHelper4 = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), x ∈ R, y ∈ R) |- (`-`(`1`) + x) + (`-`(`1`) + y) === x + (`-`(`1`) + (`-`(`1`) + y))){
-    assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
+  val addPlusHelper4 = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- (-(`1`) + x) + (-(`1`) + y) === x + (-(`1`) + (-(`1`) + y))){
+    assume(ring(R, <=, +, *, -, |, `0`, `1`))
     assume(x ∈ R)
     assume(y ∈ R)
-    val h1 = have(`0` ∈ R) by Tautology.from(additive_id) 
-    val h2 = have(`1` ∈ R) by Tautology.from(mult_id)
-    val h3 = have(`-`(`1`) ∈ R) by Tautology.from(neg_closure of (x := `1`), h2)
-    have(thesis) by Tautology.from(addPlusHelper3p of (x := x, y := y, z := `-`(`1`)), h3)
+    val h1 = have(`0` ∈ R) by Tautology.from(add_id_closure) 
+    val h2 = have(`1` ∈ R) by Tautology.from(mul_id_closure)
+    val h3 = have(-(`1`) ∈ R) by Tautology.from(neg_closure of (x := `1`), h2)
+    have(thesis) by Tautology.from(addPlusHelper3p of (x := x, y := y, z := -(`1`)), h3)
   }
 
-  val multHelper1 = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), x ∈ R) |- `-`(`1`)*x === `-`(x)){
-    assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
+  val multHelper1 = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R) |- -(`1`)*x === -(x)){
+    assume(ring(R, <=, +, *, -, |, `0`, `1`))
     assume(x ∈ R)
-    val h1 = have(`0` ∈ R) by Tautology.from(additive_id) 
-    val h2 = have(`1` ∈ R) by Tautology.from(mult_id)
-    val h3 = have(`-`(`1`) ∈ R) by Tautology.from(neg_closure of (x := `1`), h2)
-    val h5 = have((`-`(`1`))*x === `-`(`1` * x)) by Tautology.from(neg_x_y_neg_xy of (x := (`1`), y := x), h2)
+    val h1 = have(`0` ∈ R) by Tautology.from(add_id_closure) 
+    val h2 = have(`1` ∈ R) by Tautology.from(mul_id_closure)
+    val h3 = have(-(`1`) ∈ R) by Tautology.from(neg_closure of (x := `1`), h2)
+    val h5 = have((-(`1`))*x === -(`1` * x)) by Tautology.from(neg_x_y_neg_xy of (x := (`1`), y := x), h2)
     val h6 = have(`1` * x === x) by Tautology.from(mul_id_right)
-    have(`-`(`1`)*x === `-`(x)) by Congruence.from(h1, h2, h3, h5, h6)
+    have(-(`1`)*x === -(x)) by Congruence.from(h1, h2, h3, h5, h6)
     have(thesis) by Tautology.from(lastStep, h1, h2, h3, h5, h6)
   }
 
-  object BigIntToRingElem:
+  object BigIntToRingElem{
     def i(x : BigInt) : Expr[Ind] = {
       if x < 0 then 
-        `-`.construct(i(-x))
+        -.construct(i(-x))
       else if x > 0 then
-        `1` `+` i(x - 1)
+        `1` + i(x - 1)
       else 
         `0`
     }
-  
+  }
 
 
   
@@ -660,40 +722,23 @@ object RingStructure extends lisa.Main {
   val w = x === y
   // hint; use structuralToString
   println(w.getClass)
-  def is_eq(x: Expr[Prop]): Boolean = {
-    x match {
-      case (_ `equality` _) => true
-      case _ => false
-    }
-  }
+  
 
-  def collectSubExprs(exp: Expr[Ind]): SSet[Expr[Ind]] = exp match {
-    case a + b  => collectSubExprs(a) ++ collectSubExprs(b) + exp
-    case `-`(a) => collectSubExprs(a) + exp
-    case a * b  => collectSubExprs(a) ++ collectSubExprs(b) + exp
-    case _      => SSet(exp)
-  }
   
 
 
-  val succ_succ_lr   = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), (x ∈ R), (y ∈ R), (z ∈ R), (x + y === z)) |- (`1` + x) + y === (`1` + z)){
+
+  val succ_succ_lr   = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R), (z ∈ R), (x + y === z)) |- (`1` + x) + y === (`1` + z)){
     assume(goal.left.toSeq*)
     have(thesis) by Congruence.from(add_assoc of (x := `1`, y := x, z := y),
-                                    (have(`1` ∈ R) by Tautology.from(mult_id)))
+                                    (have(`1` ∈ R) by Tautology.from(mul_id_closure)))
   }
 
-  def typeChecking(using lib: library.type, proof: lib.Proof)(s: SSet[Expr[Ind]]): SSet[proof.InstantiatedFact | proof.ProofStep] = s.map: 
-      case a + b  => add_closure of (x := a, y := b)
-      case `-`(a) => neg_closure of (a)
-      case a * b  => mul_closure of (x := a, y := b)
-      case `0`    => have(`0` ∈ R) by Tautology.from(additive_id)
-      case `1`    => have(`1` ∈ R) by Tautology.from(mult_id)
-      case  x     => have(x ∈ R |- x ∈ R) by Restate
+  
 
-
-  val succ_succ_defn = Theorem((ring(R, <=, `+`, *, `-`, `0`, `1`), (x ∈ R), (y ∈ R)) |- (`1` + x) + (`1` + y) === (`1` + (`1` + (x + y)))){
-    assume(ring(R, <=, `+`, *, `-`, `0`, `1`), (x ∈ R), (y ∈ R))
-    // have(`1` ∈ R) by Restate.from(additive_id)
+  val succ_succ_defn = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R)) |- (`1` + x) + (`1` + y) === (`1` + (`1` + (x + y)))){
+    assume(ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R))
+    // have(`1` ∈ R) by Restate.from(add_id_closure)
     val g = (goal.right.toList(0): @unchecked) match 
       case a `equality` b => (a, b)
 

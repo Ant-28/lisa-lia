@@ -1,6 +1,6 @@
 import scala.collection.immutable.{Set => SSet}
 import scala.collection.immutable.{List => LList, :: => Cons}
-import lisa.maths.SetTheory.Base.Predef.{*, given}
+import lisa.maths.SetTheory.Base.Predef.{| => _, given, _}
 import lisa.maths.SetTheory.Functions.Predef.{R => _, *, given}
 import lisa.maths.SetTheory.Base.Pair.{pair, given}
 import lisa.maths.SetTheory.Functions.BasicTheorems.{appTyping}
@@ -22,8 +22,8 @@ object Rings extends lisa.Main
 
     val w : THM = RingStructure.add_closure
     println(w.statement)
-    val dummy = Theorem(ring(R, <=, `+`, *, `-`, `0`, `1`) |- `1` ∈ R) {
-        have(thesis) by Restate.from(mult_id)
+    val dummy = Theorem(ring(R, <=, +, *, -, |, `0`, `1`) |- `1` ∈ R) {
+        have(thesis) by Restate.from(mul_id_closure)
     }
     // import scala.collection.immutable.{Set => SSet}
     // val xx = variable[Ind]
@@ -55,7 +55,7 @@ object Rings extends lisa.Main
     //     |""".stripMargin)
 
     //   sorry
-    // def getTypingsInAntecedent(xx: SSet[Expr[Prop]]): SSet[Expr[Ind]] = xx
+    // def getTypingVarsInAnte(xx: SSet[Expr[Prop]]): SSet[Expr[Ind]] = xx
     //   .flatMap((yy) =>
     //     yy match {
     //       case ys ∈ R => SSet(ys)
@@ -68,10 +68,10 @@ object Rings extends lisa.Main
     //       case _ => false
     //     }
     //   )
-    // val test = Theorem( (ring(R, <=, `+`, *, `-`, `0`, `1`)) |- `1` + (`1` + `1`) === (`1` + `1`) + `1`){
-    //     assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
+    // val test = Theorem( (ring(R, <=, +, *, -, |, `0`, `1`)) |- `1` + (`1` + `1`) === (`1` + `1`) + `1`){
+    //     assume(ring(R, <=, +, *, -, |, `0`, `1`))
     //     val t = add_assoc of (xx := `1`, yy := `1`, z := `1`)
-    //     val q = typeChecking(getTypingsInAntecedent(t.result.left))
+    //     val q = typeChecking(getTypingVarsInAnte(t.result.left))
     //     val r = getTypings(t.result.left)
     //     have(t.result)
     //     println(thesis)
@@ -81,10 +81,11 @@ object Rings extends lisa.Main
     //     have(thesis) by Cut.withParameters(r.toList(0))(q.toList(0), t)
     //     // sorry
     // }
-    println("Hello!")
-    RingStructure.main(Array())
     override def main(args: Array[String]): Unit = {
+        List(RingStructure, EqReasoning).map(_.main(Array()))
+        super.main(Array())
         println(om.stringWriter.toString)
     }
+    println("Hello!")
 }
 // end Rings

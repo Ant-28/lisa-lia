@@ -227,6 +227,23 @@ build n = buildHelper n True
                         Mult (buildHelper (n - 1) t) (buildHelper (n - 1) t)
             where r = rand 10
 
+i :: Int -> RingAst
+i 0 = Zero
+i x 
+    | x > 0 = Plus One (i (x - 1))
+    | x < 0 = Plus (Neg One) (i (x + 1))
+
+buildExpr :: Int -> [RingAst]
+buildExpr 0 = [i(rand 10)]
+buildExpr n 
+    | n < 0 = error "don't call me with negative ints kthx"
+    | n > 0 = Mult (i((-10) + rand 20)) randVar  : buildExpr (n - 1)
+    where 
+        randVar :: RingAst
+        randVar  = Var [chr (97 + rand 26)]
+buildExprFinal :: [RingAst] -> RingAst
+buildExprFinal = foldl Plus Zero 
+build2 = buildExprFinal . buildExpr
 
 
 rand :: Int -> Int
@@ -248,14 +265,16 @@ gfv = foldl (\ x y -> x ++ " " ++ y) ""
 
 foo :: IO ()
 foo = do
-    let x = build 15
-    print ("syms " ++ (gfv (getFreeVars x)))
+    let x = build2 15
+    print ("syms " ++ gfv (getFreeVars x))
     print x
     print (prettyPrint x)
     print (evalRing x)
 main :: IO ()
 main = do
-    forM_ [1..1000] $ \_ -> foo
+    forM_ [1..2000] $ \_ -> foo
+
+
 
 
 

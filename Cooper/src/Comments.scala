@@ -3,14 +3,14 @@
     //     (ex : @unchecked) match {
     //       case `0` => {
     //         val proofRes = TacticSubproof { 
-    //           assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
+    //           assume(ring(R, <=, +, *, -, |, `0`, `1`))
     //           have(`0` ∈ R |- `0` === `0`) by Restate }
     //         val res = RB(`0`)
     //         (res, proofRes)
     //       }
     //       case `1` => {
     //         val proofRes = TacticSubproof { 
-    //           assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
+    //           assume(ring(R, <=, +, *, -, |, `0`, `1`))
     //           have(`1` ∈ R |- `1` === `1`) by Restate }
     //         val res = `1`
     //         (res, proofRes)
@@ -18,7 +18,7 @@
     //       case `0` + xs => {
     //         // simpl(xs)
     //         val prf = TacticSubproof{ 
-    //           assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
+    //           assume(ring(R, <=, +, *, -, |, `0`, `1`))
     //           val (result, prf) = simplify(xs)
     //           if !prf.isValid then proof.InvalidProofTactic("simplification failed!") // TODO: check if invalidprooftactic needs .validate or st 
     //           else 
@@ -35,7 +35,7 @@
     //       case xs + `0` => {
     //         // simpl(xs)
     //         val prf = TacticSubproof{ 
-    //           assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
+    //           assume(ring(R, <=, +, *, -, |, `0`, `1`))
     //           val (result, prf) = simplify(xs)
     //           if !prf.isValid then proof.InvalidProofTactic("simplification failed!") 
     //           else 
@@ -51,7 +51,7 @@
     //       }
     //       case (xs + ys) + zs => 
     //         val prf = TacticSubproof{
-    //           assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
+    //           assume(ring(R, <=, +, *, -, |, `0`, `1`))
     //           val (rxs, prfxs) = simplify(xs)
     //           val (rys, prfys) = simplify(ys)
     //           val (rzs, prfzs) = simplify(zs)
@@ -83,7 +83,7 @@
     //       case `1` + xs     => {
     //         // simpl(xs)
     //         val prf = TacticSubproof{ 
-    //           assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
+    //           assume(ring(R, <=, +, *, -, |, `0`, `1`))
     //           val (result, prf) = simplify(xs)
     //           // println("x, xs, prf")
     //           // println(ex)
@@ -102,10 +102,10 @@
     //         }
     //         (`1` + simplify(xs)._1, prf)
     //     }
-    //     case `-`(`0`) => {
+    //     case -(`0`) => {
     //         val proofRes = TacticSubproof { 
-    //           assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
-    //           have((`0` ∈ R, `-`(`0`) ∈ R) |- `-`(`0`) + `0` === `0` + `-`(`0`) ) by Tautology.from(add_comm of (x := `0`, y := `-`(`0`))) }
+    //           assume(ring(R, <=, +, *, -, |, `0`, `1`))
+    //           have((`0` ∈ R, -(`0`) ∈ R) |- -(`0`) + `0` === `0` + -(`0`) ) by Tautology.from(add_comm of (x := `0`, y := -(`0`))) }
     //         val res = `0`
     //         (res, proofRes)
           

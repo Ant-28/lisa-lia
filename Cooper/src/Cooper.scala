@@ -28,20 +28,7 @@
 
 //   object evalRingEq extends ProofTactic:
 //     // FIXME: Try to use collect
-//     def getTypingsInAntecedent(x: SSet[Expr[Prop]]): SSet[Expr[Ind]] = x
-//       .flatMap((y) =>
-//         y match {
-//           case ys ∈ R => SSet(ys)
-//           case _      => SSet()
-//         }
-//       )
-//       .flatMap(x => collectSubExprs(x))
-//     def getTypings(x: SSet[Expr[Prop]]): SSet[Expr[Prop]] = x.filter( xs => 
-//         xs match {
-//           case p ∈ R => true
-//           case _ => false
-//         }
-//       )
+    
 
 //     def apply(using lib: library.type, proof: lib.Proof)(
 //         goal: Sequent
@@ -51,7 +38,7 @@
 //       else
 //         val goalElem = goal.right.toList(0)
 //         TacticSubproof:
-//           assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
+//           assume(ring(R, <=, +, *, -, |, `0`, `1`))
 //           if (!is_eq(goalElem)) then
 //             proof.InvalidProofTactic(
 //               "I can't prove anything other than equality!"
@@ -64,7 +51,7 @@
 //               proof.InvalidProofTactic("Checking sums failed!")
 //             else
 //               val typing =
-//                 typeChecking(getTypingsInAntecedent(have(sol).bot.left))
+//                 typeChecking(getTypingVarsInAnte(have(sol).bot.left))
 //               val seqs = typing + have(sol)
 //               // 
 //               // have(goal) by Congruence.from(seqs.toSeq*)
@@ -101,18 +88,18 @@
 //         (x, s) match {
 //           case (`0`, _) => false
 //           case (`1`, P) => true
-//           case (`-`(`1`), M) => true
+//           case (-(`1`), M) => true
 //           case (`1` + xs, P) => irbHelper(xs, P)
-//           case (`-`(`1`) + xs, M) => irbHelper(xs, M)
+//           case (-(`1`) + xs, M) => irbHelper(xs, M)
 //           case _ => false
 //         }
 //       }
 //       x match {
 //         case `0` => true
 //         case `1` => true
-//         case `-`(`1`) => true
+//         case -(`1`) => true
 //         case `1` + xs => irbHelper(x, P)
-//         case (`-`(`1`) + xs) => irbHelper(x, M)
+//         case (-(`1`) + xs) => irbHelper(x, M)
 //         case _ => false
  
 //       }
@@ -120,7 +107,7 @@
 //     def evalRing(using lib: library.type, proof: lib.Proof)(
 //         int: Expr[Ind]
 //     ): (Biased, proof.ProofTacticJudgement) = {
-//       assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
+//       assume(ring(R, <=, +, *, -, |, `0`, `1`))
 //       println(int)
 //       println(isRightBiased(int))
 //       var res: Biased = NRB(`0`)
@@ -196,7 +183,7 @@
 //         lib: library.type,
 //         proof: lib.Proof
 //     )(ex: Biased, ey: Biased): (Biased, proof.ProofTacticJudgement) = {
-//       assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
+//       assume(ring(R, <=, +, *, -, |, `0`, `1`))
 //       var res: Biased = NRB(
 //         `0`
 //       ) // easier to throw an invalid proof state if res is invalid
@@ -227,9 +214,9 @@
 //                 res = RB(`1` + `1`)
 //               }
 //               // Neg One -> RightBiased Zero
-//               case `-`(`1`) => {
+//               case -(`1`) => {
 //                 have(
-//                   (`1` + `-`(`1`)) ∈ R |- `1` + `-`(`1`) === `0`
+//                   (`1` + -(`1`)) ∈ R |- `1` + -(`1`) === `0`
 //                 ) by Tautology.from(add_inv of (x := `1`))
 //                 res = RB(`0`)
 //               }
@@ -244,13 +231,13 @@
 //                 res = RB((`1` + (`1` + xss)))
 //               }
 //               // Plus (Neg One) x -> RightBiased x
-//               case ((`-`(`1`)) + xss) => {
+//               case ((-(`1`)) + xss) => {
 //                 have(
 //                   (
 //                     `1` ∈ R,
-//                     `-`(`1`) ∈ R,
+//                     -(`1`) ∈ R,
 //                     xss ∈ R
-//                   ) |- (`1` + ((`-`(`1`)) + xss)) === xss
+//                   ) |- (`1` + ((-(`1`)) + xss)) === xss
 //                 ) by Tautology.from(one_mone_xs_xs of (x := xss))
 //                 res = RB(xss)
 //               }
@@ -288,35 +275,35 @@
 //             have((xs ∈ R, `1` ∈ R)  |- xs + `1` === ures) by Tautology.from(lastStep, h0, h1)
 //           }
 //           // evalPlus (RightBiased (Neg One)) (RightBiased x) = case x of
-//           case (RB(`-`(`1`)), RB(xs)) => {
+//           case (RB(-(`1`)), RB(xs)) => {
 //             xs match {
 //               //     Neg One -> RightBiased (Plus (Neg One) (Neg One))
-//               case (`-`(`1`)) => {
+//               case (-(`1`)) => {
 //                 have(
-//                   (`-`(`1`) + `-`(`1`)) ∈ R |- `-`(`1`) + `-`(`1`) === `-`(`1`) + `-`(`1`)
+//                   (-(`1`) + -(`1`)) ∈ R |- -(`1`) + -(`1`) === -(`1`) + -(`1`)
 //                 ) by Restate
-//                 res = RB(`-`(`1`) + `-`(`1`))
+//                 res = RB(-(`1`) + -(`1`))
 //               }
 //               //     Plus One x -> RightBiased x
 //               case (`1` + xss) => {
 //                 have(
 //                   (
 //                     `1` ∈ R,
-//                     `-`(`1`) ∈ R,
+//                     -(`1`) ∈ R,
 //                     xss ∈ R
-//                   ) |- (`-`(`1`) + ((`1`) + xss)) === xss
+//                   ) |- (-(`1`) + ((`1`) + xss)) === xss
 //                 ) by Tautology.from(mone_one_xs_xs of (x := xss))
 //                 res = RB(xss)
 //               }
 //               //     Plus (Neg One) x -> RightBiased (Plus (Neg One) (Plus (Neg One) x))
-//               case (`-`(`1`) + xss) => {
+//               case (-(`1`) + xss) => {
 //                 have(
 //                   (
-//                     `-`(`1`) ∈ R,
-//                     (`-`(`1`) + xss) ∈ R
-//                   ) |- (`-`(`1`) + (`-`(`1`) + xss)) === (`-`(`1`) + (`-`(`1`) + xss))
+//                     -(`1`) ∈ R,
+//                     (-(`1`) + xss) ∈ R
+//                   ) |- (-(`1`) + (-(`1`) + xss)) === (-(`1`) + (-(`1`) + xss))
 //                 ) by Restate
-//                 res = RB((`-`(`1`) + (`-`(`1`) + xss)))
+//                 res = RB((-(`1`) + (-(`1`) + xss)))
 //               }
 //               //     _ -> error "Violates right-biased invariant"
 //               case y => {
@@ -329,92 +316,92 @@
 //             }
 //           }
 //           // evalPlus (RightBiased x) (RightBiased (Neg One)) = evalPlus (RightBiased (Neg One)) (RightBiased x)
-//           case (RB(xs), RB(`-`(`1`))) => {
-//             val temp = evalPlus(RB(`-`(`1`)), RB(xs))
+//           case (RB(xs), RB(-(`1`))) => {
+//             val temp = evalPlus(RB(-(`1`)), RB(xs))
 //             val prf = temp._2
 //             res = temp._1
 //             val ures = unapply(res)
-//             val h0 = have(`-`(`1`) + xs === ures) by Tautology.from(have(prf))
+//             val h0 = have(-(`1`) + xs === ures) by Tautology.from(have(prf))
 //             val h1 = have(
-//               (xs ∈ R, `-`(`1`) ∈ R) |- xs + `-`(`1`) === `-`(`1`) + xs
-//             ) by Tautology.from(add_comm of (x := `-`(`1`), y := xs))
+//               (xs ∈ R, -(`1`) ∈ R) |- xs + -(`1`) === -(`1`) + xs
+//             ) by Tautology.from(add_comm of (x := -(`1`), y := xs))
 //             val eqs = Set(h1.bot, h0.bot).map(_.firstElemR)
 
-//             have(eqs |- `-`(`1`) + xs === `-`(`1`) + xs) by Restate
-//             thenHave(eqs |- `-`(`1`) + xs === ures) by RightSubstEq
+//             have(eqs |- -(`1`) + xs === -(`1`) + xs) by Restate
+//             thenHave(eqs |- -(`1`) + xs === ures) by RightSubstEq
 //               .withParameters(
-//                 Seq(((`-`(`1`) + xs), ures)),
-//                 (Seq(a), `-`(`1`) + xs === a)
+//                 Seq(((-(`1`) + xs), ures)),
+//                 (Seq(a), -(`1`) + xs === a)
 //               )
-//             thenHave(eqs |- xs + `-`(`1`) === ures) by RightSubstEq
+//             thenHave(eqs |- xs + -(`1`) === ures) by RightSubstEq
 //               .withParameters(
-//                 Seq(((`-`(`1`) + xs), (xs + `-`(`1`)))),
+//                 Seq(((-(`1`) + xs), (xs + -(`1`)))),
 //                 (Seq(a), a === ures)
 //               )
-//             have((xs ∈ R, `-`(`1`) ∈ R) |- xs + `-`(`1`) === ures) by Tautology.from(lastStep, h0, h1)
+//             have((xs ∈ R, -(`1`) ∈ R) |- xs + -(`1`) === ures) by Tautology.from(lastStep, h0, h1)
 //           }
 //           // evalPlus (RightBiased (Plus o1 x)) (RightBiased (Plus o2 y)) = case (o1, o2) of
 //           case (RB(o1 + xs), RB(o2 + ys)) => {
 //             (o1, o2) match {
 //               //     (One, Neg One) -> evalPlus (RightBiased x) (RightBiased y)
-//               case (`-`(`1`), `1`) => {
+//               case (-(`1`), `1`) => {
 //                 val temp = evalPlus(RB(xs), RB(ys))
 //                 val prf = temp._2
 //                 res = temp._1
 //                 val ures = unapply(res)
 //                 val h0 = have(xs + ys === ures) by Tautology.from(have(prf))
 //                 val h1 = have(
-//                   (xs ∈ R, ys ∈ R) |- (`-`(`1`) + xs) + (`1` + ys) === xs + ys
+//                   (xs ∈ R, ys ∈ R) |- (-(`1`) + xs) + (`1` + ys) === xs + ys
 //                 ) by Tautology.from(addPlusHelper2 of (x := xs, y := ys))
 //                 val eqs = Set(h1.bot, h0.bot).map(_.firstElemR)
 
 //                 have(
-//                   eqs |- (`-`(`1`) + xs) + (`1` + ys) === (`-`(`1`) + xs) + (`1` + ys)
+//                   eqs |- (-(`1`) + xs) + (`1` + ys) === (-(`1`) + xs) + (`1` + ys)
 //                 ) by Restate
 //                 thenHave(
-//                   eqs |- (`-`(`1`) + xs) + (`1` + ys) === xs + ys
+//                   eqs |- (-(`1`) + xs) + (`1` + ys) === xs + ys
 //                 ) by RightSubstEq.withParameters(
-//                   Seq((((`-`(`1`) + xs) + (`1` + ys)), (xs + ys))),
-//                   (Seq(a), (`-`(`1`) + xs) + (`1` + ys) === a)
+//                   Seq((((-(`1`) + xs) + (`1` + ys)), (xs + ys))),
+//                   (Seq(a), (-(`1`) + xs) + (`1` + ys) === a)
 //                 )
 //                 thenHave(
-//                   eqs |- (`-`(`1`) + xs) + (`1` + ys) === ures
+//                   eqs |- (-(`1`) + xs) + (`1` + ys) === ures
 //                 ) by RightSubstEq.withParameters(
 //                   Seq(((xs + ys), ures)),
-//                   (Seq(a), (`-`(`1`) + xs) + (`1` + ys) === a)
+//                   (Seq(a), (-(`1`) + xs) + (`1` + ys) === a)
 //                 )
-//                 have((xs ∈ R, ys ∈ R) |- (`-`(`1`) + xs) + (`1` + ys) === ures) by Tautology.from(
+//                 have((xs ∈ R, ys ∈ R) |- (-(`1`) + xs) + (`1` + ys) === ures) by Tautology.from(
 //                   lastStep, h0, h1
 //                 )
 //               }
 //               //     (Neg One, One) -> evalPlus (RightBiased x) (RightBiased y)
-//               case (`1`, `-`(`1`)) => {
+//               case (`1`, -(`1`)) => {
 //                 val temp = evalPlus(RB(xs), RB(ys))
 //                 val prf = temp._2
 //                 res = temp._1
 //                 val ures = unapply(res)
 //                 val h0 = have(xs + ys === ures) by Tautology.from(have(prf))
 //                 val h1 = have(
-//                   (xs ∈ R, ys ∈ R) |- (`1` + xs) + (`-`(`1`) + ys) === xs + ys
+//                   (xs ∈ R, ys ∈ R) |- (`1` + xs) + (-(`1`) + ys) === xs + ys
 //                 ) by Tautology.from(addPlusHelper1 of (x := xs, y := ys))
 //                 val eqs = Set(h1.bot, h0.bot).map(_.firstElemR)
 
 //                 have(
-//                   eqs |- (`1` + xs) + (`-`(`1`) + ys) === (`1` + xs) + (`-`(`1`) + ys)
+//                   eqs |- (`1` + xs) + (-(`1`) + ys) === (`1` + xs) + (-(`1`) + ys)
 //                 ) by Restate
 //                 thenHave(
-//                   eqs |- (`1` + xs) + (`-`(`1`) + ys) === xs + ys
+//                   eqs |- (`1` + xs) + (-(`1`) + ys) === xs + ys
 //                 ) by RightSubstEq.withParameters(
-//                   Seq((((`1` + xs) + (`-`(`1`) + ys)), (xs + ys))),
-//                   (Seq(a), (`1` + xs) + (`-`(`1`) + ys) === a)
+//                   Seq((((`1` + xs) + (-(`1`) + ys)), (xs + ys))),
+//                   (Seq(a), (`1` + xs) + (-(`1`) + ys) === a)
 //                 )
 //                 thenHave(
-//                   eqs |- (`1` + xs) + (`-`(`1`) + ys) === ures
+//                   eqs |- (`1` + xs) + (-(`1`) + ys) === ures
 //                 ) by RightSubstEq.withParameters(
 //                   Seq(((xs + ys), ures)),
-//                   (Seq(a), (`1` + xs) + (`-`(`1`) + ys) === a)
+//                   (Seq(a), (`1` + xs) + (-(`1`) + ys) === a)
 //                 )
-//                 have((xs ∈ R, ys ∈ R) |- (`1` + xs) + (`-`(`1`) + ys) === ures) by Tautology.from(
+//                 have((xs ∈ R, ys ∈ R) |- (`1` + xs) + (-(`1`) + ys) === ures) by Tautology.from(
 //                   lastStep, h0, h1
 //                 )
 //               }
@@ -462,16 +449,16 @@
 //                 // println("here 3")
 //               }
 //               //     (Neg One, Neg One) -> evalPlus (RightBiased x) (RightBiased (Plus (Neg One) (Plus (Neg One) y)))
-//               case (`-`(`1`), `-`(`1`)) => { 
-//                 val temp = evalPlus(RB(xs), RB(`-`(`1`) + (`-`(`1`) + ys)))
+//               case (-(`1`), -(`1`)) => { 
+//                 val temp = evalPlus(RB(xs), RB(-(`1`) + (-(`1`) + ys)))
 //                 val prf = temp._2
 //                 res = temp._1
 //                 val ures = unapply(res)
             
 //                 val h0 = have(prf)
-//                 val h1 = have((xs ∈ R, ys ∈ R) |- (`-`(`1`) + xs) + (`-`(`1`) + ys) === xs + (`-`(`1`) + (`-`(`1`) + ys))) by Tautology.from(addPlusHelper4 of (x := xs, y := ys))
+//                 val h1 = have((xs ∈ R, ys ∈ R) |- (-(`1`) + xs) + (-(`1`) + ys) === xs + (-(`1`) + (-(`1`) + ys))) by Tautology.from(addPlusHelper4 of (x := xs, y := ys))
 //                 val stmt = 
-//                   val newStatement =((xs ∈ R, ys ∈ R) |- (`-`(`1`) + xs) + (`-`(`1`) + ys) === ures)
+//                   val newStatement =((xs ∈ R, ys ∈ R) |- (-(`1`) + xs) + (-(`1`) + ys) === ures)
 //                   newStatement ++<< h0.bot ++<< h1.bot
 //                 println("h0 and h1")
 //                 println(h0.bot.toString)
@@ -526,14 +513,11 @@
 //       }(res)
 //     }
 
-//     sealed trait Sign
-//     case object P extends Sign
-//     case object M extends Sign
-
+    
 //     def simplify(using lib: library.type, proof: lib.Proof)(
 //         goal: Expr[Prop]
 //     ): (proof.ProofTacticJudgement) = {
-//       assume(ring(R, <=, `+`, *, `-`, `0`, `1`))
+//       assume(ring(R, <=, +, *, -, |, `0`, `1`))
 //       val w = TacticSubproof {
 //         goal match
 //           case x `equality` y if canonicalInt(x) && canonicalInt(y) => {
@@ -549,8 +533,8 @@
 //             val lprfseq = have(lprf)
 //             val rprfseq = have(rprf)
 //             val typingAssumptions = typeChecking(
-//               getTypingsInAntecedent(lprfseq.bot.left) ++
-//               getTypingsInAntecedent(rprfseq.bot.left)
+//               getTypingVarsInAnte(lprfseq.bot.left) ++
+//               getTypingVarsInAnte(rprfseq.bot.left)
 //             )
 //             println(typingAssumptions.size)
 //             println("blerg2")
@@ -620,27 +604,27 @@
 
 //   import BigIntToRingElem.i
 
-//   val evalAdd_test1 = Theorem(ring(R, <=, `+`, *, `-`, `0`, `1`) |- i(2) === i(2)){
+//   val evalAdd_test1 = Theorem(ring(R, <=, +, *, -, |, `0`, `1`) |- i(2) === i(2)){
 //     have(thesis) by evalRingEq.apply
 //   }
 
-//   // val evalTest2 = Theorem(ring(R, <=, `+`, *, `-`, `0`, `1`) |- i(10) + i(5) === i(15)){
+//   // val evalTest2 = Theorem(ring(R, <=, +, *, -, |, `0`, `1`) |- i(10) + i(5) === i(15)){
 //   //   have(thesis) by evalRingEq.apply
 //   // }
 
-//   val evalAdd_test2 = Theorem(ring(R, <=, `+`, *, `-`, `0`, `1`) |- i(2) + i(2) === i(4)){
+//   val evalAdd_test2 = Theorem(ring(R, <=, +, *, -, |, `0`, `1`) |- i(2) + i(2) === i(4)){
 //     have(thesis) by evalRingEq.apply
 //   }
-//   val evalAdd_test3 = Theorem(ring(R, <=, `+`, *, `-`, `0`, `1`) |- i(2) + i(3) === i(5)){
+//   val evalAdd_test3 = Theorem(ring(R, <=, +, *, -, |, `0`, `1`) |- i(2) + i(3) === i(5)){
 //     have(thesis) by evalRingEq.apply
 //   }
-// //   val evalAdd_test4 = Theorem(ring(R, <=, `+`, *, `-`, `0`, `1`) |- i(4) + i(3) === i(7)){
+// //   val evalAdd_test4 = Theorem(ring(R, <=, +, *, -, |, `0`, `1`) |- i(4) + i(3) === i(7)){
 // //     have(thesis) by evalRingEq.apply
 // //   }
-// //   val evalAdd_test5 = Theorem(ring(R, <=, `+`, *, `-`, `0`, `1`) |- i(5) + i(5) === i(10)){
+// //   val evalAdd_test5 = Theorem(ring(R, <=, +, *, -, |, `0`, `1`) |- i(5) + i(5) === i(10)){
 // //     have(thesis) by evalRingEq.apply
 // //   }
-//   // val two_two_four = Theorem(ring(R, <=, `+`, *, `-`, `0`, `1`) |- i(2) + i(2) === i(4)){
+//   // val two_two_four = Theorem(ring(R, <=, +, *, -, |, `0`, `1`) |- i(2) + i(2) === i(4)){
 //   //   sorry
 //   // }
 
