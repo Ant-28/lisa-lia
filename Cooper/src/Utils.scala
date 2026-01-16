@@ -112,8 +112,16 @@ object Utils {
       case (_ `equality` _) => true
       case _ => false
     }
-  }
+    }
 
+    def evalRingCutHelper(using lib: library.type, proof: lib.Proof)
+    (equalityToCut: proof.ProofStep, consq: Expr[Prop], equalities: SSet[Expr[Prop]]): (SSet[Expr[Prop]], proof.ProofTacticJudgement) = {
+      val res = equalities.excl(equalityToCut.sRightHead) ++ equalityToCut.sLeft
+      val toCut = equalityToCut.sRightHead
+      TacticSubproofWithResult[SSet[Expr[Prop]]]{
+        have(res |- consq) by Cut.withParameters(toCut)(equalityToCut, lastStep)
+      }(res)
+    }
 
 
 }

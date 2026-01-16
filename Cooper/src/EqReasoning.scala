@@ -92,23 +92,20 @@ object EqReasoning extends lisa.Main {
               Seq((x + y, uvsum)),
               (Seq(a), x + y === a)
             )
-
-            // typings 
+            // WARNING: you may need val typs = SSet(x ∈ R, y ∈ R) ++ List(xeq, yeq, sumeq).map(l => getTypings(l.bot.left)).fold(Set())((x, y) => x ++ y)
             // TODO: Remove first set?
-            // yeah
-            // generate 3 things
-            // val typs = SSet(x ∈ R, y ∈ R) ++ List(xeq, yeq, sumeq).map(l => getTypings(l.bot.left)).fold(Set())((x, y) => x ++ y)
-            // have(typs |- x + y === uvsum) by 
-            var toCut = xeq.sRightHead
-            equalities = equalities.excl(xeq.sRightHead)
-            var tempAnte = (xeq.sLeft ++ equalities) 
-            have(tempAnte |- x + y === uvsum) by Cut.withParameters(toCut)(xeq, lastStep)
-            toCut = yeq.sRightHead 
-            tempAnte = tempAnte.excl(yeq.sRightHead) ++ yeq.sLeft
-            have(tempAnte |- x + y === uvsum) by Cut.withParameters(toCut)(yeq, lastStep)
-            toCut = sumeq.sRightHead 
-            tempAnte = tempAnte.excl(sumeq.sRightHead) ++ sumeq.sLeft
-            have(tempAnte |- x + y === uvsum) by Cut.withParameters(toCut)(sumeq, lastStep)
+
+            // var toCut = xeq.sRightHead
+            // equalities = equalities.excl(xeq.sRightHead)
+            // var tempAnte = equalities
+            // tempAnte = tempAnte.excl(xeq.sRightHead) ++ xeq.sLeft
+            // have(tempAnte |- x + y === uvsum) by Cut.withParameters(toCut)(xeq, lastStep)
+            // toCut = yeq.sRightHead 
+            // tempAnte = tempAnte.excl(yeq.sRightHead) ++ yeq.sLeft
+            // have(tempAnte |- x + y === uvsum) by Cut.withParameters(toCut)(yeq, lastStep)
+            // toCut = sumeq.sRightHead 
+            // tempAnte = tempAnte.excl(sumeq.sRightHead) ++ sumeq.sLeft
+            // have(tempAnte |- x + y === uvsum) by Cut.withParameters(toCut)(sumeq, lastStep)
 
             // thenHave(x + y)
             res = RB(uvsum)
