@@ -10,6 +10,7 @@ import lisa.utils.prooflib.Library
 import SubProofWithRes.{TacticSubproofWithResult, DebugRightSubstEq}
 import RingStructure.{_}
 import Utils.treeDepth
+import RingStructure.c
 // object Rings extends lisa.Main: 
 //     import RingStructure.{*}
 //     import RingEqReasoning.{*} 
@@ -107,5 +108,10 @@ object Rings extends lisa.Main
         // println(om.stringWriter.toString)
     }
     println("Hello!")
+    // println(isVariableOrNeg(x))
+    // println(isVariableOrNeg(-c))
+    // println(isVariableOrNeg(`0`))
+    // println(isVariableOrNeg(x + x))
+    
 }
 // end Rings

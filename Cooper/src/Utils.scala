@@ -27,6 +27,16 @@ object Utils {
       def sRight = p.bot.right
       def sRightHead = p.bot.firstElemR
 
+
+    def isVariableOrNeg(x: Expr[Ind]): Boolean = {
+      x match {
+        case `1` => false
+        case `0` => false
+        case x : Variable[Ind] => true
+        case -(x) => isVariableOrNeg(x)
+        case _ => false
+      }
+    }
     /**
       * Collects subexpressions to apply typing rules to 
       *
