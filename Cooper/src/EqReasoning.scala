@@ -129,6 +129,7 @@ object EqReasoning extends lisa.Main {
             have(temp._2)
             res = RB(uvneg)
           }
+          // TODO: refactor into binary + case? 
           case x * y => {
             val (vx, px) = evalRing(x)
             val (vy, py) = evalRing(y)

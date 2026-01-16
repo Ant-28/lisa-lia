@@ -42,6 +42,16 @@ isRB x = case x of
         irbHelper M (Plus (Neg One) x) = irbHelper M x
         irbHelper _ _ = False
 
+isVarOrNegation :: RingAst -> Bool
+isVarOrNegation (Var x) = True
+isVarOrNegation (Neg (Var x)) = True
+isVarOrNegation _  = False
+
+isOne x = x == One 
+isNegOne x = x == Neg One
+isZero x = x == Zero
+
+
 evalRing :: RingAst -> RbRing
 evalRing Zero = RB Zero
 evalRing One = RB One
