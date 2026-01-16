@@ -229,20 +229,20 @@ build n = buildHelper n True
 
 i :: Int -> RingAst
 i 0 = Zero
-i x 
+i x
     | x > 0 = Plus One (i (x - 1))
     | x < 0 = Plus (Neg One) (i (x + 1))
 
 buildExpr :: Int -> [RingAst]
-buildExpr 0 = [i(rand 10)]
-buildExpr n 
+buildExpr 0 = [i (rand 10)]
+buildExpr n
     | n < 0 = error "don't call me with negative ints kthx"
-    | n > 0 = Mult (i((-10) + rand 20)) randVar  : buildExpr (n - 1)
-    where 
+    | n > 0 = Mult (i ((-10) + rand 20)) randVar  : buildExpr (n - 1)
+    where
         randVar :: RingAst
         randVar  = Var [chr (97 + rand 26)]
 buildExprFinal :: [RingAst] -> RingAst
-buildExprFinal = foldl Plus Zero 
+buildExprFinal = foldl Plus Zero
 build2 = buildExprFinal . buildExpr
 
 
@@ -281,7 +281,7 @@ main = do
 
 -- (-(-((o + z))) + (-((a + w)) * -((1 + y))))
 
-unl :: RingAst -> RingAst 
+unl :: RingAst -> RingAst
 unr :: RingAst -> RingAst
 unl (Plus a b) = a
 unl (Neg a) = a
@@ -294,11 +294,11 @@ unr (Mult a b) = b
 unr x = x
 
 
-testval :: RingAst = (Plus
+testval :: RingAst = Plus
         (Plus (Neg (Neg (Neg Zero)))
         (Mult
             (Mult (Mult Zero One) (Neg One))
             (Plus (Mult Zero One) (Mult Zero Zero))))
-        (Neg (Plus (Plus (Neg (Var "a")) (Neg (Var "z"))) (Neg (Neg (Var "b"))))))
+        (Neg (Plus (Plus (Neg (Var "a")) (Neg (Var "z"))) (Neg (Neg (Var "b")))))
 
 testval2 = Neg (Neg (Neg (Plus (Plus (Neg (Neg (Plus (Plus (Mult One Zero) (Neg One)) (Plus (Plus Zero One) (Mult One Zero))))) (Mult (Mult (Neg (Plus (Neg One) (Plus One One))) (Neg (Neg (Mult One One)))) (Mult (Neg (Plus (Mult One One) (Mult Zero Zero))) (Plus (Plus (Mult One One) (Mult Zero Zero)) (Plus (Neg (Var "g")) (Neg One)))))) (Plus (Plus (Mult (Neg (Plus (Neg One) (Plus One Zero))) (Mult (Plus (Neg One) (Plus One One)) (Mult (Plus Zero One) (Neg One)))) (Neg (Neg (Mult (Plus One One) (Plus (Var "x") Zero))))) (Plus (Neg (Mult (Mult (Neg One) (Plus One One)) (Mult (Neg One) (Plus One (Var "g"))))) (Mult (Plus (Neg (Neg Zero)) (Neg (Mult One Zero))) (Mult (Mult (Neg Zero) (Plus One One)) (Neg (Plus (Var "d") Zero)))))))))

@@ -1,6 +1,6 @@
 import scala.collection.immutable.{Set => SSet}
 import scala.collection.immutable.{List => LList, :: => Cons}
-import lisa.maths.SetTheory.Base.Predef.{| => _, given, _}
+import lisa.maths.SetTheory.Base.Predef.{x => _, y => _, z => _, | => _, given, _}
 import lisa.maths.SetTheory.Functions.Predef.{R => _, *, given}
 import lisa.maths.SetTheory.Base.Pair.{pair, given}
 import lisa.maths.SetTheory.Functions.BasicTheorems.{appTyping}
@@ -9,22 +9,34 @@ import lisa.utils.prooflib.ProofTacticLib.ProofTactic
 import lisa.utils.prooflib.Library
 import SubProofWithRes.{TacticSubproofWithResult, DebugRightSubstEq}
 import RingStructure.{_}
+import Utils.treeDepth
 // object Rings extends lisa.Main: 
 //     import RingStructure.{*}
 //     import RingEqReasoning.{*} 
 
 object Rings extends lisa.Main 
 {
+    import Utils.*
+    
     val t = variable[Ind]
     val _ = RingStructure
 
   
 
     val w : THM = RingStructure.add_closure
-    println(w.statement)
+    // println(w.statement)
     val dummy = Theorem(ring(R, <=, +, *, -, |, `0`, `1`) |- `1` ∈ R) {
         have(thesis) by Restate.from(mul_id_closure)
     }
+
+    val PropVar1 = Theorem(() |- True) {
+        have(thesis) by Restate
+    }
+    val PropVar2 = Theorem(() |- !False) {
+        have(thesis) by Restate
+    }
+
+     
     // import scala.collection.immutable.{Set => SSet}
     // val xx = variable[Ind]
     // val yy = variable[Ind]
@@ -68,23 +80,31 @@ object Rings extends lisa.Main
     //       case _ => false
     //     }
     //   )
-    // val test = Theorem( (ring(R, <=, +, *, -, |, `0`, `1`)) |- `1` + (`1` + `1`) === (`1` + `1`) + `1`){
-    //     assume(ring(R, <=, +, *, -, |, `0`, `1`))
-    //     val t = add_assoc of (xx := `1`, yy := `1`, z := `1`)
-    //     val q = typeChecking(getTypingVarsInAnte(t.result.left))
-    //     val r = getTypings(t.result.left)
-    //     have(t.result)
-    //     println(thesis)
-    //     println(t.result)
-    //     r.map(qr => println(qr))
-    //     q.map(qp => println(qp))
-    //     have(thesis) by Cut.withParameters(r.toList(0))(q.toList(0), t)
-    //     // sorry
-    // }
+    val test = Theorem( (ring(R, <=, +, *, -, |, `0`, `1`)) |- `1` + (`1` + `1`) === (`1` + `1`) + `1`){
+        assume(ring(R, <=, +, *, -, |, `0`, `1`))
+        val t = add_assoc of (x := `1`, y := `1`, z := `1`)
+        val q = typeChecking(getTypingVarsInAnte(t.result.left))
+        val r = getTypings(t.result.left)
+        have(t.result)
+        // println(thesis)
+        println(t.result)
+
+        // r.map(qr => println(qr))
+        // q.map(qp => println(qp))
+
+        // Cut.withParameters(things to be cut, phi)(thing that has phi on right, thing that has phi on left)
+        have(thesis) by Cut.withParameters(r.head)(q.head, t)
+        
+
+        // sorry
+    }
+    println("test")
+    // val test = -(y)
+    // println(treeDepth(test))
     override def main(args: Array[String]): Unit = {
-        List(RingStructure, EqReasoning).map(_.main(Array()))
-        super.main(Array())
-        println(om.stringWriter.toString)
+        List(RingStructure, EqReasoning).map(_.main(args))
+        super.main(args)
+        // println(om.stringWriter.toString)
     }
     println("Hello!")
 }

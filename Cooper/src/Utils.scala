@@ -1,6 +1,6 @@
 
 // a file storing utilites on Expr[Ind]s
-import scala.collection.immutable.{Set => SSet}
+import scala.collection.immutable.{Set => SSet, SortedSet}
 import scala.collection.immutable.{List => LList, :: => Cons}
 import lisa.maths.SetTheory.Base.Predef.{*, given}
 import lisa.maths.SetTheory.Functions.Predef.{*, given}
@@ -15,7 +15,17 @@ import SubProofWithRes.{TacticSubproofWithResult, DebugRightSubstEq}
 
 object Utils {
 
+    inline def max(x : BigInt, y: BigInt): BigInt = if x > y then x else y
     import RingStructure.{+, -, `*`, add_closure, neg_closure, mul_closure, `0`, `1`, add_id_closure, mul_id_closure}
+
+    extension (s: Sequent)
+      def firstElemL: Expr[Prop] = s.left.head
+      def firstElemR: Expr[Prop] = s.right.head
+
+    extension (using lib: library.type, proof: lib.Proof)(p : proof.ProofStep)
+      def sLeft = p.bot.left
+      def sRight = p.bot.right
+      def sRightHead = p.bot.firstElemR
 
     /**
       * Collects subexpressions to apply typing rules to 
@@ -57,13 +67,40 @@ object Utils {
         }
       )
 
-    def typeChecking(using lib: library.type, proof: lib.Proof)(s: SSet[Expr[Ind]]): SSet[proof.InstantiatedFact | proof.ProofStep] = s.map: 
-      case a + b  => add_closure of (x := a, y := b)
-      case -(a)   => neg_closure of (a)
-      case a * b  => mul_closure of (x := a, y := b)
-      case `0`    => have(`0` ∈ R) by Tautology.from(add_id_closure)
-      case `1`    => have(`1` ∈ R) by Tautology.from(mul_id_closure)
-      case  x     => have(x ∈ R |- x ∈ R) by Restate
+    /**
+      * 
+      *
+      * @param lib Proof Library
+      * @param proof Proof
+      * @param s: Set of all typings obtained from an antecedent
+      * @return Either an instantiated fact or a proof of inclusion
+      */
+    def typeChecking(using lib: library.type, proof: lib.Proof)(s: SSet[Expr[Ind]]): SSet[proof.InstantiatedFact | proof.ProofStep] = 
+      s.map: 
+        case a + b  => add_closure of (x := a, y := b)
+        case -(a)   => neg_closure of (a)
+        case a * b  => mul_closure of (x := a, y := b)
+        case `0`    => have(`0` ∈ R) by Tautology.from(add_id_closure)
+        case `1`    => have(`1` ∈ R) by Tautology.from(mul_id_closure)
+        case  x     => have(x ∈ R |- x ∈ R) by Restate
+
+    /**
+      * Find the depth of an expression tree. Needed to sort sequents prior to cutting
+      *
+      * @param exp
+      * @return
+      */
+    def treeDepth(exp: Expr[Ind]): BigInt = {
+      exp match {
+        case a + b => max(treeDepth(a) + 1, treeDepth(b) + 1)
+        case `0` => 1
+        case `1` => 1
+        case -(a) => treeDepth(a) + 1
+        case x => 1
+      }
+    }
+
+    
 
 
     sealed trait Sign
