@@ -16,11 +16,15 @@ data RingAst =  Zero
 prettyPrint :: RingAst -> String
 prettyPrint Zero = "0"
 prettyPrint One = "1"
-prettyPrint (Plus a b) = "(" ++ (prettyPrint a) ++ " + " ++ (prettyPrint b) ++ ")"
-prettyPrint (Mult a b) = "(" ++ (prettyPrint a) ++ " * " ++ (prettyPrint b) ++ ")"
-prettyPrint (Neg a) = "-(" ++ (prettyPrint a) ++ ")"
+prettyPrint (Plus a b) = "(" ++ prettyPrint a ++ " + " ++ prettyPrint b ++ ")"
+prettyPrint (Mult a b) = "(" ++ prettyPrint a ++ " * " ++ prettyPrint b ++ ")"
+prettyPrint (Neg a) = "-(" ++ prettyPrint a ++ ")"
 prettyPrint (Var x) = x
 
+getVars :: RingAst -> String 
+getVars (Var x) = x
+getVars (Neg (Var x)) = x 
+getVars _ = error "called with invalid input"
 data Sign = P | M deriving Show
 
 newtype RB a = RB a deriving Show
@@ -47,10 +51,14 @@ isVarOrNegation (Var x) = True
 isVarOrNegation (Neg (Var x)) = True
 isVarOrNegation _  = False
 
-isOne x = x == One 
+isOne x = x == One
 isNegOne x = x == Neg One
+isOneOrNegOne x = isOne x || isNegOne x
 isZero x = x == Zero
-
+isVar (Var x) = True
+isVar _ = False
+isNegVar (Neg (Var x)) = True
+isNegVar _ = False
 
 evalRing :: RingAst -> RbRing
 evalRing Zero = RB Zero
@@ -81,25 +89,29 @@ evalPlus (RB y) (RB (Neg (Var x))) = evalInsert (Var x) y
 evalPlus (RB (Plus x xs))  (RB (Plus y ys)) = case (x, y) of
     -- 1 + x
     (One, Neg One) -> evalPlus (RB xs) (RB ys)
-    (One, s@One) -> evalPlus (RB xs) (RB (Plus One (Plus s ys)))
-    (One, s@(Var z)) -> evalPlus (RB xs) (RB (Plus One (Plus s ys)))
-    (One, s@(Neg(Var z))) -> evalPlus (RB xs) (RB (Plus One (Plus s ys)))
+    (Neg One, One) -> evalPlus (RB xs) (RB ys)
+
+
+    (x, y) | isOneOrNegOne x -> evalPlus (RB xs) (RB (Plus x (Plus y ys)))
+    (x, y) | isVarOrNegation x -> evalPlus (RB xs) (evalInsert x (Plus y ys))
+
+    -- (One, s@One) -> evalPlus (RB xs) (RB (Plus One (Plus s ys)))
+    -- (One, s@(Var z)) -> evalPlus (RB xs) (RB (Plus One (Plus s ys)))
+    -- (One, s@(Neg(Var z))) -> evalPlus (RB xs) (RB (Plus One (Plus s ys)))
+    -- (Neg One, Neg One) -> evalPlus (RB xs) (RB (Plus (Neg One) (Plus (Neg One) ys)))
+    -- (Neg One, Var z) -> evalPlus (RB xs) (RB (Plus (Neg One) (Plus (Var z) ys)))
+    -- (Neg One, s@(Neg(Var z))) -> evalPlus (RB xs) (RB (Plus (Neg One) (Plus s ys)))
 
     -- -1 + x
-    (Neg One, One) -> evalPlus (RB xs) (RB ys)
-    (Neg One, Neg One) -> evalPlus (RB xs) (RB (Plus (Neg One) (Plus (Neg One) ys)))
-    (Neg One, Var z) -> evalPlus (RB xs) (RB (Plus (Neg One) (Plus (Var z) ys)))
-    (Neg One, s@(Neg(Var z))) -> evalPlus (RB xs) (RB (Plus (Neg One) (Plus s ys)))
     -- 
-    (Var z, One) -> evalPlus (RB xs) (evalInsert (Var z) (Plus y ys))
-    (Var z, Neg One) -> evalPlus (RB xs) (evalInsert (Var z) (Plus y ys))
-    (Var z, Var a) -> evalPlus (RB xs) (evalInsert (Var z) (Plus y ys))
-    (Var z, Neg (Var a)) -> evalPlus (RB xs) (evalInsert (Var z) (Plus y ys))
+    -- (Var z, Neg One) -> evalPlus (RB xs) (evalInsert (Var z) (Plus y ys))
+    -- (Var z, Var a) -> evalPlus (RB xs) (evalInsert (Var z) (Plus y ys))
+    -- (Var z, Neg (Var a)) -> evalPlus (RB xs) (evalInsert (Var z) (Plus y ys))
 
-    (Neg (Var z), One) -> evalPlus (RB xs) (evalInsert (Neg (Var z)) (Plus y ys))
-    (Neg (Var z), Neg One) -> evalPlus (RB xs) (evalInsert (Neg (Var z)) (Plus y ys))
-    (Neg (Var z), Var a) -> evalPlus (RB xs) (evalInsert (Neg (Var z)) (Plus y ys))
-    (Neg (Var z), Neg (Var a)) -> evalPlus (RB xs) (evalInsert (Neg (Var z)) (Plus y ys))
+    -- (Neg (Var z), One) -> evalPlus (RB xs) (evalInsert (Neg (Var z)) (Plus y ys))
+    -- (Neg (Var z), Neg One) -> evalPlus (RB xs) (evalInsert (Neg (Var z)) (Plus y ys))
+    -- (Neg (Var z), Var a) -> evalPlus (RB xs) (evalInsert (Neg (Var z)) (Plus y ys))
+    -- (Neg (Var z), Neg (Var a)) -> evalPlus (RB xs) (evalInsert (Neg (Var z)) (Plus y ys))
 evalPlus _ _ = error "Violated right-biased invariant"
 
 
@@ -112,38 +124,46 @@ u (RB x) = x
 -- var or nvar : ringast -> Bool
 evalInsert :: RingAst -> RingAst -> RbRing
 evalInsert (Var z) Zero = RB (Var z)
-evalInsert (Var z) One  = RB (Plus (One) (Var z))
-evalInsert (Var z) (Neg One)  = RB (Plus (Neg One) (Var z))
-evalInsert (Neg (Var z)) Zero = RB (Var z)
-evalInsert (Neg (Var z)) (Neg One)  = RB (Plus (Neg One) (Var z))
+evalInsert x y | isVarOrNegation x && isOneOrNegOne y = RB (Plus y x)
 evalInsert x@(Var z) y@(Var a) = if z < a then RB (Plus x y) else RB (Plus y x)
-evalInsert x@(Var z) y@(Neg (Var a))
-    | z == a = RB Zero
-    | z < a  = RB (Plus x y)
-    | otherwise = RB (Plus y x)
-evalInsert x@(Neg (Var z)) y@(Var a)
-    | z == a = RB Zero
-    | z < a  = RB (Plus x y)
-    | otherwise = RB (Plus y x)
-evalInsert x@(Neg (Var z)) y@(Neg (Var a)) = if z < a then RB (Plus x y) else RB (Plus y x)
-evalInsert x@(Var z) y@(Plus av@One ys) = RB (Plus av (u (evalInsert x ys)))
-evalInsert x@(Var z) y@(Plus av@(Neg One) ys) = RB (Plus av (u (evalInsert x ys)))
-evalInsert x@(Neg (Var z)) y@(Plus av@One ys) = RB (Plus av (u (evalInsert x ys)))
-evalInsert x@(Neg (Var z)) y@(Plus av@(Neg One) ys) = RB (Plus av (u (evalInsert x ys)))
-evalInsert x@(Var z) y@(Plus av@(Var a) ys) = if z < a
+-- evalInsert (Var z) One  = RB (Plus One (Var z))
+-- evalInsert (Var z) (Neg One)  = RB (Plus (Neg One) (Var z))
+-- evalInsert (Neg (Var z)) Zero = RB (Var z)
+-- evalInsert (Neg (Var z)) (Neg One)  = RB (Plus (Neg One) (Var z))
+evalInsert x y | isVarOrNegation x && isVarOrNegation y = 
+    let z = getVars x in
+    let a = getVars y in 
+    case (z, a) of
+    (z, a) |  z == a -> RB Zero
+    (z, a) |  z < a  -> RB (Plus x y)
+    (z, a) -> RB (Plus y x)
+evalInsert x@(Neg (Var z)) y@(Var a) = evalInsert y x
+evalInsert x (Plus y ys) | isVarOrNegation x && isOneOrNegOne y = RB (Plus y (u (evalInsert x ys)))
+evalInsert x (Plus y ys)  | all isVar [x, y] || all isNegVar [x, y] = 
+    let z = getVars x in 
+    let a = getVars y in    
+    if z < a
     then RB (Plus x y)
-    else RB (Plus av (u (evalInsert x ys)))
-evalInsert x@(Var z) y@(Plus av@(Neg (Var a)) ys)
-    | z == a    = RB ys
-    | z < a     = RB (Plus x y)
-    | otherwise = RB (Plus av (u (evalInsert x ys)))
-evalInsert x@(Neg (Var z)) y@(Plus av@(Var a) ys)
-    | z == a    = RB ys
-    | z < a     = RB (Plus x y)
-    | otherwise = RB (Plus av (u (evalInsert x ys)))
-evalInsert x@(Neg (Var z)) y@(Plus av@(Neg (Var a)) ys) = if z < a
-    then RB (Plus x y)
-    else RB (Plus av (u (evalInsert x ys)))
+    else RB (Plus y (u (evalInsert x ys)))
+evalInsert x (Plus y ys) | (isVar x && isNegVar y) ||(isNegVar x && isVar y) = 
+    let z = getVars x in
+    let a = getVars y in 
+    case (z, a) of 
+    (z, a) | z == a    -> RB ys
+    (z, a) | z < a     -> RB (Plus x (Plus y ys))
+    (z, a)             -> RB (Plus y (u (evalInsert x ys)))
+-- evalInsert x@(Neg (Var z)) y@(Neg (Var a)) = if z < a then RB (Plus x y) else RB (Plus y x)
+-- evalInsert x@(Var z) y@(Plus av@One ys) = RB (Plus av (u (evalInsert x ys)))
+-- evalInsert x@(Var z) y@(Plus av@(Neg One) ys) = RB (Plus av (u (evalInsert x ys)))
+-- evalInsert x@(Neg (Var z)) y@(Plus av@One ys) = RB (Plus av (u (evalInsert x ys)))
+-- evalInsert x@(Neg (Var z)) y@(Plus av@(Neg One) ys) = RB (Plus av (u (evalInsert x ys)))
+-- evalInsert x@(Neg (Var z)) y@(Plus av@(Var a) ys)
+--     | z == a    = RB ys
+--     | z < a     = RB (Plus x Plus())
+--     | otherwise = RB (Plus av (u (evalInsert x ys)))
+-- evalInsert x@(Neg (Var z)) y@(Plus av@(Neg (Var a)) ys) = if z < a
+--     then RB (Plus x y)
+--     else RB (Plus av (u (evalInsert x ys)))
 
 
 evalInsert _ _ = error "invariant violation"
@@ -157,23 +177,25 @@ evalIncr :: RbRing -> RbRing
 evalIncr (RB x) = case x of
     One -> RB (Plus One One)
     (Neg One) -> RB Zero
-    (Plus One xs) -> RB (Plus One (Plus One xs))
     (Plus (Neg One) xs) -> RB xs
-    Var xs -> RB (Plus One (Var xs))
-    (Neg (Var xs)) -> RB (Plus One (Neg (Var xs)))
-    a@(Plus _ _) -> RB (Plus One a)
-    _ -> error "violates right-biased invariant"
+    x -> RB (Plus One x)
+    -- (Plus One xs) -> RB (Plus One (Plus One xs))
+    -- Var xs -> RB (Plus One (Var xs))
+    -- (Neg (Var xs)) -> RB (Plus One (Neg (Var xs)))
+    -- a@(Plus _ _) -> RB (Plus One a)
+    -- _ -> error "violates right-biased invariant"
 
 evalDecr :: RbRing -> RbRing
 evalDecr (RB x) = case x of
     One -> RB Zero
-    (Neg One) -> RB (Plus (Neg One) (Neg One))
-    Var xs -> RB (Plus (Neg One) (Var xs))
-    (Neg (Var xs)) -> RB (Plus (Neg One) (Neg (Var xs)))
     (Plus One xs) -> RB xs
-    (Plus (Neg One) xs) -> RB (Plus (Neg One) (Plus (Neg One) xs))
-    a@(Plus _ _) -> RB (Plus One a)
-    _ -> error "violates right-biased invariant"
+    x -> RB (Plus (Neg One) x)
+    -- (Neg One) -> RB (Plus (Neg One) (Neg One))
+    -- Var xs -> RB (Plus (Neg One) (Var xs))
+    -- (Neg (Var xs)) -> RB (Plus (Neg One) (Neg (Var xs)))
+    -- (Plus (Neg One) xs) -> RB (Plus (Neg One) (Plus (Neg One) xs))
+    -- a@(Plus _ _) -> RB (Plus (Neg One) a)
+    -- _ -> error "violates right-biased invariant"
 
 -- "-((((p * 1) + -(t)) + -(-(1))))"
 
@@ -186,13 +208,13 @@ evalNeg (RB (Neg (Var x))) = RB (Var x)
 evalNeg (RB (Plus a b)) = case a of
             One -> RB (evalNegHelper P (Plus a b))
             Neg One -> RB (evalNegHelper M (Plus a b))
-            Var x -> RB (evalNegHelper P (Plus a b))
-            Neg (Var x) -> RB (evalNegHelper P (Plus a b))
+            x | isVarOrNegation x -> RB (evalNegHelper P (Plus a b))
+            --  -> RB (evalNegHelper P (Plus a b))
             _ -> error "Violates right-biased invariant"
     where
         evalNegHelper :: Sign -> RingAst -> RingAst
         evalNegHelper _ (Var x) = Neg (Var x)
-        evalNegHelper _ (Neg (Var x)) = (Var x)
+        evalNegHelper _ (Neg (Var x)) = Var x
         evalNegHelper _ (Plus (Var x) xs) = Plus (Neg (Var x)) (evalNegHelper P xs)
         evalNegHelper _ (Plus (Neg (Var x)) xs) = Plus (Var x) (evalNegHelper P xs)
         evalNegHelper P One = Neg One
@@ -282,7 +304,9 @@ foo = do
     print (evalRing x)
 main :: IO ()
 main = do
-    forM_ [1..2000] $ \_ -> foo
+    -- how does this work
+    -- TODO: read lipovača
+    forM_ [1..2000] $ const foo
 
 
 
