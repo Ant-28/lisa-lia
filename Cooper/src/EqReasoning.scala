@@ -13,9 +13,15 @@ object EqReasoning extends lisa.Main {
     import RingStructure.{*}
     import Utils.{*}
     // RB-trees: an ex
-    sealed trait Biased
-    case class RB(x: Expr[Ind]) extends Biased 
-    case class NRB(x: Expr[Ind]) extends Biased 
+    sealed trait Biased(treeval: Expr[Ind]) {
+      def tval = treeval
+    }
+    case class RB(treeval: Expr[Ind]) extends Biased(treeval) {
+      // def treeval : Expr[Ind] = this.treeval
+    }
+    case class NRB(treeval: Expr[Ind]) extends Biased(treeval) {
+      // def treeval : Expr[Ind] = this.treeval
+    }
 
     def unapply(x: Biased): Expr[Ind] = x match
         case RB(xs)  => xs
@@ -60,7 +66,7 @@ object EqReasoning extends lisa.Main {
       
 
     def evalRing(using lib: library.type, proof: lib.Proof)(int: Expr[Ind]): (Biased, proof.ProofTacticJudgement) = {
-      
+      assume(ring(R, <=, +, *, -, |, `0`, `1`))
       var res : Biased = NRB(`0`)
       TacticSubproofWithResult[Biased]{
         int match {
@@ -168,14 +174,101 @@ object EqReasoning extends lisa.Main {
     }
     
     
-    def evalPlus(using lib: library.type, proof: lib.Proof)(x: Biased, y: Biased): (Biased, proof.ProofTacticJudgement) = {
-      
+    def evalPlus(using lib: library.type, proof: lib.Proof)(xint: Biased, yint: Biased): (Biased, proof.ProofTacticJudgement) = {
+      assume(ring(R, <=, +, *, -, |, `0`, `1`))
+      var res : Biased = NRB(xint.tval)
+      TacticSubproofWithResult[Biased]{
+        (xint.tval, yint.tval) match {
+          case (`0`, tx)  => {
+            // note: can't name inputs the same as variables
+            have(tx ∈ R |- `0` + tx === tx) by Tautology.from(zero_x_x of (x := tx))
+            res = RB(tx)
+          }
+          case (tx, `0`)  => {
+            // note: can't name inputs the same as variables
+            have(tx ∈ R |- tx + `0` === tx) by Tautology.from(zero_x_x of (x := tx))
+            res = RB(tx)
+          }
+          case (`1`, tx) => {
+            val (tres, tprf) = evalIncr(RB(tx))
+            if !tprf.isValid then return (NRB(tx), proof.InvalidProofTactic("evalPlus failed!"))
+            have(tprf) // 1 + tx === tprf
+            res = tres
+          }
+          case (tx, `1`) => {
+            val (tres, tprf) = evalPlus(yint, xint)
+            if !tprf.isValid then return (NRB(tx), proof.InvalidProofTactic("evalPlus failed!"))
+            val pprf = have(tprf) // `1` + x === tres
+            val ures = tres.tval
+            val typings = SSet(`1` ∈ R, tx ∈ R)
+            val pprf2 = have(typings |- `1` + tx === tx + `1`) by Tautology.from(add_comm of (x := `1`, y := tx))
+            val equalities = SSet(pprf, pprf2).map(_.bot.firstElemR)
+            // have()
+            res = tres
+            // TODO: eventually don't use taut? 
+            have(equalities |- `1` + tx === `1` + tx) by Restate
+            thenHave(equalities |- tx + `1` === `1` + tx ) by RightSubstEq.withParameters(
+              Seq((`1` + tx, tx + `1`)),
+              (Seq(a), a === `1` + tx)
+            )
+            thenHave(equalities |- tx + `1` === ures) by RightSubstEq.withParameters(
+              Seq((`1` + tx, ures)),
+              (Seq(a), tx + `1` === a)
+            )
+            var temp = evalRingCutHelper(pprf2, tx + `1` === ures, equalities)
+            have(temp._2)
+            temp = evalRingCutHelper(pprf, tx + `1` === ures, equalities)
+            have(temp._2)
+          }
+          case (-(`1`), tx) => {
+            val (tres, tprf) = evalDecr(RB(tx))
+            if !tprf.isValid then return (NRB(tx), proof.InvalidProofTactic("evalPlus failed!"))
+            have(tprf) // 1 + tx === tprf
+            res = tres
+          }
+          case (tx, -(`1`)) => {
+            val (tres, tprf) = evalPlus(yint, xint)
+            if !tprf.isValid then return (NRB(tx), proof.InvalidProofTactic("evalPlus failed!"))
+            val pprf = have(tprf) // -`1` + x === tres
+            val ures = tres.tval
+            val typings = SSet(-(`1`) ∈ R, tx ∈ R)
+            val pprf2 = have(typings |- -(`1`) + tx === tx + -(`1`)) by Tautology.from(add_comm of (x := -(`1`), y := tx))
+            val equalities = SSet(pprf, pprf2).map(_.bot.firstElemR)
+            // have()
+            res = tres
+            // TODO: eventually don't use taut? 
+            have(equalities |- -(`1`) + tx === -(`1`) + tx) by Restate
+            thenHave(equalities |- tx + -(`1`) === -(`1`) + tx ) by RightSubstEq.withParameters(
+              Seq((-(`1`) + tx, tx + -(`1`))),
+              (Seq(a), a === -(`1`) + tx)
+            )
+            thenHave(equalities |- tx + -(`1`) === ures) by RightSubstEq.withParameters(
+              Seq((-(`1`) + tx, ures)),
+              (Seq(a), tx + -(`1`) === a)
+            )
+            var temp = evalRingCutHelper(pprf2, tx + -(`1`) === ures, equalities)
+            have(temp._2)
+            temp = evalRingCutHelper(pprf, tx + -(`1`) === ures, equalities)
+            have(temp._2)
+          }
+          case (tx, ty) if isVariableOrNeg(tx) => ???
+          case (tx, ty) if isVariableOrNeg(ty) => ??? 
+          case (tx + txs, ty + tys) => (tx, ty) match {
+            case (`1`, `-`(`1`)) => ???
+            case (`-`(`1`), `1`) => ???
+            case (tx, ty) if isOneOrNegOne(tx) => ???
+            case (tx, ty) if isVariableOrNeg(tx) => ???
+            case _ => return (NRB(tx), proof.InvalidProofTactic("evalPlus failed!"))
+          }
+          case _ => return (NRB(xint.tval), proof.InvalidProofTactic("evalPlus failed!"))
+        }
+      }(res)
     }
-    def evalInsert(using lib: library.type, proof: lib.Proof)(int: Biased): (Biased, proof.ProofTacticJudgement) = ???
+    def evalInsert(using lib: library.type, proof: lib.Proof)(x: Expr[Ind], y: Expr[Ind]): (Biased, proof.ProofTacticJudgement) = ???
     def evalIncr(using lib: library.type, proof: lib.Proof)(int: Biased): (Biased, proof.ProofTacticJudgement) = ???
     def evalDecr(using lib: library.type, proof: lib.Proof)(int: Biased): (Biased, proof.ProofTacticJudgement) = ???
     def evalNeg(using lib: library.type, proof: lib.Proof)(int: Biased): (Biased, proof.ProofTacticJudgement) = ???
-    def evalNegHelper(using lib: library.type, proof: lib.Proof)(int: Biased, sign: Sign): (Biased, proof.ProofTacticJudgement) = ???
+    def evalNegHelper(using lib: library.type, proof: lib.Proof)(sign: Sign, int: Expr[Ind]): (Biased, proof.ProofTacticJudgement) = ???
     def evalMult(using lib: library.type, proof: lib.Proof)(x: Biased, y: Biased): (Biased, proof.ProofTacticJudgement) = ???
   }
 

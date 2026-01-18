@@ -11,13 +11,13 @@ import Base.{IBinFun, IUnFun, IRel, infixBinaryFunction, infixUnaryFunction}
 import lisa.utils.prooflib.ProofTacticLib.ProofTactic
 import lisa.utils.prooflib.Library
 import SubProofWithRes.{TacticSubproofWithResult, DebugRightSubstEq}
+import scala.quoted.Varargs
 
 
 object Utils {
 
     inline def max(x : BigInt, y: BigInt): BigInt = if x > y then x else y
-    import RingStructure.{+, -, `*`, add_closure, neg_closure, mul_closure, `0`, `1`, add_id_closure, mul_id_closure}
-
+    import RingStructure.*
     extension (s: Sequent)
       def firstElemL: Expr[Prop] = s.left.head
       def firstElemR: Expr[Prop] = s.right.head
@@ -37,6 +37,36 @@ object Utils {
         case _ => false
       }
     }
+    /**
+      * 
+      *
+      * @param x an expression tree in a Ring
+      * @return
+      */
+    inline def isVariable(x: Expr[Ind]): Boolean = {
+      x match {
+        case x : Variable[Ind] => x.id.name.head.isLetter
+        case _ => false
+      }
+    }
+    /**
+      * 
+      *
+      * @param x An Expression true. 
+      * @return True if of the form -(x), x: Variable[Ind]
+      */
+    inline def isNegVariable(x: Expr[Ind]): Boolean = {
+      x match {
+        case -(x) => isVariable(x)
+        case _ => false
+      }
+    }
+
+    inline def isOne(x: Expr[Ind]): Boolean =  x == `1` 
+    inline def isNegOne(x: Expr[Ind]): Boolean = x == -(`1`)
+    inline def isZero(x: Expr[Ind]): Boolean = x == `0`
+    inline def isOneOrNegOne(x: Expr[Ind]): Boolean = isOne(x) || isNegOne(x)
+
     /**
       * Collects subexpressions to apply typing rules to 
       *

@@ -99,6 +99,9 @@ object Rings extends lisa.Main
 
         // sorry
     }
+    val tes2 = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (`1` ∈ R)) |- `1` + (`1` + `1`) === (`1` + `1`) + `1`){
+        have(thesis) by Restate.from(add_assoc of (x := `1`, y := `1`, z := `1`))
+    }
     println("test")
     // val test = -(y)
     // println(treeDepth(test))
@@ -108,6 +111,8 @@ object Rings extends lisa.Main
         // println(om.stringWriter.toString)
     }
     println("Hello!")
+    // println(isVariable(x))
+    println(`1`.id.name)
     // println(isVariableOrNeg(x))
     // println(isVariableOrNeg(-c))
     // println(isVariableOrNeg(`0`))
