@@ -81,10 +81,11 @@ evalPlus (RB x) (RB One) = evalPlus (RB One) (RB x)
 evalPlus (RB (Neg One)) (RB x) = evalDecr (RB x)
 evalPlus (RB x) (RB (Neg One)) = evalPlus (RB (Neg One)) (RB x)
 -- vars
-evalPlus (RB (Var x)) (RB y) = evalInsert (Var x) y
-evalPlus (RB y) (RB (Var x)) = evalInsert (Var x) y
-evalPlus (RB (Neg (Var x))) (RB y) = evalInsert (Var x) y
-evalPlus (RB y) (RB (Neg (Var x))) = evalInsert (Var x) y
+evalPlus (RB x) (RB y) | isVarOrNegation x = evalInsert x y
+evalPlus (RB x) (RB y) | isVarOrNegation y = evalInsert y x
+-- evalPlus (RB y) (RB (Var x)) = evalInsert (Var x) y
+-- evalPlus (RB (Neg (Var x))) (RB y) = evalInsert (Var x) y
+-- evalPlus (RB y) (RB (Neg (Var x))) = evalInsert (Var x) y
 -- recursive cases
 evalPlus (RB (Plus x xs))  (RB (Plus y ys)) = case (x, y) of
     -- 1 + x
@@ -125,12 +126,15 @@ u (RB x) = x
 evalInsert :: RingAst -> RingAst -> RbRing
 evalInsert (Var z) Zero = RB (Var z)
 evalInsert x y | isVarOrNegation x && isOneOrNegOne y = RB (Plus y x)
-evalInsert x@(Var z) y@(Var a) = if z < a then RB (Plus x y) else RB (Plus y x)
+evalInsert x y | all isVar [x, y] || all isNegVar [x, y] =     
+    let z = getVars x in 
+    let a = getVars y in    
+    if z < a then RB (Plus x y) else RB (Plus y x)
 -- evalInsert (Var z) One  = RB (Plus One (Var z))
 -- evalInsert (Var z) (Neg One)  = RB (Plus (Neg One) (Var z))
 -- evalInsert (Neg (Var z)) Zero = RB (Var z)
 -- evalInsert (Neg (Var z)) (Neg One)  = RB (Plus (Neg One) (Var z))
-evalInsert x y | isVarOrNegation x && isVarOrNegation y = 
+evalInsert x y | isVar x && isNegVar y = 
     let z = getVars x in
     let a = getVars y in 
     case (z, a) of
@@ -297,7 +301,7 @@ gfv = foldl (\ x y -> x ++ " " ++ y) ""
 
 foo :: IO ()
 foo = do
-    let x = build2 15
+    let x = build2 7
     print ("syms " ++ gfv (getFreeVars x))
     print x
     print (prettyPrint x)
@@ -306,7 +310,8 @@ main :: IO ()
 main = do
     -- how does this work
     -- TODO: read lipovača
-    forM_ [1..2000] $ const foo
+    -- forM_ [1..2000] $ const foo
+    foo
 
 
 
@@ -319,7 +324,7 @@ unl :: RingAst -> RingAst
 unr :: RingAst -> RingAst
 unl (Plus a b) = a
 unl (Neg a) = a
-unl (Mult a b) = b
+unl (Mult a b) = a
 unl x = x
 
 unr (Plus a b) = b

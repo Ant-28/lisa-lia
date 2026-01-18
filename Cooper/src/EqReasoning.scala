@@ -168,7 +168,9 @@ object EqReasoning extends lisa.Main {
     }
     
     
-    def evalPlus(using lib: library.type, proof: lib.Proof)(x: Biased, y: Biased): (Biased, proof.ProofTacticJudgement) = ???
+    def evalPlus(using lib: library.type, proof: lib.Proof)(x: Biased, y: Biased): (Biased, proof.ProofTacticJudgement) = {
+      
+    }
     def evalInsert(using lib: library.type, proof: lib.Proof)(int: Biased): (Biased, proof.ProofTacticJudgement) = ???
     def evalIncr(using lib: library.type, proof: lib.Proof)(int: Biased): (Biased, proof.ProofTacticJudgement) = ???
     def evalDecr(using lib: library.type, proof: lib.Proof)(int: Biased): (Biased, proof.ProofTacticJudgement) = ???
