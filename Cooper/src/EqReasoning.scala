@@ -567,11 +567,23 @@ object EqReasoning extends lisa.Main {
       TacticSubproofWithResult[Biased]{
       int match
         case RB(tx) => tx match {
-          case -(`1`) => ???
-          case (-(`1`) + txs) => ???
-          case (txs) => ???
+          case -(`1`) => {
+            res = RB(`0`)
+            val typings = SSet(`1` ∈ R)
+            have(typings |- `1` + -(`1`) === `0`) by Tautology.from(add_inv of (x := `1`))
+          }
+          case (-(`1`) + txs) => {
+            res = RB(txs)
+            val typings = SSet(txs ∈ R)
+            have(typings |- `1` + (-(`1`) + txs) === txs) by Tautology.from(one_mone_xs_xs of (x := txs))
+          }
+          case (txs) => {
+            res = RB(`1` + txs)
+            val typings = SSet(txs ∈ R)
+            have(typings |- `1` + txs === `1` + txs) by Restate
+          }
         }
-        case _ => ???
+        case _ => return (NRB(int.tval), proof.InvalidProofTactic("evalIncr failed!"))
       }(res)
     }
     def evalDecr(using lib: library.type, proof: lib.Proof)(int: Biased): (Biased, proof.ProofTacticJudgement) = {
@@ -579,11 +591,23 @@ object EqReasoning extends lisa.Main {
       TacticSubproofWithResult[Biased]{
       int match
         case RB(tx) => tx match {
-          case `1` => ???
-          case (`1` + txs) => ???
-          case (txs) => ???
+          case `1` => {
+            res = RB(`0`)
+            val typings = SSet(`1` ∈ R)
+            have(typings |- -(`1`) + `1` === `0`) by Tautology.from(add_comm_inv of (x := `1`))
+          }
+          case (`1` + txs) =>  {
+            res = RB(txs)
+            val typings = SSet(txs ∈ R)
+            have(typings |- -(`1`) + (`1` + txs) === txs) by Tautology.from(mone_one_xs_xs of (x := txs))
+          }
+          case (txs) => {
+            res = RB(-(`1`) + txs)
+            val typings = SSet(txs ∈ R)
+            have(typings |- -(`1`) + txs === -(`1`) + txs) by Restate
+          }
         }
-        case _ => ???
+        case _ => return (NRB(int.tval), proof.InvalidProofTactic("evalIncr failed!"))
       }(res)
     }
     
@@ -609,17 +633,14 @@ object EqReasoning extends lisa.Main {
     def evalNegHelper(using lib: library.type, proof: lib.Proof)(sign: Sign, int: Expr[Ind]): (Biased, proof.ProofTacticJudgement) = {
       var res : Biased = NRB(`0`)
       TacticSubproofWithResult[Biased]{
-        int match {
-          case RB(xint) => (sign, xint) match {
-            case (_, tx) if isVariableOrNeg(tx) => ???
-            case (_, tx + txs) if isVariableOrNeg(tx) => ???
-            case (Pos, `1`) => ???
-            case (Pos, `1` + txs) => ???
-            case (Neg, -(`1`)) => ???
-            case (Neg, -(`1`) + txs) => ???
-            case _ => ??? 
-          }
-          case _ => ???
+        (sign, int) match {
+          case (_, tx) if isVariableOrNeg(tx) => ???
+          case (_, tx + txs) if isVariableOrNeg(tx) => ???
+          case (Pos, `1`) => ???
+          case (Pos, `1` + txs) => ???
+          case (Neg, -(`1`)) => ???
+          case (Neg, -(`1`) + txs) => ???
+          case _ => ??? 
         }
       }(res)
     }
