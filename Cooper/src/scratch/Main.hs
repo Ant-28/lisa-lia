@@ -124,7 +124,7 @@ u (RB x) = x
 
 -- var or nvar : ringast -> Bool
 evalInsert :: RingAst -> RingAst -> RbRing
-evalInsert (Var z) Zero = RB (Var z)
+evalInsert x Zero | isVarOrNegation x = RB x
 evalInsert x y | isVarOrNegation x && isOneOrNegOne y = RB (Plus y x)
 evalInsert x y | all isVar [x, y] || all isNegVar [x, y] =     
     let z = getVars x in 
@@ -142,7 +142,10 @@ evalInsert x y | isVar x && isNegVar y =
     (z, a) |  z < a  -> RB (Plus x y)
     (z, a) -> RB (Plus y x)
 evalInsert x@(Neg (Var z)) y@(Var a) = evalInsert y x
+
+
 evalInsert x (Plus y ys) | isVarOrNegation x && isOneOrNegOne y = RB (Plus y (u (evalInsert x ys)))
+
 evalInsert x (Plus y ys)  | all isVar [x, y] || all isNegVar [x, y] = 
     let z = getVars x in 
     let a = getVars y in    

@@ -325,7 +325,15 @@ object RingStructure extends lisa.Main {
   val add_inv   = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R)) |- ((x + (-(x))) === `0`)){
     have(thesis) by byRingDefn.apply 
   }
-
+  val add_comm_inv =  Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R)) |- ((-x + x) === `0`)){
+    assume(ring(R, <=, +, *, -, |, `0`, `1`))
+    assume(x ∈ R)
+    val h1 = have(-x ∈ R) by Tautology.from(neg_closure of (x := x))
+    val h2 = have(x + -x === -x + x) by Tautology.from(add_comm of (x := x, y := -x), lastStep)
+    val h3 = have(x + -x === `0`) by Tautology.from(add_inv of (x := x))
+    have(-x + x === `0`) by Congruence.from(h2, h3)
+    have(thesis) by Tautology.from(lastStep, h1, h2, h3)
+  }
 
   val mul_assoc = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R), (z ∈ R)) |- ((x * (y * z)) === ((x * y) * z))){
     have(thesis) by byRingDefn.apply
@@ -722,7 +730,20 @@ object RingStructure extends lisa.Main {
     val h3 = have(-(`1`) ∈ R) by Tautology.from(neg_closure of (x := `1`), h2)
     have(thesis) by Tautology.from(addPlusHelper3p of (x := x, y := y, z := -(`1`), w := -`1`), h3)
   }
+  
+  val addInsertHelper = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R, z ∈ R) |- x + (y + z) === y + (x + z)){
+    assume(ring(R, <=, +, *, -, |, `0`, `1`))
+    assume(x ∈ R)
+    assume(y ∈ R)
+    assume(z ∈ R)
+    val h1 = have(x + y === y + x) by Tautology.from(add_comm of (x := x, y := y))
+    val h2 = have(x + (y + z) === (x + y) + z) by Tautology.from(add_assoc of (x := x, y := y, z := z)) 
+    val h3 = have((y + x) + z === y + (x + z)) by Tautology.from(add_assoc of (x := y, y := x, z := z))
+    have(x + (y + z) === y + (x + z)) by Congruence.from(h1, h2, h3)
+    have(thesis) by Tautology.from(lastStep, h1, h2, h3)
+  }
 
+  // thank you past me
   val multHelper1 = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R) |- -(`1`)*x === -(x)){
     assume(ring(R, <=, +, *, -, |, `0`, `1`))
     assume(x ∈ R)
