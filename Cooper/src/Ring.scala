@@ -13,7 +13,12 @@ import Utils.*
 // import lisa.utils.prooflib.WithTheorems.Proof.InvalidProofTactic
 // import lisa.utils.prooflib.WithTheorems.Proof.ValidProofTactic
 object RingStructure extends lisa.Main {
-  
+  implicit def intToExpr(x: BigInt): Expr[Ind] = {
+    BigIntToRingElem.ic(x)
+  }
+  implicit def intToExpr(x: Int): Expr[Ind] = {
+    BigIntToRingElem.ic(x)
+  }
   val x   = variable[Ind]
   val y   = variable[Ind]
   val z   = variable[Ind]
@@ -764,6 +769,15 @@ object RingStructure extends lisa.Main {
         `1` + i(x - 1)
       else 
         `0`
+    }
+    def ic(x : BigInt) : Expr[Ind] = {
+      x match {
+        case 0 => `0`
+        case 1 => `1`
+        case -1 => -(`1`)
+        case x if x > 0 => `1` + ic(x - 1)
+        case x if x < 0 => -(`1`) + ic(x + 1)
+      } 
     }
   }
 
