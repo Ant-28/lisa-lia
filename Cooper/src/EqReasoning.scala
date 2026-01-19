@@ -234,9 +234,7 @@ object EqReasoning extends lisa.Main {
             val typings = SSet(-(`1`) ∈ R, tx ∈ R)
             val pprf2 = have(typings |- -(`1`) + tx === tx + -(`1`)) by Tautology.from(add_comm of (x := -(`1`), y := tx))
             val equalities = SSet(pprf, pprf2).map(_.bot.firstElemR)
-            // have()
             res = tres
-            // TODO: eventually don't use taut? 
             have(equalities |- -(`1`) + tx === -(`1`) + tx) by Restate
             thenHave(equalities |- tx + -(`1`) === -(`1`) + tx ) by RightSubstEq.withParameters(
               Seq((-(`1`) + tx, tx + -(`1`))),
@@ -251,13 +249,153 @@ object EqReasoning extends lisa.Main {
             temp = evalRingCutHelper(pprf, tx + -(`1`) === ures, equalities)
             have(temp._2)
           }
-          case (tx, ty) if isVariableOrNeg(tx) => ???
-          case (tx, ty) if isVariableOrNeg(ty) => ??? 
+          case (tx, ty) if isVariableOrNeg(tx) => {
+            // x + y === res
+            val (ires, iprf) = evalInsert(tx, ty)
+            if !iprf.isValid then return (NRB(tx), proof.InvalidProofTactic("evalPlus failed!"))
+            val pprf = have(iprf) 
+            val ures = ires.tval
+            val equalities = SSet(pprf).map(_.bot.firstElemR)
+            // have()
+            res = ires
+            // TODO: eventually don't use taut? 
+            have(equalities |- tx + ty === tx + ty) by Restate
+            thenHave(equalities |- tx + ty === ures) by RightSubstEq.withParameters(
+              Seq((tx + ty, ures)),
+              (Seq(a), tx + ty === a)
+            )
+            var temp = evalRingCutHelper(pprf, tx + ty === ures, equalities)
+            have(temp._2)
+          }
+          case (tx, ty) if isVariableOrNeg(ty) => {
+            val (ires, iprf) = evalInsert(ty, tx)
+            if !iprf.isValid then return (NRB(tx), proof.InvalidProofTactic("evalPlus failed!"))
+            val pprf = have(iprf) // ty + tx = ures
+            val ures = ires.tval
+            val typings = SSet(ty ∈ R, tx ∈ R)
+            val pprf2 = have(typings |- ty + tx === tx + ty) by Tautology.from(add_comm of (x := ty, y := tx))
+            val equalities = SSet(pprf, pprf2).map(_.bot.firstElemR)
+            res = ires
+            have(equalities |- ty + tx === ty + tx) by Restate
+            thenHave(equalities |- tx + ty === ty + tx ) by RightSubstEq.withParameters(
+              Seq((ty + tx, tx + ty)),
+              (Seq(a), a === ty + tx)
+            )
+            thenHave(equalities |- tx + ty === ures) by RightSubstEq.withParameters(
+              Seq((ty + tx, ures)),
+              (Seq(a), tx + ty === a)
+            )
+            var temp = evalRingCutHelper(pprf2, tx + ty === ures, equalities)
+            have(temp._2)
+            temp = evalRingCutHelper(pprf, tx + ty === ures, equalities)
+            have(temp._2)
+          } 
           case (tx + txs, ty + tys) => (tx, ty) match {
-            case (`1`, `-`(`1`)) => ???
-            case (`-`(`1`), `1`) => ???
-            case (tx, ty) if isOneOrNegOne(tx) => ???
-            case (tx, ty) if isVariableOrNeg(tx) => ???
+          case (`1`, -(`1`)) => {
+            val (tres, tprf) = evalPlus(RB(txs), RB(tys))
+            if !tprf.isValid then return (NRB(txs), proof.InvalidProofTactic("evalPlus failed!"))
+            val pprf = have(tprf) // tx + ty === tres
+            val ures = tres.tval
+            val typings = SSet(`1` ∈ R, tys ∈ R, txs ∈ R)
+            val pprf2 = have(typings |- (`1` + txs) + (-`1` + tys) === txs + tys) by Tautology.from(addPlusHelper1g of (x := tx, y := ty, z := `1`))
+            val equalities = SSet(pprf, pprf2).map(_.bot.firstElemR)
+            res = tres
+            have(equalities |-  (`1` + txs) + (-`1` + tys) === (`1` + txs) + (-`1` + tys)) by Restate
+            thenHave(equalities |- (`1` + txs) + (-`1` + tys) === tx + tys ) by RightSubstEq.withParameters(
+              Seq(((`1` + txs) + (-`1` + tys), txs + tys)),
+              (Seq(a), (`1` + txs) + (-`1` + tys) === a)
+            )
+            thenHave(equalities |- (`1` + txs) + (-`1` + tys) === ures) by RightSubstEq.withParameters(
+              Seq(((`1` + txs) + (-`1` + tys), ures)),
+              (Seq(a), (`1` + txs) + (-`1` + tys) === a)
+            )
+            var temp = evalRingCutHelper(pprf2, (`1` + txs) + (-`1` + tys) === ures, equalities)
+            have(temp._2)
+            temp = evalRingCutHelper(pprf, (`1` + txs) + (-`1` + tys) === ures, equalities)
+            have(temp._2)
+          }
+          case (-(`1`), `1`) => {
+            val (tres, tprf) = evalPlus(RB(txs), RB(tys))
+            if !tprf.isValid then return (NRB(xint.tval), proof.InvalidProofTactic("evalPlus failed!"))
+            val pprf = have(tprf) // tx + ty === tres
+            val ures = tres.tval
+            val typings = SSet(`1` ∈ R, tys ∈ R, txs ∈ R)
+            val pprf2 = have(typings |- (`1` + txs) + (-`1` + tys) === txs + tys) by Tautology.from(addPlusHelper2g of (x := txs, y := tys, z := `1`))
+            val equalities = SSet(pprf, pprf2).map(_.bot.firstElemR)
+            res = tres
+            have(equalities |-  (-`1` + txs) + (`1` + tys) === (-`1` + txs) + (`1` + tys)) by Restate
+            thenHave(equalities |- (`1` + txs) + (-`1` + tys) === txs + tys ) by RightSubstEq.withParameters(
+              Seq(((`1` + txs) + (-`1` + tys), txs + tys)),
+              (Seq(a), (`1` + txs) + (-`1` + tys) === a)
+            )
+            thenHave(equalities |- (`1` + txs) + (-`1` + tys) === ures) by RightSubstEq.withParameters(
+              Seq(((`1` + txs) + (-`1` + tys), ures)),
+              (Seq(a), (`1` + txs) + (-`1` + tys) === a)
+            )
+            var temp = evalRingCutHelper(pprf2, (`1` + txs) + (-`1` + tys) === ures, equalities)
+            have(temp._2)
+            temp = evalRingCutHelper(pprf, (`1` + txs) + (-`1` + tys) === ures, equalities)
+            have(temp._2)
+          }
+          case (tx, ty) if isOneOrNegOne(tx) => {
+            // tx + txs + ty + tys = txs + tx + ty + tys. 
+            val (tres, tprf) = evalPlus(RB(txs), RB(tx + (ty + tys)))
+            if !tprf.isValid then return (NRB(txs), proof.InvalidProofTactic("evalPlus failed!"))
+            val pprf = have(tprf) // txs + tys === tres
+            val ures = tres.tval
+            val typings = SSet(tx ∈ R, ty ∈ R, tys ∈ R, txs ∈ R)
+            val pprf2 = have(typings |- (tx + txs) + (ty + tys) === txs + (tx + (ty + tys))) by Tautology.from(addPlusHelper3p of (x := txs, y := tys, z := tx, w := ty))
+            val equalities = SSet(pprf, pprf2).map(_.bot.firstElemR)
+            res = tres
+            have(equalities |-  (tx + txs) + (ty + tys) === (tx + txs) + (ty + tys)) by Restate
+            thenHave(equalities |- (tx + txs) + (ty + tys) === txs + (tx + (ty + tys)) ) by RightSubstEq.withParameters(
+              Seq(((tx + txs) + (ty + tys), txs + (tx + (ty + tys)))),
+              (Seq(a), (tx + txs) + (ty + tys) === a)
+            )
+            thenHave(equalities |- (tx + txs) + (ty + tys) === ures) by RightSubstEq.withParameters(
+              Seq((txs + (tx + (ty + tys)), ures)),
+              (Seq(a), (tx + txs) + (ty + tys) === a)
+            )
+            var temp = evalRingCutHelper(pprf2, (tx + txs) + (ty + tys) === ures, equalities)
+            have(temp._2)
+            temp = evalRingCutHelper(pprf, (tx + txs) + (ty + tys) === ures, equalities)
+            have(temp._2)
+          }
+          case (tx, ty) if isVariableOrNeg(tx) => {
+            // tx + txs + ty + tys = txs + tx + ty + tys. 
+            val (vres, vprf) = evalInsert(tx, ty + tys)
+            // tx + (ty + tys) = vres
+            if !vprf.isValid then return (NRB(txs), proof.InvalidProofTactic("evalPlus failed!"))
+            val pprf1 = have(vprf)
+            val (tres, tprf) = evalPlus(RB(txs), vres)
+            // tx + txs + ty + tys = txs + vres = tres
+            if !tprf.isValid then return (NRB(txs), proof.InvalidProofTactic("evalPlus failed!"))
+            val pprf2 = have(tprf) // txs + tys === tres
+            val ures = tres.tval
+            val typings = SSet(tx ∈ R, ty ∈ R, tys ∈ R, txs ∈ R)
+            val pprf3 = have(typings |- (tx + txs) + (ty + tys) === txs + (tx + (ty + tys))) by Tautology.from(addPlusHelper3p of (x := txs, y := tys, z := tx, w := ty))
+            val equalities = SSet(pprf1, pprf2, pprf3).map(_.bot.firstElemR)
+            res = tres
+            have(equalities |-  (tx + txs) + (ty + tys) === (tx + txs) + (ty + tys)) by Restate
+            thenHave(equalities |- (tx + txs) + (ty + tys) === txs + (tx + (ty + tys)) ) by RightSubstEq.withParameters(
+              Seq(((tx + txs) + (ty + tys), txs + (tx + (ty + tys)))),
+              (Seq(a), (tx + txs) + (ty + tys) === a)
+            )
+            thenHave(equalities |- (tx + txs) + (ty + tys) === txs + vres.tval) by RightSubstEq.withParameters(
+              Seq((tx + (ty + tys), vres.tval)),
+              (Seq(a), (tx + txs) + (ty + tys) === txs + a)
+            )
+            thenHave(equalities |- (tx + txs) + (ty + tys) === ures) by RightSubstEq.withParameters(
+              Seq((txs + vres.tval, ures)),
+              (Seq(a), (tx + txs) + (ty + tys) === a)
+            )
+            var temp = evalRingCutHelper(pprf1, (tx + txs) + (ty + tys) === ures, equalities)
+            have(temp._2)
+            temp = evalRingCutHelper(pprf2, (tx + txs) + (ty + tys) === ures, equalities)
+            have(temp._2)
+            temp = evalRingCutHelper(pprf3, (tx + txs) + (ty + tys) === ures, equalities)
+            have(temp._2)
+          }
             case _ => return (NRB(tx), proof.InvalidProofTactic("evalPlus failed!"))
           }
           case _ => return (NRB(xint.tval), proof.InvalidProofTactic("evalPlus failed!"))
