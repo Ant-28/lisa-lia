@@ -402,12 +402,128 @@ object EqReasoning extends lisa.Main {
         }
       }(res)
     }
-    def evalInsert(using lib: library.type, proof: lib.Proof)(x: Expr[Ind], y: Expr[Ind]): (Biased, proof.ProofTacticJudgement) = ???
-    def evalIncr(using lib: library.type, proof: lib.Proof)(int: Biased): (Biased, proof.ProofTacticJudgement) = ???
-    def evalDecr(using lib: library.type, proof: lib.Proof)(int: Biased): (Biased, proof.ProofTacticJudgement) = ???
-    def evalNeg(using lib: library.type, proof: lib.Proof)(int: Biased): (Biased, proof.ProofTacticJudgement) = ???
-    def evalNegHelper(using lib: library.type, proof: lib.Proof)(sign: Sign, int: Expr[Ind]): (Biased, proof.ProofTacticJudgement) = ???
-    def evalMult(using lib: library.type, proof: lib.Proof)(x: Biased, y: Biased): (Biased, proof.ProofTacticJudgement) = ???
+
+
+    def evalInsert(using lib: library.type, proof: lib.Proof)(xint: Expr[Ind], yint: Expr[Ind]): (Biased, proof.ProofTacticJudgement) = {
+      var res = NRB(`0`)
+      TacticSubproofWithResult[Biased]{
+      (xint, yint) match {
+        case (tx, `0`) if isVariableOrNeg(tx) => ???
+        case (tx,  ty) if isVariableOrNeg(tx) && isOneOrNegOne(ty) => ???
+        case (tx, ty)  if List(tx, ty).forall(isVariable) || List(x, y).forall(isNegVariable) => {
+          (getVarName(tx), getVarName(ty)) match {
+            case (zind, aind) if zind <= aind => ???
+            case (zind, aind) if zind > aind => ???
+            case _ => return (NRB(xint), proof.InvalidProofTactic("evalPlus failed!"))
+          }
+        }
+        case (tx, ty) if (isVariable(tx) && isNegVariable(ty)) || (isVariable(ty) && isNegVariable(tx)) => {
+          (getVarName(tx), getVarName(ty)) match {
+            case (zind, aind) if zind == aind => ???
+            case (zind, aind) if zind < aind => ???
+            case (zind, aind) if zind > aind => ???
+            case _ => return (NRB(xint), proof.InvalidProofTactic("evalPlus failed!"))
+          }
+        }
+        case (tx, ty + tys) if (isVariableOrNeg(tx) && isOneOrNegOne(ty)) => ???
+        case (tx, ty + tys)  if List(tx, ty).forall(isVariable) || List(x, y).forall(isNegVariable) => {
+          (getVarName(tx), getVarName(ty)) match {
+            case (zind, aind) if zind <= aind => ???
+            case (zind, aind) if zind > aind => ???
+            case _ => return (NRB(xint), proof.InvalidProofTactic("evalPlus failed!"))
+          }
+        }
+        case (tx , ty + tys) if (isVariable(tx) && isNegVariable(ty)) || (isVariable(ty) && isNegVariable(tx)) => {
+          (getVarName(tx), getVarName(ty)) match {
+            case (zind, aind) if zind == aind => ???
+            case (zind, aind) if zind < aind => ???
+            case (zind, aind) if zind > aind => ???
+            case _ => return (NRB(xint), proof.InvalidProofTactic("evalPlus failed!"))
+          }
+        }
+        case _ => ???
+        }
+      }(res)
+    }
+    def evalIncr(using lib: library.type, proof: lib.Proof)(int: Biased): (Biased, proof.ProofTacticJudgement) = {
+      var res = NRB(`0`)
+      TacticSubproofWithResult[Biased]{
+      int match
+        case RB(tx) => tx match {
+          case -(`1`) => ???
+          case (-(`1`) + txs) => ???
+          case (txs) => ???
+        }
+        case _ => ???
+      }(res)
+    }
+    def evalDecr(using lib: library.type, proof: lib.Proof)(int: Biased): (Biased, proof.ProofTacticJudgement) = {
+      var res = NRB(`0`)
+      TacticSubproofWithResult[Biased]{
+      int match
+        case RB(tx) => tx match {
+          case `1` => ???
+          case (`1` + txs) => ???
+          case (txs) => ???
+        }
+        case _ => ???
+      }(res)
+    }
+    
+    def evalNeg(using lib: library.type, proof: lib.Proof)(int: Biased): (Biased, proof.ProofTacticJudgement) = {
+      var res = NRB(`0`)
+      TacticSubproofWithResult[Biased]{
+      int match
+        case RB(xint) => xint match {
+          case `0` => ???
+          case tx if isOne(tx) || isVariable(tx) => ???
+          case tx if isNegOne(tx) || isNegVariable(tx) => ???
+          case (tx + txs) => tx match {
+            case `1` => ???
+            case (-(`1`)) => ???
+            case tx if isVariableOrNeg(tx) => ???
+            case _ => ???
+          }
+          case _ => ???
+        }
+        case _ => ???
+      }(res)
+    }
+    def evalNegHelper(using lib: library.type, proof: lib.Proof)(sign: Sign, int: Expr[Ind]): (Biased, proof.ProofTacticJudgement) = {
+      var res = NRB(`0`)
+      TacticSubproofWithResult[Biased]{
+        int match {
+          case RB(xint) => (sign, xint) match {
+            case (_, tx) if isVariableOrNeg(tx) => ???
+            case (_, tx + txs) if isVariableOrNeg(tx) => ???
+            case (Pos, `1`) => ???
+            case (Pos, `1` + txs) => ???
+            case (Neg, -(`1`)) => ???
+            case (Neg, -(`1`) + txs) => ???
+            case _ => ??? 
+          }
+          case _ => ???
+        }
+      }(res)
+    }
+    def evalMult(using lib: library.type, proof: lib.Proof)(xint: Biased, yint: Biased): (Biased, proof.ProofTacticJudgement) = {
+      var res = NRB(`0`)
+      TacticSubproofWithResult[Biased]{
+        (xint, yint) match {
+          case (RB(xi), RB(yi)) => (xi, yi) match {
+            case (`0`, ty) => ???
+            case (tx, `0`) => ???
+            case (`1`, ty) => ???
+            case (tx, `1`) => ???
+            case (`-`(`1`), ty) => ???
+            case (tx, `-`(`1`)) => ???
+            case (tx + txs, ty) => ???
+            case _ => ???
+          }
+          case _ => ???
+        }
+      }(res)
+    }
   }
 
 

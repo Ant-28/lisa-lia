@@ -140,12 +140,24 @@ object Utils {
       }
     }
 
-    
+    /**
+      * Get name of Variable[Ind]
+      *
+      * @param exp
+      * @return
+      */
+    def getVarName(exp: Expr[Ind]): String = {
+      require(isVariable(exp) || isNegVariable(exp))
+      exp match {
+        case tx : Variable[Ind] => tx.id.name
+        case -(tx) => getVarName(tx)
+      }
+    }
 
 
     sealed trait Sign
-    case object P extends Sign
-    case object M extends Sign
+    case object Pos extends Sign
+    case object Neg extends Sign
 
     def is_eq(x: Expr[Prop]): Boolean = {
     x match {

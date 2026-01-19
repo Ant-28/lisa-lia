@@ -179,9 +179,9 @@ evalInsert _ _ = error "invariant violation"
 
 evalIncr :: RbRing -> RbRing
 evalIncr (RB x) = case x of
-    One -> RB (Plus One One)
     (Neg One) -> RB Zero
     (Plus (Neg One) xs) -> RB xs
+    -- One -> RB (Plus One One)
     x -> RB (Plus One x)
     -- (Plus One xs) -> RB (Plus One (Plus One xs))
     -- Var xs -> RB (Plus One (Var xs))
