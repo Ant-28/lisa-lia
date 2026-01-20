@@ -7,6 +7,7 @@ import lisa.maths.SetTheory.Base.Predef.{*, given}
 import lisa.maths.SetTheory.Functions.Predef.{*, given}
 import scala.quoted.quotes
 import scala.quoted.{Expr => EExpr, Quotes  }
+import scala.math.Ordering
 
 
 object EqReasoning extends lisa.Main {
@@ -34,7 +35,7 @@ object EqReasoning extends lisa.Main {
 
     object evalRingEq extends ProofTactic {
     
-    def apply(using lib: library.type, proof: lib.Proof)(goal: Sequent): proof.ProofTacticJudgement = {
+    def apply(using lib: library.type, proof: lib.Proof)(goal: Sequent)(using myOrd: Ordering[Expr[Ind]]): proof.ProofTacticJudgement = {
       if (goal.right.size != 1) then
         proof.InvalidProofTactic("I can't prove more than one sequent!")
       else
@@ -55,7 +56,7 @@ object EqReasoning extends lisa.Main {
     }
 
 
-    def simplify(using lib: library.type, proof: lib.Proof)(goal: Expr[Prop]): proof.ProofTacticJudgement = 
+    def simplify(using lib: library.type, proof: lib.Proof)(goal: Expr[Prop])(using myOrd: Ordering[Expr[Ind]]): proof.ProofTacticJudgement = 
       {assume(ring(R, <=, +, *, -, |, 0, 1))
       TacticSubproof {
         goal match 
@@ -65,7 +66,7 @@ object EqReasoning extends lisa.Main {
     
       
 
-    def evalRing(using lib: library.type, proof: lib.Proof)(int: Expr[Ind]): (Biased, proof.ProofTacticJudgement) = {
+    def evalRing(using lib: library.type, proof: lib.Proof)(int: Expr[Ind])(using myOrd: Ordering[Expr[Ind]]): (Biased, proof.ProofTacticJudgement) = {
       assume(ring(R, <=, +, *, -, |, 0, 1))
       var res : Biased = NRB(0)
       TacticSubproofWithResult[Biased]{
@@ -174,7 +175,7 @@ object EqReasoning extends lisa.Main {
     }
     
     
-    def evalPlus(using lib: library.type, proof: lib.Proof)(xint: Biased, yint: Biased): (Biased, proof.ProofTacticJudgement) = {
+    def evalPlus(using lib: library.type, proof: lib.Proof)(xint: Biased, yint: Biased)(using myOrd: Ordering[Expr[Ind]]): (Biased, proof.ProofTacticJudgement) = {
       assume(ring(R, <=, +, *, -, |, 0, 1))
       var res : Biased = NRB(xint.tval)
       TacticSubproofWithResult[Biased]{
@@ -404,7 +405,8 @@ object EqReasoning extends lisa.Main {
     }
 
 
-    def evalInsert(using lib: library.type, proof: lib.Proof)(xint: Expr[Ind], yint: Expr[Ind]): (Biased, proof.ProofTacticJudgement) = {
+    def evalInsert(using lib: library.type, proof: lib.Proof)(xint: Expr[Ind], yint: Expr[Ind])(using myOrd: Ordering[Expr[Ind]]): (Biased, proof.ProofTacticJudgement) = {
+      
       var res : Biased = NRB(0)
       TacticSubproofWithResult[Biased]{
       (xint, yint) match {
@@ -419,13 +421,13 @@ object EqReasoning extends lisa.Main {
           have(typings |- tx + ty === ty + tx) by Tautology.from(add_comm of (x := tx, y := ty))
         }
         case (tx, ty)  if List(tx, ty).forall(isVariable) || List(x, y).forall(isNegVariable) => {
-          (getVarName(tx), getVarName(ty)) match {
-            case (zind, aind) if zind <= aind => {
+          myOrd.compare(tx, ty)  match {
+            case tcomp  if tcomp <= 0 => {
               res = RB(tx + ty)
               val typings = SSet(tx ∈ R, ty ∈ R)
               have(typings |- tx + ty === tx + ty) by Restate
             }
-            case (zind, aind) if zind > aind => {
+            case tcomp if tcomp > 0 => {
               res = RB(ty + tx)
               val typings = SSet(tx ∈ R, ty ∈ R)
               have(typings |- tx + ty === ty + tx) by Tautology.from(add_comm of (x := tx, y := ty))
@@ -434,8 +436,11 @@ object EqReasoning extends lisa.Main {
           }
         }
         case (tx, ty) if (isVariable(tx) && isNegVariable(ty)) || (isVariable(ty) && isNegVariable(tx)) => {
-          (getVarName(tx), getVarName(ty)) match {
-            case (zind, aind) if zind == aind => {
+          // sort by quantifier order
+          // given Ordering 
+          
+            myOrd.compare(tx, ty) match {
+            case tcomp if tcomp == 0 => {
               if isVariable(tx) && isNegVariable(ty) then {
                 res = RB(0)
                 val typings = SSet(tx ∈ R, ty ∈ R)
@@ -447,12 +452,12 @@ object EqReasoning extends lisa.Main {
                 have(typings |- tx + ty === 0) by Tautology.from(add_comm_inv of (x := tx, y := ty))
               }
             }
-            case (zind, aind) if zind < aind => {
+            case tcomp if tcomp < 0 => {
               res = RB(tx + ty)
               val typings = SSet(tx ∈ R, ty ∈ R)
               have(typings |- tx + ty === tx + ty) by Restate
             }
-            case (zind, aind) if zind > aind => {
+            case tcomp if tcomp > 0  => {
               res = RB(ty + tx)
               val typings = SSet(tx ∈ R, ty ∈ R)
               have(typings |- tx + ty === ty + tx) by Tautology.from(add_comm of (x := tx, y := ty))
@@ -483,13 +488,13 @@ object EqReasoning extends lisa.Main {
           have(temp._2)
         }
         case (tx, ty + tys)  if List(tx, ty).forall(isVariable) || List(x, y).forall(isNegVariable) => {
-          (getVarName(tx), getVarName(ty)) match {
-            case (zind, aind) if zind <= aind => {
+          myOrd.compare(tx, ty) match {
+            case tcomp if tcomp <= 0 => {
               val typings = SSet(tx ∈ R, ty ∈ R, tys ∈ R)
               res = RB(tx + (ty + tys))
               have(typings |- tx + (ty + tys) === tx + (ty + tys)) by Restate
             }
-            case (zind, aind) if zind > aind => {
+            case tcomp if tcomp > 0 => {
               val (ires, iprf) = evalInsert(tx, tys) // tx + tys === ires
               val typings = SSet(tx ∈ R, ty ∈ R, tys ∈ R)
               val pprf1 = have(iprf)
@@ -515,8 +520,8 @@ object EqReasoning extends lisa.Main {
           }
         }
         case (tx , ty + tys) if (isVariable(tx) && isNegVariable(ty)) || (isVariable(ty) && isNegVariable(tx)) => {
-          (getVarName(tx), getVarName(ty)) match {
-            case (zind, aind) if zind == aind => {
+          myOrd.compare(tx, ty) match {
+            case tcomp if tcomp == 0 => {
               val typings = SSet(tx ∈ R, ty ∈ R, tys ∈ R)
               res = RB(tys)
               if isVariable(tx) && isNegVariable(ty) then {
@@ -528,12 +533,12 @@ object EqReasoning extends lisa.Main {
                 have(typings |- tx + (ty + tys) === tys) by Tautology.from(mz_z_x_x of (z := tx, x := tys))
               }
             }
-            case (zind, aind) if zind < aind => {
+            case tcomp if tcomp < 0 => {
               val typings = SSet(tx ∈ R, ty ∈ R, tys ∈ R)
               res = RB(tx + (ty + tys))
               have(typings |- tx + (ty + tys) === tx + (ty + tys)) by Restate
             }
-            case (zind, aind) if zind > aind => {
+            case tcomp if tcomp > 0 => {
               val (ires, iprf) = evalInsert(tx, tys) // tx + tys === ires
               val typings = SSet(tx ∈ R, ty ∈ R, tys ∈ R)
               val pprf1 = have(iprf)
@@ -562,7 +567,7 @@ object EqReasoning extends lisa.Main {
         }
       }(res)
     }
-    def evalIncr(using lib: library.type, proof: lib.Proof)(int: Biased): (Biased, proof.ProofTacticJudgement) = {
+    def evalIncr(using lib: library.type, proof: lib.Proof)(int: Biased)(using myOrd: Ordering[Expr[Ind]]): (Biased, proof.ProofTacticJudgement) = {
       var res : Biased = NRB(0)
       TacticSubproofWithResult[Biased]{
       int match
@@ -586,7 +591,7 @@ object EqReasoning extends lisa.Main {
         case _ => return (NRB(int.tval), proof.InvalidProofTactic("evalIncr failed!"))
       }(res)
     }
-    def evalDecr(using lib: library.type, proof: lib.Proof)(int: Biased): (Biased, proof.ProofTacticJudgement) = {
+    def evalDecr(using lib: library.type, proof: lib.Proof)(int: Biased)(using myOrd: Ordering[Expr[Ind]]): (Biased, proof.ProofTacticJudgement) = {
       var res : Biased = NRB(0)
       TacticSubproofWithResult[Biased]{
       int match
@@ -611,7 +616,7 @@ object EqReasoning extends lisa.Main {
       }(res)
     }
     
-    def evalNeg(using lib: library.type, proof: lib.Proof)(int: Biased): (Biased, proof.ProofTacticJudgement) = {
+    def evalNeg(using lib: library.type, proof: lib.Proof)(int: Biased)(using myOrd: Ordering[Expr[Ind]]): (Biased, proof.ProofTacticJudgement) = {
       var res : Biased = NRB(0)
       TacticSubproofWithResult[Biased]{
       int match
@@ -665,7 +670,7 @@ object EqReasoning extends lisa.Main {
         case _ => return (NRB(int.tval), proof.InvalidProofTactic("evalNeg Failed!"))
       }(res)
     }
-    def evalNegHelper(using lib: library.type, proof: lib.Proof)(sign: Sign, int: Expr[Ind]): (Biased, proof.ProofTacticJudgement) = {
+    def evalNegHelper(using lib: library.type, proof: lib.Proof)(sign: Sign, int: Expr[Ind])(using myOrd: Ordering[Expr[Ind]]): (Biased, proof.ProofTacticJudgement) = {
       var res : Biased = NRB(0)
       TacticSubproofWithResult[Biased]{
         (sign, int) match {
@@ -806,7 +811,7 @@ object EqReasoning extends lisa.Main {
       }(res)
     }
     
-    def evalMult(using lib: library.type, proof: lib.Proof)(xint: Biased, yint: Biased): (Biased, proof.ProofTacticJudgement) = {
+    def evalMult(using lib: library.type, proof: lib.Proof)(xint: Biased, yint: Biased)(using myOrd: Ordering[Expr[Ind]]): (Biased, proof.ProofTacticJudgement) = {
       var res : Biased = NRB(0)
       TacticSubproofWithResult[Biased]{
         (xint, yint) match {

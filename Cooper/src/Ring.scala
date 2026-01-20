@@ -137,11 +137,13 @@ object RingStructure extends lisa.Main {
       (`0` ∈ R) /\ 
       (`1` ∈ R) /\
       // total order over Integers
+        // TODO: change to LT?
         ∀(x, (x ∈ R) ==> x <= x) /\ // reflexivity
         ∀(x, ∀(y, ((x ∈ R) /\ (y ∈ R) /\ (x <= y) /\ (y <= x)) ==> (x === y))) /\ // antisymmetry
         ∀(x, ∀(y, ∀(z, ((x ∈ R) /\ (y ∈ R) /\ (z ∈ R) /\ (x <= y) /\ (y <= z)) ==> (x <= z)))) /\ // transitivity
         ∀(x, ∀(y, (x ∈ R) /\ (y ∈ R) ==> (x <= y) \/ (y <= x))) // totality 
         /\ (`0` <= `1`)
+        /\ !(`0` === `1`) // note: does this need to be an axiom or a consequence of some other axiom??
 
       //    ∀(x, ∀(y, (x ∈ R /\ y ∈ R) ==> (x + y) ∈ R))
       // /\ ∀(x, ∀(y, (x ∈ R /\ y ∈ R) ==> (x * y) ∈ R))
@@ -183,7 +185,9 @@ object RingStructure extends lisa.Main {
       // proofs such as x * 0 = x * (0 + 0)
       // divisibility axioms
       /\ ∀(x, ∀(y, (y | x) <=> ∃(c, (c ∈ R) /\ (x === y * c))))
-      /\ ∀(x, x | `0`)
+      /\ ∀(x, x | `0`) // TODO: elim??
+      // review this one
+      // TODO: Add axiom !∃(c, c ∈ R /\ 0 < c /\ c < 1) -- use this to prove nondivisibility (d /| x + y in notes)
       // /\ 
 
       
@@ -781,7 +785,12 @@ object RingStructure extends lisa.Main {
     have(x * -1 === -x) by Congruence.from(h1, h2)
     have(thesis) by Tautology.from(h1, h2, lastStep)
   }
+  
 
+  val x_y_1x_1y = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- (x === y) <=> (1 + x === 1 + y))
+  val x_lt_y_iff_p1 = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- (x <= y) <=> (1 + x <= 1 + y))
+
+  val does_not_divide = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R, z ∈ R) |- (z | x) ==> ∀(y, y ∈ R /\ (1 <= y) /\ (y <= (z + -1)) /\ !(z | (x + y))))
   object BigIntToRingElem{
     def i(x : BigInt) : Expr[Ind] = {
       if x < 0 then 
