@@ -217,7 +217,7 @@ object EqReasoning extends lisa.Main {
             )
             var temp = evalRingCutHelper(pprf2, tx + 1 === ures, equalities)
             have(temp._2)
-            temp = evalRingCutHelper(pprf, tx + 1 === ures, equalities)
+            temp = evalRingCutHelper(pprf, tx + 1 === ures, temp._1)
             have(temp._2)
           }
           case (-(`1`), tx) => {
@@ -246,7 +246,7 @@ object EqReasoning extends lisa.Main {
             )
             var temp = evalRingCutHelper(pprf2, tx + -(1) === ures, equalities)
             have(temp._2)
-            temp = evalRingCutHelper(pprf, tx + -(1) === ures, equalities)
+            temp = evalRingCutHelper(pprf, tx + -(1) === ures, temp._1)
             have(temp._2)
           }
           case (tx, ty) if isVariableOrNeg(tx) => {
@@ -287,7 +287,7 @@ object EqReasoning extends lisa.Main {
             )
             var temp = evalRingCutHelper(pprf2, tx + ty === ures, equalities)
             have(temp._2)
-            temp = evalRingCutHelper(pprf, tx + ty === ures, equalities)
+            temp = evalRingCutHelper(pprf, tx + ty === ures, temp._1)
             have(temp._2)
           } 
           case (tx + txs, ty + tys) => (tx, ty) match {
@@ -311,7 +311,7 @@ object EqReasoning extends lisa.Main {
             )
             var temp = evalRingCutHelper(pprf2, (1 + txs) + (-1 + tys) === ures, equalities)
             have(temp._2)
-            temp = evalRingCutHelper(pprf, (1 + txs) + (-1 + tys) === ures, equalities)
+            temp = evalRingCutHelper(pprf, (1 + txs) + (-1 + tys) === ures, temp._1)
             have(temp._2)
           }
           case (-(`1`), `1`) => {
@@ -334,7 +334,7 @@ object EqReasoning extends lisa.Main {
             )
             var temp = evalRingCutHelper(pprf2, (1 + txs) + (-1 + tys) === ures, equalities)
             have(temp._2)
-            temp = evalRingCutHelper(pprf, (1 + txs) + (-1 + tys) === ures, equalities)
+            temp = evalRingCutHelper(pprf, (1 + txs) + (-1 + tys) === ures, temp._1)
             have(temp._2)
           }
           case (tx, ty) if isOneOrNegOne(tx) => {
@@ -358,7 +358,7 @@ object EqReasoning extends lisa.Main {
             )
             var temp = evalRingCutHelper(pprf2, (tx + txs) + (ty + tys) === ures, equalities)
             have(temp._2)
-            temp = evalRingCutHelper(pprf, (tx + txs) + (ty + tys) === ures, equalities)
+            temp = evalRingCutHelper(pprf, (tx + txs) + (ty + tys) === ures, temp._1)
             have(temp._2)
           }
           case (tx, ty) if isVariableOrNeg(tx) => {
@@ -391,9 +391,9 @@ object EqReasoning extends lisa.Main {
             )
             var temp = evalRingCutHelper(pprf1, (tx + txs) + (ty + tys) === ures, equalities)
             have(temp._2)
-            temp = evalRingCutHelper(pprf2, (tx + txs) + (ty + tys) === ures, equalities)
+            temp = evalRingCutHelper(pprf2, (tx + txs) + (ty + tys) === ures, temp._1)
             have(temp._2)
-            temp = evalRingCutHelper(pprf3, (tx + txs) + (ty + tys) === ures, equalities)
+            temp = evalRingCutHelper(pprf3, (tx + txs) + (ty + tys) === ures, temp._1)
             have(temp._2)
           }
             case _ => return (NRB(tx), proof.InvalidProofTactic("evalPlus failed!"))
@@ -479,7 +479,7 @@ object EqReasoning extends lisa.Main {
           )
           var temp = evalRingCutHelper(pprf1, tx + (ty + tys)  === ty + ires.tval, equalities)
           have(temp._2)
-          temp = evalRingCutHelper(pprf2, tx + (ty + tys)  === ty + ires.tval, equalities)
+          temp = evalRingCutHelper(pprf2, tx + (ty + tys)  === ty + ires.tval, temp._1)
           have(temp._2)
         }
         case (tx, ty + tys)  if List(tx, ty).forall(isVariable) || List(x, y).forall(isNegVariable) => {
@@ -508,7 +508,7 @@ object EqReasoning extends lisa.Main {
               )
               var temp = evalRingCutHelper(pprf1, tx + (ty + tys)  === ty + ires.tval, equalities)
               have(temp._2)
-              temp = evalRingCutHelper(pprf2, tx + (ty + tys)  === ty + ires.tval, equalities)
+              temp = evalRingCutHelper(pprf2, tx + (ty + tys)  === ty + ires.tval, temp._1)
               have(temp._2)
             }
             case _ => return (NRB(xint), proof.InvalidProofTactic("evalPlus failed!"))
@@ -552,7 +552,7 @@ object EqReasoning extends lisa.Main {
               )
               var temp = evalRingCutHelper(pprf1, tx + (ty + tys)  === ty + ires.tval, equalities)
               have(temp._2)
-              temp = evalRingCutHelper(pprf2, tx + (ty + tys)  === ty + ires.tval, equalities)
+              temp = evalRingCutHelper(pprf2, tx + (ty + tys)  === ty + ires.tval, temp._1)
               have(temp._2)
             }
             case _ => return (NRB(xint), proof.InvalidProofTactic("evalPlus failed!"))
@@ -689,7 +689,7 @@ object EqReasoning extends lisa.Main {
               case tx if isVariable(tx) => {
                 val (nres, nprf) = evalNegHelper(Pos, txs)
                 if !nprf.isValid then return (NRB(int), proof.InvalidProofTactic("evalPlus failed!"))
-                val res = RB(-tx + nres.tval)
+                res = RB(-tx + nres.tval)
                 val pprf = have(nprf) // -txs === nres.tval
                 val typings = SSet(tx ∈ R, txs ∈ R)
                 val pprf2 = have(typings |- -(tx + txs) === -tx + -txs) by Tautology.from(negation_dist_add of (x := tx, y := txs))
@@ -705,13 +705,13 @@ object EqReasoning extends lisa.Main {
                 )
                 var temp = evalRingCutHelper(pprf2, -(tx + txs) === -tx + nres.tval, equalities)
                 have(temp._2)
-                temp = evalRingCutHelper(pprf, -(tx + txs) === -tx + nres.tval, equalities)
+                temp = evalRingCutHelper(pprf, -(tx + txs) === -tx + nres.tval, temp._1)
                 have(temp._2)
               }
               case -(txp) if isNegVariable(tx) => {
                 val (nres, nprf) = evalNegHelper(Pos, txs)
                 if !nprf.isValid then return (NRB(int), proof.InvalidProofTactic("evalPlus failed!"))
-                val res = RB(txp + nres.tval)
+                res = RB(txp + nres.tval)
                 val pprf = have(nprf) // -txs === nres.tval
                 val typings = SSet(tx ∈ R, txs ∈ R, txp ∈ R)
                 val pprf2 = have(typings |- -(tx + txs) === -tx + -txs) by Tautology.from(negation_dist_add of (x := tx, y := txs))
@@ -732,9 +732,9 @@ object EqReasoning extends lisa.Main {
                 )
                 var temp = evalRingCutHelper(pprf2, -((-txp) + txs) === txp + nres.tval, equalities)
                 have(temp._2)
-                temp = evalRingCutHelper(pprf, -((-txp) + txs) === txp + nres.tval, equalities)
+                temp = evalRingCutHelper(pprf, -((-txp) + txs) === txp + nres.tval, temp._1)
                 have(temp._2)
-                temp = evalRingCutHelper(pprf3, -((-txp) + txs) === txp + nres.tval, equalities)
+                temp = evalRingCutHelper(pprf3, -((-txp) + txs) === txp + nres.tval, temp._1)
                 have(temp._2)
               }
               case _ => return (NRB(int), proof.InvalidProofTactic("evalNegHelper reached an unreachable case!"))
@@ -748,7 +748,7 @@ object EqReasoning extends lisa.Main {
           case (Pos, `1` + txs) => {
             val (nres, nprf) = evalNegHelper(Pos, txs)
                 if !nprf.isValid then return (NRB(int), proof.InvalidProofTactic("evalPlus failed!"))
-                val res = RB(-1 + nres.tval)
+                res = RB(-1 + nres.tval)
                 val pprf = have(nprf) // -txs === nres.tval
                 val typings = SSet(1 ∈ R, txs ∈ R)
                 val pprf2 = have(typings |- -(1 + txs) === -1 + -txs) by Tautology.from(negation_dist_add of (x := 1, y := txs))
@@ -764,7 +764,7 @@ object EqReasoning extends lisa.Main {
                 )
                 var temp = evalRingCutHelper(pprf2, -(1 + txs) === -1 + nres.tval, equalities)
                 have(temp._2)
-                temp = evalRingCutHelper(pprf, -(1 + txs) === -1 + nres.tval, equalities)
+                temp = evalRingCutHelper(pprf, -(1 + txs) === -1 + nres.tval, temp._1)
                 have(temp._2)
           }
           case (Neg, -(`1`)) => {
@@ -774,32 +774,32 @@ object EqReasoning extends lisa.Main {
           }
           case (Neg, -(`1`) + txs) => {
             val (nres, nprf) = evalNegHelper(Neg, txs)
-                if !nprf.isValid then return (NRB(int), proof.InvalidProofTactic("evalPlus failed!"))
-                val res = RB(1 + nres.tval)
-                val pprf = have(nprf) // -txs === nres.tval
-                val typings = SSet(-1 ∈ R, txs ∈ R, 1 ∈ R)
-                val pprf2 = have(typings |- -(-`1` + txs) === -(-`1`) + -txs) by Tautology.from(negation_dist_add of (x := -1, y := txs))
-                val pprf3 = have(typings |- -(-`1`) === 1) by Tautology.from(double_negation_elimination of (x := 1))
-                val equalities = SSet(pprf, pprf2, pprf3).map(_.bot.firstElemR)
-                have(equalities |- -(-1 + txs)  === -(-1 + txs)) by Restate
-                thenHave(equalities |- -(-1 + txs) === -(-`1`) + -txs) by RightSubstEq.withParameters(
-                  Seq((-(-1 + txs),  -(-`1`) + -txs)),
-                  (Seq(a), -(-1 + txs) === a)
-                )
-                thenHave(equalities |- -((-1) + txs) === -(-`1`) + nres.tval) by RightSubstEq.withParameters(
-                  Seq((-txs, nres.tval)),
-                  (Seq(a), -((-1)  + txs) === -(-`1`) + a)
-                )
-                thenHave(equalities |- -((-1) + txs) === 1 + nres.tval) by RightSubstEq.withParameters(
-                  Seq((-(-`1`), 1)),
-                  (Seq(a), -((-1)  + txs) === a + nres.tval)
-                )
-                var temp = evalRingCutHelper(pprf2, -((-1) + txs) === 1 + nres.tval, equalities)
-                have(temp._2)
-                temp = evalRingCutHelper(pprf, -((-1) + txs) === 1 + nres.tval, equalities)
-                have(temp._2)
-                temp = evalRingCutHelper(pprf3, -((-1) + txs) === 1 + nres.tval, equalities)
-                have(temp._2)
+            if !nprf.isValid then return (NRB(int), proof.InvalidProofTactic("evalPlus failed!"))
+            res = RB(1 + nres.tval)
+            val pprf = have(nprf) // -txs === nres.tval
+            val typings = SSet(-1 ∈ R, txs ∈ R, 1 ∈ R)
+            val pprf2 = have(typings |- -(-`1` + txs) === -(-`1`) + -txs) by Tautology.from(negation_dist_add of (x := -1, y := txs))
+            val pprf3 = have(typings |- -(-`1`) === 1) by Tautology.from(double_negation_elimination of (x := 1))
+            val equalities = SSet(pprf, pprf2, pprf3).map(_.bot.firstElemR)
+            have(equalities |- -(-1 + txs)  === -(-1 + txs)) by Restate
+            thenHave(equalities |- -(-1 + txs) === -(-`1`) + -txs) by RightSubstEq.withParameters(
+              Seq((-(-1 + txs),  -(-`1`) + -txs)),
+              (Seq(a), -(-1 + txs) === a)
+            )
+            thenHave(equalities |- -((-1) + txs) === -(-`1`) + nres.tval) by RightSubstEq.withParameters(
+              Seq((-txs, nres.tval)),
+              (Seq(a), -((-1)  + txs) === -(-`1`) + a)
+            )
+            thenHave(equalities |- -((-1) + txs) === 1 + nres.tval) by RightSubstEq.withParameters(
+              Seq((-(-`1`), 1)),
+              (Seq(a), -((-1)  + txs) === a + nres.tval)
+            )
+            var temp = evalRingCutHelper(pprf2, -((-1) + txs) === 1 + nres.tval, equalities)
+            have(temp._2)
+            temp = evalRingCutHelper(pprf, -((-1) + txs) === 1 + nres.tval, temp._1)
+            have(temp._2)
+            temp = evalRingCutHelper(pprf3, -((-1) + txs) === 1 + nres.tval, temp._1)
+            have(temp._2)
           }
           case _ => return (NRB(int), proof.InvalidProofTactic("evalNegHelper failed!")) 
         }
@@ -811,16 +811,113 @@ object EqReasoning extends lisa.Main {
       TacticSubproofWithResult[Biased]{
         (xint, yint) match {
           case (RB(xi), RB(yi)) => (xi, yi) match {
-            case (`0`, ty) => ???
-            case (tx, `0`) => ???
-            case (`1`, ty) => ???
-            case (tx, `1`) => ???
-            case (`-`(`1`), ty) => ???
-            case (tx, `-`(`1`)) => ???
-            case (tx + txs, ty) => ???
-            case _ => ???
+            case (`0`, ty) => {
+              val typings = SSet(ty ∈ R)
+              res = RB(0)
+              have(typings |- 0 * ty === 0) by Tautology.from(mult_zero_x_zero of (x := ty))
+            }
+            case (tx, `0`) => {
+              val typings = SSet(tx ∈ R)
+              res = RB(0)
+              have(typings |- tx * 0 === 0) by Tautology.from(mult_zero_x_zero of (x := tx))
+            }
+            case (`1`, ty) => {
+              val typings = SSet(ty ∈ R)
+              res = RB(ty)
+              have(typings |- 1 * ty === ty) by Tautology.from(mul_id_right of (x := ty))
+            }
+            case (tx, `1`) => {
+              val typings = SSet(tx ∈ R)
+              res = RB(tx)
+              have(typings |- tx * 1 === tx) by Tautology.from(mul_id_left of (x := tx))
+            }
+            case (`-`(`1`), ty) => {
+              val (nres, nprf) = evalNeg(RB(ty))
+              if !nprf.isValid then return (NRB(xint.tval * yint.tval), proof.InvalidProofTactic("evalMult failed!"))
+              res = nres
+              val pprf = have(nprf) // -txs === nres.tval
+              val typings = SSet(-1 ∈ R, ty ∈ R)
+              val pprf2 = have(typings |- -1 * ty === -ty) by Tautology.from(mult_neg1_x_negx of (x := ty))
+  
+              val equalities = SSet(pprf, pprf2).map(_.bot.firstElemR)
+              have(equalities |- -1 * ty  === -1 * ty) by Restate
+              thenHave(equalities |- -1 * ty === -ty) by RightSubstEq.withParameters(
+                Seq((-1 * ty,  -ty)),
+                (Seq(a), -1 * ty === a)
+              )
+              thenHave(equalities |- -1 * ty === nres.tval) by RightSubstEq.withParameters(
+                Seq((-ty, nres.tval)),
+                (Seq(a), -1 * ty === a)
+              )
+
+              var temp = evalRingCutHelper(pprf2, -1 * ty === nres.tval, equalities)
+              have(temp._2)
+              temp = evalRingCutHelper(pprf, -1 * ty === nres.tval, temp._1)
+              have(temp._2)
+            }
+            case (ty, `-`(`1`)) => {
+              val (nres, nprf) = evalNeg(RB(ty))
+              if !nprf.isValid then return (NRB(xint.tval * yint.tval), proof.InvalidProofTactic("evalMult failed!"))
+              res = nres
+              val pprf = have(nprf) // -txs === nres.tval
+              val typings = SSet(-1 ∈ R, ty ∈ R)
+              val pprf2 = have(typings |- ty * -1 === -ty) by Tautology.from(mult_x_neg1_negx of (x := ty))
+  
+              val equalities = SSet(pprf, pprf2).map(_.bot.firstElemR)
+              have(equalities |- ty * -1  === ty * -1) by Restate
+              thenHave(equalities |- ty * -1 === -ty) by RightSubstEq.withParameters(
+                Seq((ty * -1,  -ty)),
+                (Seq(a), ty * -1 === a)
+              )
+              thenHave(equalities |- ty * -1 === nres.tval) by RightSubstEq.withParameters(
+                Seq((-ty, nres.tval)),
+                (Seq(a), ty * -1 === a)
+              )
+
+              var temp = evalRingCutHelper(pprf2, ty * -1 === nres.tval, equalities)
+              have(temp._2)
+              temp = evalRingCutHelper(pprf, ty * -1 === nres.tval, temp._1)
+              have(temp._2)
+            }
+            case (tx + txs, ty) => {
+              val (mres1, mprf1) = evalMult(RB(tx), RB(ty))
+              if !mprf1.isValid then return (NRB(xint.tval * yint.tval), proof.InvalidProofTactic("evalMult failed!"))
+              val (mres2, mprf2) = evalMult(RB(txs), RB(ty))
+              if !mprf2.isValid then return (NRB(xint.tval * yint.tval), proof.InvalidProofTactic("evalMult failed!"))
+              val (mres3, mprf3) = evalPlus(mres1, mres2)
+              if !mprf3.isValid then return (NRB(xint.tval * yint.tval), proof.InvalidProofTactic("evalMult failed!"))
+              val typings = SSet(tx ∈ R, txs ∈ R, ty ∈ R)
+              val (pprf, pprf2, pprf3) = (have(mprf1), have(mprf2), have(mprf3))
+              val pprf4 = have(typings |- (tx + txs) * ty === (tx * ty) + (txs * ty)) by Tautology.from(mul_dist_right of (y := tx, z := txs, x := ty))
+
+              val equalities = SSet(pprf, pprf2, pprf3, pprf4).map(_.bot.firstElemR)
+              have(equalities |- (tx + txs) * ty  === (tx + txs) * ty) by Restate
+              thenHave(equalities |- (tx + txs) * ty === (tx * ty) + (txs * ty))  by RightSubstEq.withParameters(
+                Seq(((tx + txs) * ty,  (tx * ty) + (txs * ty))),
+                (Seq(a), (tx + txs) * ty === a)
+              )
+              thenHave(equalities |- (tx + txs) * ty === mres1.tval + mres2.tval) by RightSubstEq.withParameters(
+                Seq(((tx * ty), mres1.tval), ((txs * ty), mres2.tval)),
+                (Seq(a, b), (tx + txs) * ty === a + b)
+              )
+              thenHave(equalities |- (tx + txs) * ty === mres3.tval) by RightSubstEq.withParameters(
+                Seq(((mres1.tval + mres2.tval), mres3.tval)),
+                (Seq(a), (tx + txs) * ty === a)
+              )
+
+              var temp = evalRingCutHelper(pprf, (tx + txs) * ty === mres3.tval, equalities)
+              have(temp._2)
+              temp = evalRingCutHelper(pprf2, (tx + txs) * ty === mres3.tval, temp._1)
+              have(temp._2)
+              temp = evalRingCutHelper(pprf3, (tx + txs) * ty === mres3.tval, temp._1)
+              have(temp._2)
+              temp = evalRingCutHelper(pprf4, (tx + txs) * ty === mres3.tval, temp._1)
+              have(temp._2)
+
+            } 
+            case _ => return (NRB(xint.tval * yint.tval), proof.InvalidProofTactic("evalMult failed!")) 
           }
-          case _ => ???
+          case _ => return (NRB(xint.tval * yint.tval), proof.InvalidProofTactic("evalMult failed!")) 
         }
       }(res)
     }

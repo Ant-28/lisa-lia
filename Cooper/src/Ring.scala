@@ -429,7 +429,7 @@ object RingStructure extends lisa.Main {
     have(thesis) by Congruence.from(v1, v2)
   }
 
-  val zero_times = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R)) |- (`0` * x === `0`)) {
+  val mult_zero_x_zero = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R)) |- (`0` * x === `0`)) {
     assume(x ∈ R)
     assume(ring(R, <=, +, *, -, |, `0`, `1`))
     val zero_r = have(`0` ∈ R) by Tautology.from(add_id_closure)
@@ -457,6 +457,17 @@ object RingStructure extends lisa.Main {
     have(thesis) by Congruence.from(s9, s8, s7, s6, s5, s4)
   }
 
+  val mult_x_zero_zero = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R)) |- (x * 0 === 0)) {
+    assume(x ∈ R)
+    assume(ring(R, <=, +, *, -, |, `0`, `1`))
+    val zero_r = have(`0` ∈ R) by Tautology.from(add_id_closure)
+
+    val h1 = have(x * 0 === 0 * x) by Tautology.from(mul_comm of (x := x, y := 0), zero_r)
+    val h2 = have(0 * x === 0) by Tautology.from(mult_zero_x_zero)
+    have(x * 0 === 0) by Congruence.from(h1, h2)
+    have(thesis) by Tautology.from(h1, h2, lastStep)
+  } 
+
   val double_negation_elimination = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R)) |- (-(-(x)) === x)){
     assume(ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R))
     val n1 = have(-(x) ∈ R) by Tautology.from(neg_closure of (x := x))
@@ -481,7 +492,7 @@ object RingStructure extends lisa.Main {
     val h5 = have(`0` ∈ R) by Tautology.from(add_id_closure)
     have((x + -(x)) === `0`) by Tautology.from(add_inv)
     val v2 = have((x + -(x)) * y === `0` * y) by Congruence.from(lastStep)
-    have(`0` * y  === `0`) by Tautology.from(zero_times of (x := y))
+    have(`0` * y  === `0`) by Tautology.from(mult_zero_x_zero of (x := y))
     have((x + -(x)) * y === `0`) by Congruence.from(lastStep, v2)
     have(((x * y) + (-(x) * y)) === `0`) by Congruence.from(lastStep, h3, mul_dist_right of (y := x, z := -(x), x := y))
     have(((-(x) * y) + (x * y)) === `0`) by Congruence.from(h1, h2, h3, h4, add_comm of (x := (x * y), y:= (-(x) * y)), lastStep)
@@ -749,7 +760,7 @@ object RingStructure extends lisa.Main {
   }
 
   // thank you past me
-  val multHelper1 = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R) |- -(`1`)*x === -(x)){
+  val mult_neg1_x_negx = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R) |- -(`1`)*x === -(x)){
     assume(ring(R, <=, +, *, -, |, `0`, `1`))
     assume(x ∈ R)
     val h1 = have(`0` ∈ R) by Tautology.from(add_id_closure) 
@@ -759,6 +770,16 @@ object RingStructure extends lisa.Main {
     val h6 = have(`1` * x === x) by Tautology.from(mul_id_right)
     have(-(`1`)*x === -(x)) by Congruence.from(h1, h2, h3, h5, h6)
     have(thesis) by Tautology.from(lastStep, h1, h2, h3, h5, h6)
+  }
+  val mult_x_neg1_negx = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R) |- x*(-1) === -(x)){
+    assume(x ∈ R)
+    assume(ring(R, <=, +, *, -, |, `0`, `1`))
+    val id_r = have(1 ∈ R) by Tautology.from(mul_id_closure)
+    val nid_r = have(-1 ∈ R) by Tautology.from(neg_closure of (x := 1), id_r)
+    val h1 = have(x * -1 === -1 * x) by Tautology.from(mul_comm of (x := x, y := -1), nid_r)
+    val h2 = have(-1 * x === -x) by Tautology.from(mult_neg1_x_negx)
+    have(x * -1 === -x) by Congruence.from(h1, h2)
+    have(thesis) by Tautology.from(h1, h2, lastStep)
   }
 
   object BigIntToRingElem{
@@ -772,9 +793,9 @@ object RingStructure extends lisa.Main {
     }
     def ic(x : BigInt) : Expr[Ind] = {
       x match {
-        case 0 => `0`
-        case 1 => `1`
-        case -1 => -(`1`)
+        case x if x == BigInt(0) => `0`
+        case x if x == BigInt(1) => `1`
+        case x if x == BigInt(-1)  => -(`1`)
         case x if x > 0 => `1` + ic(x - 1)
         case x if x < 0 => -(`1`) + ic(x + 1)
       } 
