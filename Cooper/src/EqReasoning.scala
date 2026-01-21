@@ -13,7 +13,9 @@ import scala.collection.SortedSet
 import scala.collection.SeqView.Sorted
 
 
+
 object EqReasoning extends lisa.Main {
+    // FIXME: move imports up
     import RingStructure.{*}
     import Utils.{*, given Ordering[?]}
     // RB-trees: an ex
@@ -33,38 +35,12 @@ object EqReasoning extends lisa.Main {
 
 
     object inSet extends ProofTactic {
-      def from(using lib: library.type, proof: lib.Proof)(premises: proof.Fact*)(bot: Sequent) = ???
+      def from(using proof: library.Proof)(premises: proof.Fact*)(bot: Sequent) = ???
     }
 
     object evalRingEq extends ProofTactic {
     
-    def apply(using lib: library.type, proof: lib.Proof)(goal: Sequent)(using myOrd: Ordering[Expr[Ind]]): proof.ProofTacticJudgement = {
-      // given myOrdering : Ordering[proof.InstantiatedFact | proof.ProofStep]{
-      //     def compare(x: proof.InstantiatedFact | proof.ProofStep, y: proof.InstantiatedFact | proof.ProofStep): Int = {
-      //         val IOrder = summon[Ordering[Int]]
-      //         (x: @unchecked) match {
-      //             case tx : Library#Proof#InnerProof#InstantiatedFact => {
-      //                 (y: @unchecked) match {
-      //                     case ty : Library#Proof#InnerProof#InstantiatedFact => IOrder.compare(treeDepth(getTypingVarsInAnte(tx.result.right).head), 
-      //                                         treeDepth(getTypingVarsInAnte(ty.result.right).head))
-                          
-      //                     case ty : Library#Proof#InnerProof#ProofStep => IOrder.compare(treeDepth(getTypingVarsInAnte(tx.result.right).head), 
-      //                                         treeDepth(getTypingVarsInAnte(ty.bot.right).head))
-      //                 }
-      //             }
-      //             case tx : Library#Proof#InnerProof#ProofStep => {
-      //                 (y: @unchecked) match {
-      //                     case ty : Library#Proof#InnerProof#InstantiatedFact => IOrder.compare(treeDepth(getTypingVarsInAnte(tx.bot.right).head), 
-      //                                         treeDepth(getTypingVarsInAnte(ty.result.right).head))
-                          
-      //                     case ty : Library#Proof#InnerProof#ProofStep => IOrder.compare(treeDepth(getTypingVarsInAnte(tx.bot.right).head), 
-      //                                         treeDepth(getTypingVarsInAnte(ty.bot.right).head))
-      //                 }
-      //             }
-      //         }
-      //     }
-      // }
-
+    def apply(using proof: library.Proof)(goal: Sequent)(using myOrd: Ordering[Expr[Ind]]): proof.ProofTacticJudgement = {
       if (goal.right.size != 1) then
         proof.InvalidProofTactic("I can't prove more than one sequent!")
       else
@@ -77,72 +53,67 @@ object EqReasoning extends lisa.Main {
             // println(have(sol).bot)
             if !sol.isValid then return proof.InvalidProofTactic("Checking sums failed!")
             else
-              val hprf = have(sol)
               println("thing to cut")
-              println(hprf.bot)
+              println(have(sol).bot)
               val typing = typeChecking(getTypingVarsInAnte(have(sol).bot.left))
               println("unsorted")
-              typing.map(x => {
-                x match {
-                  case x : Library#Proof#InnerProof#ProofStep => {
-                    println("proofstep")
-                    println(x.bot)
-                    println(x.bot.firstElemR)}
-                  case x : Library#Proof#InnerProof#InstantiatedFact => {
-                    println("instfact")
-                    println(x.result)
-                    println(x.result.firstElemR)}
-                }
-              })
-              val typing2 = typing.map(_.asInstanceOf[proof.InstantiatedFact | proof.ProofStep])
-              println("typing2")
-              typing2.map(x => {
-                x match {
-                  case x : Library#Proof#InnerProof#ProofStep => {
-                    println("proofstep")
-                    println(x.bot)
-                    println(x.bot.firstElemR)}
-                  case x : Library#Proof#InnerProof#InstantiatedFact => {
-                    println("instfact")
-                    println(x.result)
-                    println(x.result.firstElemR)}
-                }
-              })
-              println("end typing2")
+              typing.map(proofStepDebugPrint)
+              // val typing2 = typing.map(_.asInstanceOf[proof.InstantiatedFact | proof.ProofStep])
+              // println("typing2")
+              // typing2.map(proofStepDebugPrint)
+              // println("end typing2")
               
-              // val foo = SortedSet(typing.map(_.asInstanceOf[proof.InstantiatedFact | proof.ProofStep]).toSeq*)(using summon[Ordering[proof.InstantiatedFact | proof.ProofStep]])
-              // println(foo)
-              // println("sorted")
-              // foo.map(x => {
-              //   x match {
-              //     case x : Library#Proof#InnerProof#ProofStep => {
-              //       println("proofstep")
-              //       println(x.bot)
-              //       println(x.bot.firstElemR)}
-              //     case x : Library#Proof#InnerProof#InstantiatedFact => {
-              //       println("instfact")
-              //       println(x.result)
-              //       println(x.result.firstElemR)}
-              //   }
-              // })
-
-              
+                           
       
               println("lengths")
-              // println(foo.size)
-              println(typing.size)
-              println(typing2.size)
-              println(typing.toList.sortBy(proofStepDepth).size)
+              
+              // .map(proofStepDebugPrint)
               // val foo2 = SortedSet[proof.InstantiatedFact | proof.ProofStep]() ++ typing
               // println(foo2.size)
-              val seqs = typing + have(sol)
+              val hprf = have(sol)
+              val seqs = typing + hprf
+              var temp : (SSet[Expr[Prop]], proof.ProofTacticJudgement) = (getTypings(hprf.bot.left), proof.InvalidProofTactic("temp"))
               // TODO: Use cuts instead
+              def proofStepCalc(x : proof.InstantiatedFact | proof.ProofStep) : Unit = {
+                x.
+                // x.
+                // (x: @unchecked) match {
+                //   case tx : proof.ProofStep => {
+                    
+                //     temp = evalRingCutHelper(tx, hprf.bot.right.head, temp._1, lastStep)
+                //     have(temp._2)
+                //   }
+                //   case tx : proof.InstantiatedFact => {
+
+                //     temp = evalRingCutHelperB(tx, hprf.bot.right.head, temp._1, lastStep)
+                //     have(temp._2)
+                //   }}
+                // }
+              }
+    
+              // typing.toList.sortBy(proofStepDepth).map()
+              // typing.toList.sortBy(proofStepDepth).map( x => {
+                
+                
+                  // x match {
+                  //   case tx : Library#Proof#InnerProof#ProofStep => {
+                  //     temp = evalRingCutHelper(have(tx), hprf.sRightHead, temp._1, lastStep)
+                  //     have(temp._2)
+                  //   }
+              //       case tx : Library#Proof#InnerProof#InstantiatedFact => {
+              //         temp = evalRingCutHelperB(tx, hprf.sRightHead, temp._1, lastStep)
+              //         have(temp._2)
+              //       }
+              //     }
+                
+              //   }
+              // )
               have(goal) by Tautology.from(seqs.toSeq*)
         }
     }
 
 
-    def simplify(using lib: library.type, proof: lib.Proof)(goal: Expr[Prop])(using myOrd: Ordering[Expr[Ind]]): proof.ProofTacticJudgement = 
+    def simplify(using proof: library.Proof)(goal: Expr[Prop])(using myOrd: Ordering[Expr[Ind]]): proof.ProofTacticJudgement = 
       {assume(ring(R, <=, +, *, -, |, 0, 1))
       TacticSubproof {
         goal match 
@@ -172,7 +143,7 @@ object EqReasoning extends lisa.Main {
     
       
 
-    def evalRing(using lib: library.type, proof: lib.Proof)(int: Expr[Ind])(using myOrd: Ordering[Expr[Ind]]): (Biased, proof.ProofTacticJudgement) = {
+    def evalRing(using proof: library.Proof)(int: Expr[Ind])(using myOrd: Ordering[Expr[Ind]]): (Biased, proof.ProofTacticJudgement) = {
       assume(ring(R, <=, +, *, -, |, 0, 1))
       var res : Biased = NRB(0)
       TacticSubproofWithResult[Biased]{
@@ -287,7 +258,7 @@ object EqReasoning extends lisa.Main {
     }
     
     
-    def evalPlus(using lib: library.type, proof: lib.Proof)(xint: Biased, yint: Biased)(using myOrd: Ordering[Expr[Ind]]): (Biased, proof.ProofTacticJudgement) = {
+    def evalPlus(using proof: library.Proof)(xint: Biased, yint: Biased)(using myOrd: Ordering[Expr[Ind]]): (Biased, proof.ProofTacticJudgement) = {
       assume(ring(R, <=, +, *, -, |, 0, 1))
       var res : Biased = NRB(xint.tval)
       TacticSubproofWithResult[Biased]{
@@ -517,7 +488,7 @@ object EqReasoning extends lisa.Main {
     }
 
 
-    def evalInsert(using lib: library.type, proof: lib.Proof)(xint: Expr[Ind], yint: Expr[Ind])(using myOrd: Ordering[Expr[Ind]]): (Biased, proof.ProofTacticJudgement) = {
+    def evalInsert(using proof: library.Proof)(xint: Expr[Ind], yint: Expr[Ind])(using myOrd: Ordering[Expr[Ind]]): (Biased, proof.ProofTacticJudgement) = {
       
       var res : Biased = NRB(0)
       TacticSubproofWithResult[Biased]{
@@ -679,7 +650,7 @@ object EqReasoning extends lisa.Main {
         }
       }(res)
     }
-    def evalIncr(using lib: library.type, proof: lib.Proof)(int: Biased)(using myOrd: Ordering[Expr[Ind]]): (Biased, proof.ProofTacticJudgement) = {
+    def evalIncr(using proof: library.Proof)(int: Biased)(using myOrd: Ordering[Expr[Ind]]): (Biased, proof.ProofTacticJudgement) = {
       var res : Biased = NRB(0)
       TacticSubproofWithResult[Biased]{
       int match
@@ -703,7 +674,7 @@ object EqReasoning extends lisa.Main {
         case _ => return (NRB(int.tval), proof.InvalidProofTactic("evalIncr failed!"))
       }(res)
     }
-    def evalDecr(using lib: library.type, proof: lib.Proof)(int: Biased)(using myOrd: Ordering[Expr[Ind]]): (Biased, proof.ProofTacticJudgement) = {
+    def evalDecr(using proof: library.Proof)(int: Biased)(using myOrd: Ordering[Expr[Ind]]): (Biased, proof.ProofTacticJudgement) = {
       var res : Biased = NRB(0)
       TacticSubproofWithResult[Biased]{
       int match
@@ -728,7 +699,7 @@ object EqReasoning extends lisa.Main {
       }(res)
     }
     
-    def evalNeg(using lib: library.type, proof: lib.Proof)(int: Biased)(using myOrd: Ordering[Expr[Ind]]): (Biased, proof.ProofTacticJudgement) = {
+    def evalNeg(using proof: library.Proof)(int: Biased)(using myOrd: Ordering[Expr[Ind]]): (Biased, proof.ProofTacticJudgement) = {
       var res : Biased = NRB(0)
       TacticSubproofWithResult[Biased]{
       int match
@@ -782,7 +753,7 @@ object EqReasoning extends lisa.Main {
         case _ => return (NRB(int.tval), proof.InvalidProofTactic("evalNeg Failed!"))
       }(res)
     }
-    def evalNegHelper(using lib: library.type, proof: lib.Proof)(sign: Sign, int: Expr[Ind])(using myOrd: Ordering[Expr[Ind]]): (Biased, proof.ProofTacticJudgement) = {
+    def evalNegHelper(using proof: library.Proof)(sign: Sign, int: Expr[Ind])(using myOrd: Ordering[Expr[Ind]]): (Biased, proof.ProofTacticJudgement) = {
       var res : Biased = NRB(0)
       TacticSubproofWithResult[Biased]{
         (sign, int) match {
@@ -923,7 +894,7 @@ object EqReasoning extends lisa.Main {
       }(res)
     }
     
-    def evalMult(using lib: library.type, proof: lib.Proof)(xint: Biased, yint: Biased)(using myOrd: Ordering[Expr[Ind]]): (Biased, proof.ProofTacticJudgement) = {
+    def evalMult(using proof: library.Proof)(xint: Biased, yint: Biased)(using myOrd: Ordering[Expr[Ind]]): (Biased, proof.ProofTacticJudgement) = {
       var res : Biased = NRB(0)
       TacticSubproofWithResult[Biased]{
         (xint, yint) match {

@@ -21,9 +21,9 @@ prettyPrint (Mult a b) = "(" ++ prettyPrint a ++ " * " ++ prettyPrint b ++ ")"
 prettyPrint (Neg a) = "-(" ++ prettyPrint a ++ ")"
 prettyPrint (Var x) = x
 
-getVars :: RingAst -> String 
+getVars :: RingAst -> String
 getVars (Var x) = x
-getVars (Neg (Var x)) = x 
+getVars (Neg (Var x)) = x
 getVars _ = error "called with invalid input"
 data Sign = P | M deriving Show
 
@@ -115,7 +115,13 @@ evalPlus (RB (Plus x xs))  (RB (Plus y ys)) = case (x, y) of
     -- (Neg (Var z), Neg (Var a)) -> evalPlus (RB xs) (evalInsert (Neg (Var z)) (Plus y ys))
 evalPlus _ _ = error "Violated right-biased invariant"
 
-
+treeDepth :: RingAst -> Int
+treeDepth Zero = 1
+treeDepth One = 1
+treeDepth (Var x) = 1
+treeDepth (Plus a b) = max (treeDepth a) (treeDepth b) + 1
+treeDepth (Mult a b) = max (treeDepth a) (treeDepth b) + 1
+treeDepth (Neg a) = (treeDepth a) + 1
 
 
 u :: RbRing -> RingAst
@@ -126,17 +132,17 @@ u (RB x) = x
 evalInsert :: RingAst -> RingAst -> RbRing
 evalInsert x Zero | isVarOrNegation x = RB x
 evalInsert x y | isVarOrNegation x && isOneOrNegOne y = RB (Plus y x)
-evalInsert x y | all isVar [x, y] || all isNegVar [x, y] =     
-    let z = getVars x in 
-    let a = getVars y in    
+evalInsert x y | all isVar [x, y] || all isNegVar [x, y] =
+    let z = getVars x in
+    let a = getVars y in
     if z < a then RB (Plus x y) else RB (Plus y x)
 -- evalInsert (Var z) One  = RB (Plus One (Var z))
 -- evalInsert (Var z) (Neg One)  = RB (Plus (Neg One) (Var z))
 -- evalInsert (Neg (Var z)) Zero = RB (Var z)
 -- evalInsert (Neg (Var z)) (Neg One)  = RB (Plus (Neg One) (Var z))
-evalInsert x y | isVar x && isNegVar y = 
+evalInsert x y | isVar x && isNegVar y =
     let z = getVars x in
-    let a = getVars y in 
+    let a = getVars y in
     case (z, a) of
     (z, a) |  z == a -> RB Zero
     (z, a) |  z < a  -> RB (Plus x y)
@@ -146,16 +152,16 @@ evalInsert x@(Neg (Var z)) y@(Var a) = evalInsert y x
 
 evalInsert x (Plus y ys) | isVarOrNegation x && isOneOrNegOne y = RB (Plus y (u (evalInsert x ys)))
 
-evalInsert x (Plus y ys)  | all isVar [x, y] || all isNegVar [x, y] = 
-    let z = getVars x in 
-    let a = getVars y in    
+evalInsert x (Plus y ys)  | all isVar [x, y] || all isNegVar [x, y] =
+    let z = getVars x in
+    let a = getVars y in
     if z < a
     then RB (Plus x y)
     else RB (Plus y (u (evalInsert x ys)))
-evalInsert x (Plus y ys) | (isVar x && isNegVar y) ||(isNegVar x && isVar y) = 
+evalInsert x (Plus y ys) | (isVar x && isNegVar y) ||(isNegVar x && isVar y) =
     let z = getVars x in
-    let a = getVars y in 
-    case (z, a) of 
+    let a = getVars y in
+    case (z, a) of
     (z, a) | z == a    -> RB ys
     (z, a) | z < a     -> RB (Plus x (Plus y ys))
     (z, a)             -> RB (Plus y (u (evalInsert x ys)))

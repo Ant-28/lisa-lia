@@ -22,16 +22,13 @@ object Utils {
       def firstElemL: Expr[Prop] = s.left.head
       def firstElemR: Expr[Prop] = s.right.head
 
-    extension (using lib: library.type, proof: lib.Proof)(p : proof.ProofStep)
-      def sLeft = p.bot.left
-      def sRight = p.bot.right
-      def sRightHead = p.bot.firstElemR
+    extension (using proof: library.Proof)(p : proof.ProofStep | proof.InstantiatedFact)
+      def sLeft = proof.sequentOfFact(p).left
+      def sRight = proof.sequentOfFact(p).right
+      def sRightHead = proof.sequentOfFact(p).firstElemR
 
     
-    
-    extension (using lib: library.type, proof: lib.Proof)(x : proof.InstantiatedFact)
-      def sRightHeadB = x.result.firstElemR
-
+  
 
     def isVariableOrNeg(x: Expr[Ind]): Boolean = {
       x match {
@@ -99,6 +96,11 @@ object Utils {
       )
       .flatMap(x => collectSubExprs(x))
 
+    def getTypingFromProp(x : Expr[Prop]): Expr[Ind] = x match {
+          case ys ∈ R => ys
+          case _      => throw Exception("invalid typing!")
+        }
+
     /**
       * Gets all typing propositions in the antecedent of a sequent
       * i.e. any expr of the form x ∈ R
@@ -113,36 +115,65 @@ object Utils {
       )
 
 
-    def proofStepDepth(using lib: library.type, proof: lib.Proof)(x : proof.InstantiatedFact | proof.ProofStep) : Int = {
+    def proofStepDepth(using proof: library.Proof)(x : proof.InstantiatedFact | proof.ProofStep) : Int = {
                 (x: @unchecked) match {
                   case tx : Library#Proof#InnerProof#ProofStep => {
                     // println("proofstep")
                     // println(x.bot)
                     // println(x.bot.firstElemR)
-                    treeDepth(getTypingVarsInAnte(tx.bot.right).head)
+                    -treeDepth(getTypingFromProp(tx.bot.firstElemR))
                     }
                   case tx : Library#Proof#InnerProof#InstantiatedFact => {
                     // println("instfact")
                     // println(tx.result)
                     // println(tx.result.firstElemR)
-                    treeDepth(getTypingVarsInAnte(tx.result.right).head)}
+                    -treeDepth(getTypingFromProp(tx.result.firstElemR))
                 }
       }
+    }
 
-    def proofStepDebugPrint(using lib: library.type, proof: lib.Proof)(x : proof.InstantiatedFact | proof.ProofStep) : Unit = {
+    def proofStepSequent(using proof: library.Proof)(x : proof.InstantiatedFact | proof.ProofStep) : Sequent = {
+                (x: @unchecked) match {
+                  case tx : Library#Proof#InnerProof#ProofStep => tx.bot
+                  case tx : Library#Proof#InnerProof#InstantiatedFact => tx.result
+                }
+    }
+    
+
+    // TODO: proof.sequentOfFact
+    def proofStepDebugPrint(using proof: library.Proof)(x : proof.InstantiatedFact | proof.ProofStep) : Unit = {
+        proof.sequentOfFact(x)
         (x: @unchecked) match {
-          case tx : Library#Proof#InnerProof#ProofStep => {
+          case tx : proof.ProofStep => {
             println("proofstep")
             println(tx.bot)
             println(tx.bot.firstElemR)
+            println(treeDepth(getTypingFromProp(tx.bot.firstElemR)))
+            println(tx.getClass())
+            println(" ")
             // treeDepth(getTypingVarsInAnte(tx.bot.right).head)
             }
-          case tx : Library#Proof#InnerProof#InstantiatedFact => {
+          case tx : proof.InstantiatedFact => {
             println("instfact")
             println(tx.result)
             println(tx.result.firstElemR)
+            println(treeDepth(getTypingFromProp(tx.result.firstElemR)))
+            println(tx.getClass())
+            println(" ")
             // treeDepth(getTypingVarsInAnte(tx.result.right).head)}
         }
+      }
+    }
+
+    def proofStepDebugCut(using proof: library.Proof)(x : proof.InstantiatedFact | proof.ProofStep) : Unit = {
+        println(proof.sequentOfFact(x))
+        println(x.sRightHead)
+        println(treeDepth(getTypingFromProp(x.sRightHead)))
+        println(x.getClass())
+        println(" ")
+        x match {
+          case tx : proof.ProofStep => println("proofstep")
+          case tx : proof.InstantiatedFact => println("instfact")
       }
     }
     /**
@@ -153,7 +184,7 @@ object Utils {
       * @param s: Set of all typings obtained from an antecedent
       * @return Either an instantiated fact or a proof of inclusion
       */
-    def typeChecking(using lib: library.type, proof: lib.Proof)(s: SSet[Expr[Ind]]): SSet[proof.InstantiatedFact | proof.ProofStep] = 
+    def typeChecking(using proof: library.Proof)(s: SSet[Expr[Ind]]): SSet[proof.InstantiatedFact | proof.ProofStep] = 
       s.map: 
         case a + b  => add_closure of (x := a, y := b)
         case -(a)   => neg_closure of (a)
@@ -171,6 +202,7 @@ object Utils {
     def treeDepth(exp: Expr[Ind]): Int = {
       exp match {
         case a + b => scala.math.max(treeDepth(a), treeDepth(b)) + 1
+        case a * b => scala.math.max(treeDepth(a), treeDepth(b)) + 1
         case `0` => 1
         case `1` => 1
         case -(a) => treeDepth(a) + 1
@@ -219,8 +251,23 @@ object Utils {
     }
     }
 
-    def evalRingCutHelper(using lib: library.type, proof: lib.Proof)
-    (equalityToCut: proof.ProofStep, consq: Expr[Prop], equalities: SSet[Expr[Prop]], ls: proof.ProofStep): (SSet[Expr[Prop]], proof.ProofTacticJudgement) = {
+
+    // def evalRingCutHelperB(using proof: library.Proof)
+    // (equalityToCut: proof.InstantiatedFact, consq: Expr[Prop], equalities: SSet[Expr[Prop]], ls: proof.ProofStep): (SSet[Expr[Prop]], proof.ProofTacticJudgement) = {
+    //   if(equalities.contains(equalityToCut.sRightHeadB)) then {
+    //     val res = equalities.excl(equalityToCut.sRightHeadB) ++ equalityToCut.sLeftB
+    //     val toCut = equalityToCut.sRightHeadB
+    //     TacticSubproofWithResult[SSet[Expr[Prop]]]{
+    //       have(res |- consq) by Cut.withParameters(toCut)(equalityToCut, ls)
+    //     }(res)
+    //   } else {
+    //     TacticSubproofWithResult[SSet[Expr[Prop]]]{
+    //       have(equalities |- consq) by Restate.from(ls)
+    //     }(equalities)
+    //   }
+    // }
+    def evalRingCutHelper(using proof: library.Proof)
+    (equalityToCut: proof.ProofStep | proof.InstantiatedFact, consq: Expr[Prop], equalities: SSet[Expr[Prop]], ls: proof.ProofStep): (SSet[Expr[Prop]], proof.ProofTacticJudgement) = {
       if(equalities.contains(equalityToCut.sRightHead)) then {
         val res = equalities.excl(equalityToCut.sRightHead) ++ equalityToCut.sLeft
         val toCut = equalityToCut.sRightHead

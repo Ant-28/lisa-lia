@@ -145,7 +145,7 @@ object RingStructure extends lisa.Main {
         ∀(x, ∀(y, (x ∈ R) /\ (y ∈ R) ==> (x <= y) \/ (y <= x))) // totality 
         /\ (`0` <= `1`)
         /\ !(`0` === `1`) // note: does this need to be an axiom or a consequence of some other axiom??
-
+      // TODO: add denseness to work in the rationals?
       //    ∀(x, ∀(y, (x ∈ R /\ y ∈ R) ==> (x + y) ∈ R))
       // /\ ∀(x, ∀(y, (x ∈ R /\ y ∈ R) ==> (x * y) ∈ R))
       // abelian group under addition axioms
@@ -204,11 +204,15 @@ object RingStructure extends lisa.Main {
       
     }
 
-
+  // omega : bill pugh maryland
     inline def definition = ring.definition
 
   // we can instantiate and extract each of the properties for easier reuse
-
+  // ∀ c ∈ R, !∃x ∈ R s.t. c < x < c + 1 
+  // ∀ c ∈ R, ∀x ∈ R s.t. !(c < x) \/  !(x < c + 1) 
+  // c < x -> c + 1 <= x
+  // rewrite using ∀ in !∃
+  // this is equivalent to ∀x, y ∈ R, x < y => x + 1 <= y 
 
   // scaffolding for "by definition" theorems that are universally quantified
   def freeVars(s: SSet[Expr[Prop]]): SSet[Variable[Ind]] = {
@@ -232,7 +236,7 @@ object RingStructure extends lisa.Main {
 
   // "by definition of the algebraic structure"
   object byRingDefn extends ProofTactic:
-    def apply(using lib: library.type, proof: lib.Proof)(goal: Sequent): proof.ProofTacticJudgement = {
+    def apply(using proof: library.Proof)(goal: Sequent): proof.ProofTacticJudgement = {
       if (!hasRingElem(goal.left)) then proof.InvalidProofTactic("Not a ring") else
       if (goal.right.toList.length != 1) then proof.InvalidProofTactic("right element should only be a string") else
         // evil lexicographical hack that forces a certain order on universal quantifiers

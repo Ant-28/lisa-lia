@@ -30,7 +30,7 @@
 //     // FIXME: Try to use collect
     
 
-//     def apply(using lib: library.type, proof: lib.Proof)(
+//     def apply(using proof: library.Proof)(
 //         goal: Sequent
 //     ): proof.ProofTacticJudgement = {
 //       if (goal.right.size != 1) then
@@ -104,7 +104,7 @@
  
 //       }
 //     }
-//     def evalRing(using lib: library.type, proof: lib.Proof)(
+//     def evalRing(using proof: library.Proof)(
 //         int: Expr[Ind]
 //     ): (Biased, proof.ProofTacticJudgement) = {
 //       assume(ring(R, <=, +, *, -, |, `0`, `1`))
@@ -514,7 +514,7 @@
 //     }
 
     
-//     def simplify(using lib: library.type, proof: lib.Proof)(
+//     def simplify(using proof: library.Proof)(
 //         goal: Expr[Prop]
 //     ): (proof.ProofTacticJudgement) = {
 //       assume(ring(R, <=, +, *, -, |, `0`, `1`))

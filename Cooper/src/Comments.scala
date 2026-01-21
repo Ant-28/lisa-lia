@@ -1,4 +1,4 @@
- // def simplify(using lib: library.type, proof: lib.Proof)(ex: Expr[Ind]): (RB, proof.ProofTacticJudgement) = {
+ // def simplify(using proof: library.Proof)(ex: Expr[Ind]): (RB, proof.ProofTacticJudgement) = {
 
     //     (ex : @unchecked) match {
     //       case `0` => {
