@@ -12,13 +12,14 @@ import RingStructure.{_}
 import Utils.treeDepth
 import RingStructure.c
 import EqReasoning.evalRingEq
+import scala.collection.immutable.SortedSet
 // object Rings extends lisa.Main: 
 //     import RingStructure.{*}
 //     import RingEqReasoning.{*} 
 
 object Rings extends lisa.Main 
 {
-    import Utils.*
+    import Utils.{*, given Ordering[?]}
     import EqReasoning.evalRingEq.evalRing
     
     val t = variable[Ind]
@@ -84,12 +85,16 @@ object Rings extends lisa.Main
     //     }
     //   )
 
-    given myExprOrdering : Ordering[Expr[Ind]] {
-        def compare(x: Expr[Ind], y: Expr[Ind]): Int = {
-            // summon[Ordering[String]].compare(x.asInstanceOf[Variable[Ind]].id.name, y.asInstanceOf[Variable[Ind]].id.name)
-            summon[Ordering[String]].compare(getVarName(x), getVarName(y))
-        }
-    }
+    
+
+    
+
+    // class myProofOrdering extends Ordering[proof.InstantiatedFact | proof.ProofStep] {
+    //     def compare(x: proof.InstantiatedFact | proof.ProofStep, y: proof.InstantiatedFact | proof.ProofStep): Int = {
+    //         ???
+    //     }
+    // }
+    
     val test = Theorem( (ring(R, <=, +, *, -, |, `0`, `1`)) |- `1` + (`1` + `1`) === (`1` + `1`) + `1`){
         assume(ring(R, <=, +, *, -, |, `0`, `1`))
         val t = add_assoc of (x := `1`, y := `1`, z := `1`)
@@ -122,13 +127,14 @@ object Rings extends lisa.Main
     println("Hello!")
     val dummyTheorem = Theorem(P(x) |- P(x)){
         import RingStructure.BigIntToRingElem.*
-        val pprf = evalRingEq.apply((ring(R, <=, +, *, -, |, 0, 1) |- i(2) * i(2) === i(4)))(using myExprOrdering)
+        val pprf = evalRingEq.apply((ring(R, <=, +, *, -, |, 0, 1) |- i(2) * i(2) === i(4)))(using summon[Ordering[Expr[Ind]]])
         // println(pres)
         println(pprf.asInstanceOf[pprf.proof.ValidProofTactic].bot)
         sorry
     }
     // println(isVariable(x))
-    println(`1`.id.name)
+    println(`1`.id.name)   
+    
     // println(isVariableOrNeg(x))
     // println(isVariableOrNeg(-c))
     // println(isVariableOrNeg(`0`))

@@ -9,11 +9,13 @@ import scala.quoted.quotes
 import scala.quoted.{Expr => EExpr, Quotes  }
 import scala.math.Ordering
 import lisa.utils.prooflib.Library
+import scala.collection.SortedSet
+import scala.collection.SeqView.Sorted
 
 
 object EqReasoning extends lisa.Main {
     import RingStructure.{*}
-    import Utils.{*}
+    import Utils.{*, given Ordering[?]}
     // RB-trees: an ex
     sealed trait Biased(treeval: Expr[Ind]) {
       def tval = treeval
@@ -37,6 +39,32 @@ object EqReasoning extends lisa.Main {
     object evalRingEq extends ProofTactic {
     
     def apply(using lib: library.type, proof: lib.Proof)(goal: Sequent)(using myOrd: Ordering[Expr[Ind]]): proof.ProofTacticJudgement = {
+      // given myOrdering : Ordering[proof.InstantiatedFact | proof.ProofStep]{
+      //     def compare(x: proof.InstantiatedFact | proof.ProofStep, y: proof.InstantiatedFact | proof.ProofStep): Int = {
+      //         val IOrder = summon[Ordering[Int]]
+      //         (x: @unchecked) match {
+      //             case tx : Library#Proof#InnerProof#InstantiatedFact => {
+      //                 (y: @unchecked) match {
+      //                     case ty : Library#Proof#InnerProof#InstantiatedFact => IOrder.compare(treeDepth(getTypingVarsInAnte(tx.result.right).head), 
+      //                                         treeDepth(getTypingVarsInAnte(ty.result.right).head))
+                          
+      //                     case ty : Library#Proof#InnerProof#ProofStep => IOrder.compare(treeDepth(getTypingVarsInAnte(tx.result.right).head), 
+      //                                         treeDepth(getTypingVarsInAnte(ty.bot.right).head))
+      //                 }
+      //             }
+      //             case tx : Library#Proof#InnerProof#ProofStep => {
+      //                 (y: @unchecked) match {
+      //                     case ty : Library#Proof#InnerProof#InstantiatedFact => IOrder.compare(treeDepth(getTypingVarsInAnte(tx.bot.right).head), 
+      //                                         treeDepth(getTypingVarsInAnte(ty.result.right).head))
+                          
+      //                     case ty : Library#Proof#InnerProof#ProofStep => IOrder.compare(treeDepth(getTypingVarsInAnte(tx.bot.right).head), 
+      //                                         treeDepth(getTypingVarsInAnte(ty.bot.right).head))
+      //                 }
+      //             }
+      //         }
+      //     }
+      // }
+
       if (goal.right.size != 1) then
         proof.InvalidProofTactic("I can't prove more than one sequent!")
       else
@@ -49,7 +77,11 @@ object EqReasoning extends lisa.Main {
             // println(have(sol).bot)
             if !sol.isValid then return proof.InvalidProofTactic("Checking sums failed!")
             else
+              val hprf = have(sol)
+              println("thing to cut")
+              println(hprf.bot)
               val typing = typeChecking(getTypingVarsInAnte(have(sol).bot.left))
+              println("unsorted")
               typing.map(x => {
                 x match {
                   case x : Library#Proof#InnerProof#ProofStep => {
@@ -62,6 +94,47 @@ object EqReasoning extends lisa.Main {
                     println(x.result.firstElemR)}
                 }
               })
+              val typing2 = typing.map(_.asInstanceOf[proof.InstantiatedFact | proof.ProofStep])
+              println("typing2")
+              typing2.map(x => {
+                x match {
+                  case x : Library#Proof#InnerProof#ProofStep => {
+                    println("proofstep")
+                    println(x.bot)
+                    println(x.bot.firstElemR)}
+                  case x : Library#Proof#InnerProof#InstantiatedFact => {
+                    println("instfact")
+                    println(x.result)
+                    println(x.result.firstElemR)}
+                }
+              })
+              println("end typing2")
+              
+              // val foo = SortedSet(typing.map(_.asInstanceOf[proof.InstantiatedFact | proof.ProofStep]).toSeq*)(using summon[Ordering[proof.InstantiatedFact | proof.ProofStep]])
+              // println(foo)
+              // println("sorted")
+              // foo.map(x => {
+              //   x match {
+              //     case x : Library#Proof#InnerProof#ProofStep => {
+              //       println("proofstep")
+              //       println(x.bot)
+              //       println(x.bot.firstElemR)}
+              //     case x : Library#Proof#InnerProof#InstantiatedFact => {
+              //       println("instfact")
+              //       println(x.result)
+              //       println(x.result.firstElemR)}
+              //   }
+              // })
+
+              
+      
+              println("lengths")
+              // println(foo.size)
+              println(typing.size)
+              println(typing2.size)
+              println(typing.toList.sortBy(proofStepDepth).size)
+              // val foo2 = SortedSet[proof.InstantiatedFact | proof.ProofStep]() ++ typing
+              // println(foo2.size)
               val seqs = typing + have(sol)
               // TODO: Use cuts instead
               have(goal) by Tautology.from(seqs.toSeq*)
@@ -130,6 +203,7 @@ object EqReasoning extends lisa.Main {
             thenHave(equalities |- x + y === uvsum) by RightSubstEq.withParameters(
               Seq((uvx + uvy, uvsum)),
               (Seq(a), x + y === a)
+
             )
             // WARNING: you may need val typs = SSet(x ∈ R, y ∈ R) ++ List(xeq, yeq, sumeq).map(l => getTypings(l.bot.left)).fold(Set())((x, y) => x ++ y)
             // TODO: Remove first set?

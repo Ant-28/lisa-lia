@@ -112,6 +112,39 @@ object Utils {
         }
       )
 
+
+    def proofStepDepth(using lib: library.type, proof: lib.Proof)(x : proof.InstantiatedFact | proof.ProofStep) : Int = {
+                (x: @unchecked) match {
+                  case tx : Library#Proof#InnerProof#ProofStep => {
+                    // println("proofstep")
+                    // println(x.bot)
+                    // println(x.bot.firstElemR)
+                    treeDepth(getTypingVarsInAnte(tx.bot.right).head)
+                    }
+                  case tx : Library#Proof#InnerProof#InstantiatedFact => {
+                    // println("instfact")
+                    // println(tx.result)
+                    // println(tx.result.firstElemR)
+                    treeDepth(getTypingVarsInAnte(tx.result.right).head)}
+                }
+      }
+
+    def proofStepDebugPrint(using lib: library.type, proof: lib.Proof)(x : proof.InstantiatedFact | proof.ProofStep) : Unit = {
+        (x: @unchecked) match {
+          case tx : Library#Proof#InnerProof#ProofStep => {
+            println("proofstep")
+            println(tx.bot)
+            println(tx.bot.firstElemR)
+            // treeDepth(getTypingVarsInAnte(tx.bot.right).head)
+            }
+          case tx : Library#Proof#InnerProof#InstantiatedFact => {
+            println("instfact")
+            println(tx.result)
+            println(tx.result.firstElemR)
+            // treeDepth(getTypingVarsInAnte(tx.result.right).head)}
+        }
+      }
+    }
     /**
       * 
       *
@@ -135,13 +168,13 @@ object Utils {
       * @param exp
       * @return
       */
-    def treeDepth(exp: Expr[Ind]): BigInt = {
+    def treeDepth(exp: Expr[Ind]): Int = {
       exp match {
-        case a + b => max(treeDepth(a) + 1, treeDepth(b) + 1)
+        case a + b => scala.math.max(treeDepth(a), treeDepth(b)) + 1
         case `0` => 1
         case `1` => 1
         case -(a) => treeDepth(a) + 1
-        case x => 1
+        case x : Variable[Ind] => 1
       }
     }
 
@@ -158,6 +191,21 @@ object Utils {
         case -(tx) => getVarName(tx)
       }
     }
+
+    given myExprOrdering : Ordering[Expr[Ind]] {
+        def compare(x: Expr[Ind], y: Expr[Ind]): Int = {
+            // summon[Ordering[String]].compare(x.asInstanceOf[Variable[Ind]].id.name, y.asInstanceOf[Variable[Ind]].id.name)
+            summon[Ordering[String]].compare(getVarName(x), getVarName(y))
+        }
+    }
+   
+    
+    // class myProofOrdering(using val lib: library.type, val proof: lib.Proof){
+    //   object meepo extends 
+    //   // given MPO:  with {
+    
+    //   // }
+    // }
 
 
     sealed trait Sign
