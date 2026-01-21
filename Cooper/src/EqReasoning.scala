@@ -3,21 +3,21 @@
 import lisa.utils.prooflib.ProofTacticLib.ProofTactic
 import SubProofWithRes.TacticSubproofWithResult
 import scala.collection.immutable.{Set => SSet}
-import lisa.maths.SetTheory.Base.Predef.{*, given}
-import lisa.maths.SetTheory.Functions.Predef.{*, given}
+import lisa.maths.SetTheory.Base.Predef.{x => _, y => _, z => _, P => _, ∈ => _, have => _, | => _, given, _}
+import lisa.maths.SetTheory.Functions.Predef.{R => _, _, given}
 import scala.quoted.quotes
 import scala.quoted.{Expr => EExpr, Quotes  }
 import scala.math.Ordering
 import lisa.utils.prooflib.Library
 import scala.collection.SortedSet
 import scala.collection.SeqView.Sorted
+import RingStructure.{*}
+import Utils.{*, given Ordering[?]}
 
 
 
 object EqReasoning extends lisa.Main {
     // FIXME: move imports up
-    import RingStructure.{*}
-    import Utils.{*, given Ordering[?]}
     // RB-trees: an ex
     sealed trait Biased(treeval: Expr[Ind]) {
       def tval = treeval
@@ -46,6 +46,7 @@ object EqReasoning extends lisa.Main {
       else
         val goalElem = goal.right.head 
         TacticSubproof{
+
           assume(ring(R, <=, +, *, -, |, 0, 1))
           if (!is_eq(goalElem)) then return proof.InvalidProofTactic("I can't prove anything other than equality!")
           else
@@ -70,45 +71,86 @@ object EqReasoning extends lisa.Main {
               // .map(proofStepDebugPrint)
               // val foo2 = SortedSet[proof.InstantiatedFact | proof.ProofStep]() ++ typing
               // println(foo2.size)
-              val hprf = have(sol)
-              val seqs = typing + hprf
-              var temp : (SSet[Expr[Prop]], proof.ProofTacticJudgement) = (getTypings(hprf.bot.left), proof.InvalidProofTactic("temp"))
-              // TODO: Use cuts instead
-              def proofStepCalc(x : proof.InstantiatedFact | proof.ProofStep) : Unit = {
-                x.
-                // x.
-                // (x: @unchecked) match {
-                //   case tx : proof.ProofStep => {
-                    
-                //     temp = evalRingCutHelper(tx, hprf.bot.right.head, temp._1, lastStep)
-                //     have(temp._2)
-                //   }
-                //   case tx : proof.InstantiatedFact => {
+              
+              
 
-                //     temp = evalRingCutHelperB(tx, hprf.bot.right.head, temp._1, lastStep)
-                //     have(temp._2)
-                //   }}
-                // }
+              val invalidRes = TacticSubproof{
+                have(0 === 0) by Restate
               }
-    
-              // typing.toList.sortBy(proofStepDepth).map()
-              // typing.toList.sortBy(proofStepDepth).map( x => {
-                
-                
-                  // x match {
-                  //   case tx : Library#Proof#InnerProof#ProofStep => {
-                  //     temp = evalRingCutHelper(have(tx), hprf.sRightHead, temp._1, lastStep)
-                  //     have(temp._2)
-                  //   }
-              //       case tx : Library#Proof#InnerProof#InstantiatedFact => {
-              //         temp = evalRingCutHelperB(tx, hprf.sRightHead, temp._1, lastStep)
-              //         have(temp._2)
-              //       }
-              //     }
-                
+              val hprf = have(sol)
+
+              var temp  = (getTypings(hprf.bot.left), hprf)
+              // TODO: REMOVE THIS. THIS IS A HACK. YOU SHOULD NOT BE USING MUTABLE STATE.
+              // def ECRHack(equalityToCut: proof.ProofStep | proof.InstantiatedFact, consq: Expr[Prop], equalities: SSet[Expr[Prop]], ls: proof.ProofStep): (SSet[Expr[Prop]], proof.ProofTacticJudgement) = {
+              //   val srh = proof.sequentOfFact(equalityToCut).right.head
+              //   val sl  = proof.sequentOfFact(equalityToCut).left
+              //   if(equalities.contains(srh)) then {
+              //     val res = equalities.excl(srh) ++ sl
+              //     val toCut = srh
+              //     TacticSubproofWithResult[SSet[Expr[Prop]]]{
+              //       have(res |- consq) by Cut.withParameters(toCut)(equalityToCut, ls)
+              //     }(res)
+              //   } else {
+              //     TacticSubproofWithResult[SSet[Expr[Prop]]]{
+              //       have(equalities |- consq) by Restate.from(ls)
+              //     }(equalities)
               //   }
-              // )
-              have(goal) by Tautology.from(seqs.toSeq*)
+              // }
+
+              
+              // FIXME
+              // proof.sequentOfFact(hprf)
+              val seqs = typing + hprf
+              // thing that does not work that needs to work
+              typing.toList.sortBy(proofStepDepth).map( x => {
+                (x: @unchecked) match {
+                  case tx : Library#Proof#InnerProof#InstantiatedFact => {
+                    val srh = tx.result.right.head
+                    val sl  = tx.result.left
+                    val consq = hprf.bot.right.head
+                    if(temp._1.contains(srh)) then {
+                      val res = temp._1.excl(srh) ++ sl
+                      val toCut = srh
+                      val t = TacticSubproofWithResult[SSet[Expr[Prop]]]{
+                        have(res |- consq) by Cut.withParameters(toCut)(tx, temp._2)
+                      }(res)
+                      temp = (t._1, have(t._2))
+                    } else {
+                      val t = TacticSubproofWithResult[SSet[Expr[Prop]]]{
+                        have(temp._1 |- consq) by Restate.from(temp._2)
+                      }(temp._1)
+                      temp = (t._1, have(t._2))
+                    }
+                    // have(temp._2)
+                  }
+                  case tx : Library#Proof#InnerProof#ProofStep => {
+                    val srh = tx.bot.right.head
+                    val sl  = tx.bot.left
+                    val consq = hprf.bot.right.head
+                    if(temp._1.contains(srh)) then {
+                      val res = temp._1.excl(srh) ++ sl
+                      val toCut = srh
+                      val t = TacticSubproofWithResult[SSet[Expr[Prop]]]{
+                        have(res |- consq) by Cut.withParameters(toCut)(tx, temp._2)
+                      }(res)
+                      temp = (t._1, have(t._2))
+                    } else {
+                      val t = TacticSubproofWithResult[SSet[Expr[Prop]]]{
+                        have(temp._1 |- consq) by Restate.from(temp._2)
+                      }(temp._1)
+                      temp = (t._1, have(t._2))
+                    }
+                    // have(temp._2)
+                  }
+                }
+                
+              }
+                
+              )
+              
+                
+                  
+              have(goal) by Restate.from(temp._2)
         }
     }
 

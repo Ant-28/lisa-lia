@@ -2,8 +2,8 @@
 // a file storing utilites on Expr[Ind]s
 import scala.collection.immutable.{Set => SSet, SortedSet}
 import scala.collection.immutable.{List => LList, :: => Cons}
-import lisa.maths.SetTheory.Base.Predef.{*, given}
-import lisa.maths.SetTheory.Functions.Predef.{*, given}
+import lisa.maths.SetTheory.Base.Predef.{x => _, y => _, z => _, P => _, ∈ => _, have => _, | => _, given, _}
+import lisa.maths.SetTheory.Functions.Predef.{R => _, _, given}
 import lisa.maths.SetTheory.Base.Pair.{pair, given}
 import lisa.maths.SetTheory.Functions.BasicTheorems.{appTyping}
 import lisa.automation.Substitution.Apply as Substitution
@@ -12,12 +12,12 @@ import lisa.utils.prooflib.ProofTacticLib.ProofTactic
 import lisa.utils.prooflib.Library
 import SubProofWithRes.{TacticSubproofWithResult, DebugRightSubstEq}
 import scala.quoted.Varargs
+import RingStructure.*
 
 
 object Utils {
 
     inline def max(x : BigInt, y: BigInt): BigInt = if x > y then x else y
-    import RingStructure.*
     extension (s: Sequent)
       def firstElemL: Expr[Prop] = s.left.head
       def firstElemR: Expr[Prop] = s.right.head
@@ -142,26 +142,14 @@ object Utils {
 
     // TODO: proof.sequentOfFact
     def proofStepDebugPrint(using proof: library.Proof)(x : proof.InstantiatedFact | proof.ProofStep) : Unit = {
-        proof.sequentOfFact(x)
-        (x: @unchecked) match {
-          case tx : proof.ProofStep => {
-            println("proofstep")
-            println(tx.bot)
-            println(tx.bot.firstElemR)
-            println(treeDepth(getTypingFromProp(tx.bot.firstElemR)))
-            println(tx.getClass())
-            println(" ")
-            // treeDepth(getTypingVarsInAnte(tx.bot.right).head)
-            }
-          case tx : proof.InstantiatedFact => {
-            println("instfact")
-            println(tx.result)
-            println(tx.result.firstElemR)
-            println(treeDepth(getTypingFromProp(tx.result.firstElemR)))
-            println(tx.getClass())
-            println(" ")
-            // treeDepth(getTypingVarsInAnte(tx.result.right).head)}
-        }
+        println(proof.sequentOfFact(x))
+        println(x.sRightHead)
+        println(treeDepth(getTypingFromProp(x.sRightHead)))
+        println(x.getClass())
+        println(" ")
+        x match {
+          case tx : proof.ProofStep => println("proofstep")
+          case tx : proof.InstantiatedFact => println("instfact")
       }
     }
 

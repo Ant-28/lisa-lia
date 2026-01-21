@@ -1,7 +1,7 @@
 import scala.collection.immutable.{Set => SSet}
 import scala.collection.immutable.{List => LList, :: => Cons}
-import lisa.maths.SetTheory.Base.Predef.{*, given}
-import lisa.maths.SetTheory.Functions.Predef.{*, given}
+import lisa.maths.SetTheory.Base.Predef.{x => _, y => _, z => _, P => _, | => _, given, _}
+import lisa.maths.SetTheory.Functions.Predef.{R => _, _, given}
 import lisa.maths.SetTheory.Base.Pair.{pair, given}
 import lisa.maths.SetTheory.Functions.BasicTheorems.{appTyping}
 import lisa.automation.Substitution.Apply as Substitution
