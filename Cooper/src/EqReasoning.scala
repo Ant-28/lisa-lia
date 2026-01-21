@@ -8,6 +8,7 @@ import lisa.maths.SetTheory.Functions.Predef.{*, given}
 import scala.quoted.quotes
 import scala.quoted.{Expr => EExpr, Quotes  }
 import scala.math.Ordering
+import lisa.utils.prooflib.Library
 
 
 object EqReasoning extends lisa.Main {
@@ -49,6 +50,18 @@ object EqReasoning extends lisa.Main {
             if !sol.isValid then return proof.InvalidProofTactic("Checking sums failed!")
             else
               val typing = typeChecking(getTypingVarsInAnte(have(sol).bot.left))
+              typing.map(x => {
+                x match {
+                  case x : Library#Proof#InnerProof#ProofStep => {
+                    println("proofstep")
+                    println(x.bot)
+                    println(x.bot.firstElemR)}
+                  case x : Library#Proof#InnerProof#InstantiatedFact => {
+                    println("instfact")
+                    println(x.result)
+                    println(x.result.firstElemR)}
+                }
+              })
               val seqs = typing + have(sol)
               // TODO: Use cuts instead
               have(goal) by Tautology.from(seqs.toSeq*)
@@ -60,7 +73,27 @@ object EqReasoning extends lisa.Main {
       {assume(ring(R, <=, +, *, -, |, 0, 1))
       TacticSubproof {
         goal match 
-          case x `equality` y => have(() |- x === x) by Restate
+          case x `equality` y => {
+            val (xval, xprf) = evalRing(x)
+            if !xprf.isValid then return proof.InvalidProofTactic("simplify failed!")
+            val (yval, yprf) = evalRing(y)
+            if !yprf.isValid then return proof.InvalidProofTactic("simplify failed!")
+            val (uvx, uvy) = (xval, yval).map[[t] =>> Expr[Ind]]([t] => x => unapply(x.asInstanceOf[Biased]))
+            val (xeq, yeq) = (have(xprf), have(yprf))
+            var equalities = SSet(xeq, yeq).map(_.bot.firstElemR)
+            have(equalities |- uvx === uvy) by Restate 
+            thenHave(equalities |- x === y) by RightSubstEq.withParameters(
+              Seq((uvx, x), (uvy, y)),
+              (Seq(a, b), a === b)
+            )
+        
+            // WARNING: you may need val typs = SSet(x ∈ R, y ∈ R) ++ List(xeq, yeq, sumeq).map(l => getTypings(l.bot.left)).fold(Set())((x, y) => x ++ y)
+            // TODO: Remove first set?
+            var temp = evalRingCutHelper(xeq, x === y, equalities, lastStep)
+            have(temp._2)
+            temp = evalRingCutHelper(yeq, x === y, temp._1, lastStep)
+            have(temp._2)
+          }
           case _ => return proof.InvalidProofTactic("Can only solve inequalities")
       }}
     
@@ -100,11 +133,11 @@ object EqReasoning extends lisa.Main {
             )
             // WARNING: you may need val typs = SSet(x ∈ R, y ∈ R) ++ List(xeq, yeq, sumeq).map(l => getTypings(l.bot.left)).fold(Set())((x, y) => x ++ y)
             // TODO: Remove first set?
-            var temp = evalRingCutHelper(xeq, x + y === uvsum, equalities)
+            var temp = evalRingCutHelper(xeq, x + y === uvsum, equalities, lastStep)
             have(temp._2)
-            temp = evalRingCutHelper(yeq, x + y === uvsum, temp._1)
+            temp = evalRingCutHelper(yeq, x + y === uvsum, temp._1, lastStep)
             have(temp._2)
-            temp = evalRingCutHelper(sumeq, x + y === uvsum, temp._1)
+            temp = evalRingCutHelper(sumeq, x + y === uvsum, temp._1, lastStep)
             have(temp._2)
             // thenHave(x + y)
             res = RB(uvsum)
@@ -130,9 +163,9 @@ object EqReasoning extends lisa.Main {
             )
             // WARNING: you may need val typs = SSet(x ∈ R, y ∈ R) ++ List(xeq, yeq, sumeq).map(l => getTypings(l.bot.left)).fold(Set())((x, y) => x ++ y)
             // TODO: Remove first set?
-            var temp = evalRingCutHelper(xeq, -(x) === uvneg, equalities)
+            var temp = evalRingCutHelper(xeq, -(x) === uvneg, equalities, lastStep)
             have(temp._2)
-            temp = evalRingCutHelper(negeq, -(x) === uvneg, temp._1)
+            temp = evalRingCutHelper(negeq, -(x) === uvneg, temp._1, lastStep)
             have(temp._2)
             res = RB(uvneg)
           }
@@ -148,21 +181,26 @@ object EqReasoning extends lisa.Main {
             val (xeq, yeq, muleq) = (have(px), have(py), have(pmul))
             var equalities = SSet(xeq, yeq, muleq).map(_.bot.firstElemR)
             have(equalities |- x * y === x * y) by Restate 
-            thenHave(equalities |- x * y === uvx * uvy) by RightSubstEq.withParameters(
-              Seq((x, uvx), (y, uvy)),
-              (Seq(a, b), x * y === a * b)
+            thenHave(equalities |- x * y === uvx * y) by RightSubstEq.withParameters(
+              Seq((x, uvx)),
+              (Seq(a), x * y === a * y)
             )
+            thenHave(equalities |- x * y === uvx * uvy) by RightSubstEq.withParameters(
+              Seq((y, uvy)),
+              (Seq(a), x * y === uvx * a)
+            )
+            println(uvx * uvy === uvmul)
             thenHave(equalities |- x * y === uvmul) by RightSubstEq.withParameters(
-              Seq((uvx * uvy, uvmul)),
+              Seq((((uvx) * (uvy)), uvmul)),
               (Seq(a), x * y === a)
             )
             // WARNING: you may need val typs = SSet(x ∈ R, y ∈ R) ++ List(xeq, yeq, muleq).map(l => getTypings(l.bot.left)).fold(Set())((x, y) => x ++ y)
             // TODO: Remove first set?
-            var temp = evalRingCutHelper(xeq, x * y === uvmul, equalities)
+            var temp = evalRingCutHelper(xeq, x * y === uvmul, equalities, lastStep)
             have(temp._2)
-            temp = evalRingCutHelper(yeq, x * y === uvmul, temp._1)
+            temp = evalRingCutHelper(yeq, x * y === uvmul, temp._1, lastStep)
             have(temp._2)
-            temp = evalRingCutHelper(muleq, x * y === uvmul, temp._1)
+            temp = evalRingCutHelper(muleq, x * y === uvmul, temp._1, lastStep)
             have(temp._2)
             // thenHave(x + y)
             res = RB(uvmul)
@@ -187,7 +225,7 @@ object EqReasoning extends lisa.Main {
           }
           case (tx, `0`)  => {
             // note: can't name inputs the same as variables
-            have(tx ∈ R |- tx + 0 === tx) by Tautology.from(zero_x_x of (x := tx))
+            have(tx ∈ R |- tx + 0 === tx) by Tautology.from(x_zero_x of (x := tx))
             res = RB(tx)
           }
           case (`1`, tx) => {
@@ -216,9 +254,9 @@ object EqReasoning extends lisa.Main {
               Seq((1 + tx, ures)),
               (Seq(a), tx + 1 === a)
             )
-            var temp = evalRingCutHelper(pprf2, tx + 1 === ures, equalities)
+            var temp = evalRingCutHelper(pprf2, tx + 1 === ures, equalities, lastStep)
             have(temp._2)
-            temp = evalRingCutHelper(pprf, tx + 1 === ures, temp._1)
+            temp = evalRingCutHelper(pprf, tx + 1 === ures, temp._1, lastStep)
             have(temp._2)
           }
           case (-(`1`), tx) => {
@@ -245,9 +283,9 @@ object EqReasoning extends lisa.Main {
               Seq((-(1) + tx, ures)),
               (Seq(a), tx + -(1) === a)
             )
-            var temp = evalRingCutHelper(pprf2, tx + -(1) === ures, equalities)
+            var temp = evalRingCutHelper(pprf2, tx + -(1) === ures, equalities, lastStep)
             have(temp._2)
-            temp = evalRingCutHelper(pprf, tx + -(1) === ures, temp._1)
+            temp = evalRingCutHelper(pprf, tx + -(1) === ures, temp._1, lastStep)
             have(temp._2)
           }
           case (tx, ty) if isVariableOrNeg(tx) => {
@@ -265,7 +303,7 @@ object EqReasoning extends lisa.Main {
               Seq((tx + ty, ures)),
               (Seq(a), tx + ty === a)
             )
-            var temp = evalRingCutHelper(pprf, tx + ty === ures, equalities)
+            var temp = evalRingCutHelper(pprf, tx + ty === ures, equalities, lastStep)
             have(temp._2)
           }
           case (tx, ty) if isVariableOrNeg(ty) => {
@@ -286,9 +324,9 @@ object EqReasoning extends lisa.Main {
               Seq((ty + tx, ures)),
               (Seq(a), tx + ty === a)
             )
-            var temp = evalRingCutHelper(pprf2, tx + ty === ures, equalities)
+            var temp = evalRingCutHelper(pprf2, tx + ty === ures, equalities, lastStep)
             have(temp._2)
-            temp = evalRingCutHelper(pprf, tx + ty === ures, temp._1)
+            temp = evalRingCutHelper(pprf, tx + ty === ures, temp._1, lastStep)
             have(temp._2)
           } 
           case (tx + txs, ty + tys) => (tx, ty) match {
@@ -310,9 +348,9 @@ object EqReasoning extends lisa.Main {
               Seq(((1 + txs) + (-1 + tys), ures)),
               (Seq(a), (1 + txs) + (-1 + tys) === a)
             )
-            var temp = evalRingCutHelper(pprf2, (1 + txs) + (-1 + tys) === ures, equalities)
+            var temp = evalRingCutHelper(pprf2, (1 + txs) + (-1 + tys) === ures, equalities, lastStep)
             have(temp._2)
-            temp = evalRingCutHelper(pprf, (1 + txs) + (-1 + tys) === ures, temp._1)
+            temp = evalRingCutHelper(pprf, (1 + txs) + (-1 + tys) === ures, temp._1, lastStep)
             have(temp._2)
           }
           case (-(`1`), `1`) => {
@@ -333,9 +371,9 @@ object EqReasoning extends lisa.Main {
               Seq(((1 + txs) + (-1 + tys), ures)),
               (Seq(a), (1 + txs) + (-1 + tys) === a)
             )
-            var temp = evalRingCutHelper(pprf2, (1 + txs) + (-1 + tys) === ures, equalities)
+            var temp = evalRingCutHelper(pprf2, (1 + txs) + (-1 + tys) === ures, equalities, lastStep)
             have(temp._2)
-            temp = evalRingCutHelper(pprf, (1 + txs) + (-1 + tys) === ures, temp._1)
+            temp = evalRingCutHelper(pprf, (1 + txs) + (-1 + tys) === ures, temp._1, lastStep)
             have(temp._2)
           }
           case (tx, ty) if isOneOrNegOne(tx) => {
@@ -357,9 +395,9 @@ object EqReasoning extends lisa.Main {
               Seq((txs + (tx + (ty + tys)), ures)),
               (Seq(a), (tx + txs) + (ty + tys) === a)
             )
-            var temp = evalRingCutHelper(pprf2, (tx + txs) + (ty + tys) === ures, equalities)
+            var temp = evalRingCutHelper(pprf2, (tx + txs) + (ty + tys) === ures, equalities, lastStep)
             have(temp._2)
-            temp = evalRingCutHelper(pprf, (tx + txs) + (ty + tys) === ures, temp._1)
+            temp = evalRingCutHelper(pprf, (tx + txs) + (ty + tys) === ures, temp._1, lastStep)
             have(temp._2)
           }
           case (tx, ty) if isVariableOrNeg(tx) => {
@@ -390,11 +428,11 @@ object EqReasoning extends lisa.Main {
               Seq((txs + vres.tval, ures)),
               (Seq(a), (tx + txs) + (ty + tys) === a)
             )
-            var temp = evalRingCutHelper(pprf1, (tx + txs) + (ty + tys) === ures, equalities)
+            var temp = evalRingCutHelper(pprf1, (tx + txs) + (ty + tys) === ures, equalities, lastStep)
             have(temp._2)
-            temp = evalRingCutHelper(pprf2, (tx + txs) + (ty + tys) === ures, temp._1)
+            temp = evalRingCutHelper(pprf2, (tx + txs) + (ty + tys) === ures, temp._1, lastStep)
             have(temp._2)
-            temp = evalRingCutHelper(pprf3, (tx + txs) + (ty + tys) === ures, temp._1)
+            temp = evalRingCutHelper(pprf3, (tx + txs) + (ty + tys) === ures, temp._1, lastStep)
             have(temp._2)
           }
             case _ => return (NRB(tx), proof.InvalidProofTactic("evalPlus failed!"))
@@ -482,9 +520,9 @@ object EqReasoning extends lisa.Main {
             Seq((tx + tys, ires.tval)),
             (Seq(a), (tx + (ty + tys) === ty + a))
           )
-          var temp = evalRingCutHelper(pprf1, tx + (ty + tys)  === ty + ires.tval, equalities)
+          var temp = evalRingCutHelper(pprf1, tx + (ty + tys)  === ty + ires.tval, equalities, lastStep)
           have(temp._2)
-          temp = evalRingCutHelper(pprf2, tx + (ty + tys)  === ty + ires.tval, temp._1)
+          temp = evalRingCutHelper(pprf2, tx + (ty + tys)  === ty + ires.tval, temp._1, lastStep)
           have(temp._2)
         }
         case (tx, ty + tys)  if List(tx, ty).forall(isVariable) || List(x, y).forall(isNegVariable) => {
@@ -511,9 +549,9 @@ object EqReasoning extends lisa.Main {
                 Seq((tx + tys, ires.tval)),
                 (Seq(a), (tx + (ty + tys) === ty + a))
               )
-              var temp = evalRingCutHelper(pprf1, tx + (ty + tys)  === ty + ires.tval, equalities)
+              var temp = evalRingCutHelper(pprf1, tx + (ty + tys)  === ty + ires.tval, equalities, lastStep)
               have(temp._2)
-              temp = evalRingCutHelper(pprf2, tx + (ty + tys)  === ty + ires.tval, temp._1)
+              temp = evalRingCutHelper(pprf2, tx + (ty + tys)  === ty + ires.tval, temp._1, lastStep)
               have(temp._2)
             }
             case _ => return (NRB(xint), proof.InvalidProofTactic("evalPlus failed!"))
@@ -555,9 +593,9 @@ object EqReasoning extends lisa.Main {
                 Seq((tx + tys, ires.tval)),
                 (Seq(a), (tx + (ty + tys) === ty + a))
               )
-              var temp = evalRingCutHelper(pprf1, tx + (ty + tys)  === ty + ires.tval, equalities)
+              var temp = evalRingCutHelper(pprf1, tx + (ty + tys)  === ty + ires.tval, equalities, lastStep)
               have(temp._2)
-              temp = evalRingCutHelper(pprf2, tx + (ty + tys)  === ty + ires.tval, temp._1)
+              temp = evalRingCutHelper(pprf2, tx + (ty + tys)  === ty + ires.tval, temp._1, lastStep)
               have(temp._2)
             }
             case _ => return (NRB(xint), proof.InvalidProofTactic("evalPlus failed!"))
@@ -708,9 +746,9 @@ object EqReasoning extends lisa.Main {
                   Seq((-txs, nres.tval)),
                   (Seq(a), -(tx + txs) === -tx + a)
                 )
-                var temp = evalRingCutHelper(pprf2, -(tx + txs) === -tx + nres.tval, equalities)
+                var temp = evalRingCutHelper(pprf2, -(tx + txs) === -tx + nres.tval, equalities, lastStep)
                 have(temp._2)
-                temp = evalRingCutHelper(pprf, -(tx + txs) === -tx + nres.tval, temp._1)
+                temp = evalRingCutHelper(pprf, -(tx + txs) === -tx + nres.tval, temp._1, lastStep)
                 have(temp._2)
               }
               case -(txp) if isNegVariable(tx) => {
@@ -735,11 +773,11 @@ object EqReasoning extends lisa.Main {
                   Seq((-(-txp), txp)),
                   (Seq(a), -((-txp)  + txs) === a + nres.tval)
                 )
-                var temp = evalRingCutHelper(pprf2, -((-txp) + txs) === txp + nres.tval, equalities)
+                var temp = evalRingCutHelper(pprf2, -((-txp) + txs) === txp + nres.tval, equalities, lastStep)
                 have(temp._2)
-                temp = evalRingCutHelper(pprf, -((-txp) + txs) === txp + nres.tval, temp._1)
+                temp = evalRingCutHelper(pprf, -((-txp) + txs) === txp + nres.tval, temp._1, lastStep)
                 have(temp._2)
-                temp = evalRingCutHelper(pprf3, -((-txp) + txs) === txp + nres.tval, temp._1)
+                temp = evalRingCutHelper(pprf3, -((-txp) + txs) === txp + nres.tval, temp._1, lastStep)
                 have(temp._2)
               }
               case _ => return (NRB(int), proof.InvalidProofTactic("evalNegHelper reached an unreachable case!"))
@@ -767,9 +805,9 @@ object EqReasoning extends lisa.Main {
                   Seq((-txs, nres.tval)),
                   (Seq(a), -(1 + txs) === -1 + a)
                 )
-                var temp = evalRingCutHelper(pprf2, -(1 + txs) === -1 + nres.tval, equalities)
+                var temp = evalRingCutHelper(pprf2, -(1 + txs) === -1 + nres.tval, equalities, lastStep)
                 have(temp._2)
-                temp = evalRingCutHelper(pprf, -(1 + txs) === -1 + nres.tval, temp._1)
+                temp = evalRingCutHelper(pprf, -(1 + txs) === -1 + nres.tval, temp._1, lastStep)
                 have(temp._2)
           }
           case (Neg, -(`1`)) => {
@@ -799,11 +837,11 @@ object EqReasoning extends lisa.Main {
               Seq((-(-`1`), 1)),
               (Seq(a), -((-1)  + txs) === a + nres.tval)
             )
-            var temp = evalRingCutHelper(pprf2, -((-1) + txs) === 1 + nres.tval, equalities)
+            var temp = evalRingCutHelper(pprf2, -((-1) + txs) === 1 + nres.tval, equalities, lastStep)
             have(temp._2)
-            temp = evalRingCutHelper(pprf, -((-1) + txs) === 1 + nres.tval, temp._1)
+            temp = evalRingCutHelper(pprf, -((-1) + txs) === 1 + nres.tval, temp._1, lastStep)
             have(temp._2)
-            temp = evalRingCutHelper(pprf3, -((-1) + txs) === 1 + nres.tval, temp._1)
+            temp = evalRingCutHelper(pprf3, -((-1) + txs) === 1 + nres.tval, temp._1, lastStep)
             have(temp._2)
           }
           case _ => return (NRB(int), proof.InvalidProofTactic("evalNegHelper failed!")) 
@@ -855,9 +893,9 @@ object EqReasoning extends lisa.Main {
                 (Seq(a), -1 * ty === a)
               )
 
-              var temp = evalRingCutHelper(pprf2, -1 * ty === nres.tval, equalities)
+              var temp = evalRingCutHelper(pprf2, -1 * ty === nres.tval, equalities, lastStep)
               have(temp._2)
-              temp = evalRingCutHelper(pprf, -1 * ty === nres.tval, temp._1)
+              temp = evalRingCutHelper(pprf, -1 * ty === nres.tval, temp._1, lastStep)
               have(temp._2)
             }
             case (ty, `-`(`1`)) => {
@@ -879,9 +917,9 @@ object EqReasoning extends lisa.Main {
                 (Seq(a), ty * -1 === a)
               )
 
-              var temp = evalRingCutHelper(pprf2, ty * -1 === nres.tval, equalities)
+              var temp = evalRingCutHelper(pprf2, ty * -1 === nres.tval, equalities, lastStep)
               have(temp._2)
-              temp = evalRingCutHelper(pprf, ty * -1 === nres.tval, temp._1)
+              temp = evalRingCutHelper(pprf, ty * -1 === nres.tval, temp._1, lastStep)
               have(temp._2)
             }
             case (tx + txs, ty) => {
@@ -894,7 +932,7 @@ object EqReasoning extends lisa.Main {
               val typings = SSet(tx ∈ R, txs ∈ R, ty ∈ R)
               val (pprf, pprf2, pprf3) = (have(mprf1), have(mprf2), have(mprf3))
               val pprf4 = have(typings |- (tx + txs) * ty === (tx * ty) + (txs * ty)) by Tautology.from(mul_dist_right of (y := tx, z := txs, x := ty))
-
+              res = mres3
               val equalities = SSet(pprf, pprf2, pprf3, pprf4).map(_.bot.firstElemR)
               have(equalities |- (tx + txs) * ty  === (tx + txs) * ty) by Restate
               thenHave(equalities |- (tx + txs) * ty === (tx * ty) + (txs * ty))  by RightSubstEq.withParameters(
@@ -910,13 +948,13 @@ object EqReasoning extends lisa.Main {
                 (Seq(a), (tx + txs) * ty === a)
               )
 
-              var temp = evalRingCutHelper(pprf, (tx + txs) * ty === mres3.tval, equalities)
+              var temp = evalRingCutHelper(pprf, (tx + txs) * ty === mres3.tval, equalities, lastStep)
               have(temp._2)
-              temp = evalRingCutHelper(pprf2, (tx + txs) * ty === mres3.tval, temp._1)
+              temp = evalRingCutHelper(pprf2, (tx + txs) * ty === mres3.tval, temp._1, lastStep)
               have(temp._2)
-              temp = evalRingCutHelper(pprf3, (tx + txs) * ty === mres3.tval, temp._1)
+              temp = evalRingCutHelper(pprf3, (tx + txs) * ty === mres3.tval, temp._1, lastStep)
               have(temp._2)
-              temp = evalRingCutHelper(pprf4, (tx + txs) * ty === mres3.tval, temp._1)
+              temp = evalRingCutHelper(pprf4, (tx + txs) * ty === mres3.tval, temp._1, lastStep)
               have(temp._2)
 
             } 

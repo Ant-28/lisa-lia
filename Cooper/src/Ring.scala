@@ -117,6 +117,7 @@ object RingStructure extends lisa.Main {
     def  - :Expr[Ind]                          = this.-.construct(left)
     infix def  +(right : Expr[Ind]): Expr[Ind]   = this.+.construct(left, right)
     infix def  *(right : Expr[Ind]): Expr[Ind]   = this.*.construct(left, right)
+    infix def !==(right: Expr[Ind]): Expr[Prop] = !(left === right)
     def unary_- = this.-.construct(left)
     
   }
@@ -179,7 +180,8 @@ object RingStructure extends lisa.Main {
       /\ ∀(x, ∀(y, (x ∈ R /\ y ∈ R ==> ((x <= `0`) /\  (`0` <= y)) ==> ((x * y) <= `0`))))
       // how should we represent our integers? 
       // what does HOL light do?
-
+      // nontriviality
+      /\ ∃(x, ∃(y, x ∈ R /\ y ∈ R /\ !(x === y)))
       // create a very modest milestone
       // linear arithmetic normalization in rings
       // proofs such as x * 0 = x * (0 + 0)
@@ -432,6 +434,13 @@ object RingStructure extends lisa.Main {
     val v2 = have((y + z) ∈ R) by Tautology.from(add_closure of (x:= y, y:=z))
     have(thesis) by Congruence.from(v1, v2)
   }
+
+  val nontriviality = Theorem((ring(R, <=, +, *, -, |, `0`, `1`) ) |- ∃(x, ∃(y, x ∈ R /\ y ∈ R /\ !(x === y)))){
+    have(thesis) by byRingDefn.apply
+  }
+
+  
+ 
 
   val mult_zero_x_zero = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R)) |- (`0` * x === `0`)) {
     assume(x ∈ R)
@@ -784,6 +793,26 @@ object RingStructure extends lisa.Main {
     val h2 = have(-1 * x === -x) by Tautology.from(mult_neg1_x_negx)
     have(x * -1 === -x) by Congruence.from(h1, h2)
     have(thesis) by Tautology.from(h1, h2, lastStep)
+  }
+
+  val zero_eq_1_implies_triviality = Theorem((ring(R, <=, +, *, -, |, `0`, `1`) , 0 === 1, c ∈ R) |- (c === 0)){
+    assume(ring(R, <=, +, *, -, |, `0`, `1`))
+    val v = assume(0 === 1)
+    val s1 = have(c ∈ R |- c*1 === c) by Tautology.from(mul_id_left of (x := c))
+    val s2 = have(c ∈ R |- c*`0` === `0`) by Tautology.from(mult_x_zero_zero of (x := c))
+    val s3 = have(c ∈ R |- c*1 === c*0) by Congruence.from(v)
+    val s4 = have(c ∈ R |- c === 0) by Congruence.from(s1, s2, s3, v)
+    have(thesis) by Tautology.from(s1, s2, s3, s4, v)
+
+  }
+
+   val zero_neq_1 = Theorem((ring(R, <=, +, *, -, |, `0`, `1`) ) |- (0 !== 1)){
+    assume(ring(R, <=, +, *, -, |, `0`, `1`))
+    val h0 = have(0 ∈ R) by Tautology.from(add_id_closure)
+    val h1 = have(1 ∈ R) by Tautology.from(mul_id_closure)
+    val res1 = have(0 ∈ R /\ 1 ∈ R) by Tautology.from(h0, h1)
+    // have(0 !== 1) by Tautology
+    sorry
   }
   
 

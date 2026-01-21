@@ -1,6 +1,6 @@
 import scala.collection.immutable.{Set => SSet}
 import scala.collection.immutable.{List => LList, :: => Cons}
-import lisa.maths.SetTheory.Base.Predef.{x => _, y => _, z => _, | => _, given, _}
+import lisa.maths.SetTheory.Base.Predef.{x => _, y => _, z => _, P => _, | => _, given, _}
 import lisa.maths.SetTheory.Functions.Predef.{R => _, *, given}
 import lisa.maths.SetTheory.Base.Pair.{pair, given}
 import lisa.maths.SetTheory.Functions.BasicTheorems.{appTyping}
@@ -11,6 +11,7 @@ import SubProofWithRes.{TacticSubproofWithResult, DebugRightSubstEq}
 import RingStructure.{_}
 import Utils.treeDepth
 import RingStructure.c
+import EqReasoning.evalRingEq
 // object Rings extends lisa.Main: 
 //     import RingStructure.{*}
 //     import RingEqReasoning.{*} 
@@ -18,6 +19,7 @@ import RingStructure.c
 object Rings extends lisa.Main 
 {
     import Utils.*
+    import EqReasoning.evalRingEq.evalRing
     
     val t = variable[Ind]
     val _ = RingStructure
@@ -81,6 +83,13 @@ object Rings extends lisa.Main
     //       case _ => false
     //     }
     //   )
+
+    given myExprOrdering : Ordering[Expr[Ind]] {
+        def compare(x: Expr[Ind], y: Expr[Ind]): Int = {
+            // summon[Ordering[String]].compare(x.asInstanceOf[Variable[Ind]].id.name, y.asInstanceOf[Variable[Ind]].id.name)
+            summon[Ordering[String]].compare(getVarName(x), getVarName(y))
+        }
+    }
     val test = Theorem( (ring(R, <=, +, *, -, |, `0`, `1`)) |- `1` + (`1` + `1`) === (`1` + `1`) + `1`){
         assume(ring(R, <=, +, *, -, |, `0`, `1`))
         val t = add_assoc of (x := `1`, y := `1`, z := `1`)
@@ -111,6 +120,13 @@ object Rings extends lisa.Main
         // println(om.stringWriter.toString)
     }
     println("Hello!")
+    val dummyTheorem = Theorem(P(x) |- P(x)){
+        import RingStructure.BigIntToRingElem.*
+        val pprf = evalRingEq.apply((ring(R, <=, +, *, -, |, 0, 1) |- i(2) * i(2) === i(4)))(using myExprOrdering)
+        // println(pres)
+        println(pprf.asInstanceOf[pprf.proof.ValidProofTactic].bot)
+        sorry
+    }
     // println(isVariable(x))
     println(`1`.id.name)
     // println(isVariableOrNeg(x))

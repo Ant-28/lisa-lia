@@ -27,6 +27,11 @@ object Utils {
       def sRight = p.bot.right
       def sRightHead = p.bot.firstElemR
 
+    
+    
+    extension (using lib: library.type, proof: lib.Proof)(x : proof.InstantiatedFact)
+      def sRightHeadB = x.result.firstElemR
+
 
     def isVariableOrNeg(x: Expr[Ind]): Boolean = {
       x match {
@@ -167,12 +172,18 @@ object Utils {
     }
 
     def evalRingCutHelper(using lib: library.type, proof: lib.Proof)
-    (equalityToCut: proof.ProofStep, consq: Expr[Prop], equalities: SSet[Expr[Prop]]): (SSet[Expr[Prop]], proof.ProofTacticJudgement) = {
-      val res = equalities.excl(equalityToCut.sRightHead) ++ equalityToCut.sLeft
-      val toCut = equalityToCut.sRightHead
-      TacticSubproofWithResult[SSet[Expr[Prop]]]{
-        have(res |- consq) by Cut.withParameters(toCut)(equalityToCut, lastStep)
-      }(res)
+    (equalityToCut: proof.ProofStep, consq: Expr[Prop], equalities: SSet[Expr[Prop]], ls: proof.ProofStep): (SSet[Expr[Prop]], proof.ProofTacticJudgement) = {
+      if(equalities.contains(equalityToCut.sRightHead)) then {
+        val res = equalities.excl(equalityToCut.sRightHead) ++ equalityToCut.sLeft
+        val toCut = equalityToCut.sRightHead
+        TacticSubproofWithResult[SSet[Expr[Prop]]]{
+          have(res |- consq) by Cut.withParameters(toCut)(equalityToCut, ls)
+        }(res)
+      } else {
+        TacticSubproofWithResult[SSet[Expr[Prop]]]{
+          have(equalities |- consq) by Restate.from(ls)
+        }(equalities)
+      }
     }
 
 
