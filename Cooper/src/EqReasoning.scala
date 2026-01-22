@@ -80,27 +80,11 @@ object EqReasoning extends lisa.Main {
               val hprf = have(sol)
 
               var temp  = (getTypings(hprf.bot.left), hprf)
-              // TODO: REMOVE THIS. THIS IS A HACK. YOU SHOULD NOT BE USING MUTABLE STATE.
-              // def ECRHack(equalityToCut: proof.ProofStep | proof.InstantiatedFact, consq: Expr[Prop], equalities: SSet[Expr[Prop]], ls: proof.ProofStep): (SSet[Expr[Prop]], proof.ProofTacticJudgement) = {
-              //   val srh = proof.sequentOfFact(equalityToCut).right.head
-              //   val sl  = proof.sequentOfFact(equalityToCut).left
-              //   if(equalities.contains(srh)) then {
-              //     val res = equalities.excl(srh) ++ sl
-              //     val toCut = srh
-              //     TacticSubproofWithResult[SSet[Expr[Prop]]]{
-              //       have(res |- consq) by Cut.withParameters(toCut)(equalityToCut, ls)
-              //     }(res)
-              //   } else {
-              //     TacticSubproofWithResult[SSet[Expr[Prop]]]{
-              //       have(equalities |- consq) by Restate.from(ls)
-              //     }(equalities)
-              //   }
-              // }
-
               
-              // FIXME
+
               // proof.sequentOfFact(hprf)
               val seqs = typing + hprf
+              // TODO: not this
               // thing that does not work that needs to work
               typing.toList.sortBy(proofStepDepth).map( x => {
                 (x: @unchecked) match {

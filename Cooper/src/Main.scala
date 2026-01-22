@@ -125,12 +125,22 @@ object Rings extends lisa.Main
         // println(om.stringWriter.toString)
     }
     println("Hello!")
-    val dummyTheorem = Theorem(P(x) |- P(x)){
-        import RingStructure.BigIntToRingElem.*
-        val pprf = evalRingEq.apply((ring(R, <=, +, *, -, |, 0, 1) |- i(2) * i(2) === i(4)))(using summon[Ordering[Expr[Ind]]])
-        // println(pres)
-        println(pprf.asInstanceOf[pprf.proof.ValidProofTactic].bot)
-        sorry
+    // val dummyTheorem = Theorem(P(x) |- P(x)){
+    //     import RingStructure.BigIntToRingElem.*
+    //     val pprf = evalRingEq.apply((ring(R, <=, +, *, -, |, 0, 1) |- i(2) * i(2) === i(4)))(using summon[Ordering[Expr[Ind]]])
+    //     // println(pres)
+    //     println(pprf.asInstanceOf[pprf.proof.ValidProofTactic].bot)
+    //     sorry
+    // }
+    import BigIntToRingElem.i
+    val ringEq1 = Theorem(ring(R, <=, +, *, -, |, `0`, `1`) |- i(2) === i(2)){
+        have(thesis) by evalRingEq.apply
+    }
+    val ringEq2 = Theorem(ring(R, <=, +, *, -, |, `0`, `1`) |- i(2) + i(2) === i(4)){
+        have(thesis) by evalRingEq.apply
+    }
+    val ringEq3 = Theorem(ring(R, <=, +, *, -, |, `0`, `1`) |- i(2) * i(2) === i(4)){
+        have(thesis) by evalRingEq.apply
     }
     // println(isVariable(x))
     println(`1`.id.name)   
