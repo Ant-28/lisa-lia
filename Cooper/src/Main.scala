@@ -13,6 +13,8 @@ import Utils.treeDepth
 import RingStructure.c
 import EqReasoning.evalRingEq
 import scala.collection.immutable.SortedSet
+import TypeChecker.typeCheck
+import DivReasoning.divInts
 // object Rings extends lisa.Main: 
 //     import RingStructure.{*}
 //     import RingEqReasoning.{*} 
@@ -116,13 +118,13 @@ object Rings extends lisa.Main
     }
     println("Hello!")
     // val dummyTheorem = Theorem(P(x) |- P(x)){
-    //     import RingStructure.BigIntToRingElem.*
+    //     import RingStructure.RingElemConversions.*
     //     val pprf = evalRingEq.apply((ring(R, <=, +, *, -, |, 0, 1) |- i(2) * i(2) === i(4)))(using summon[Ordering[Expr[Ind]]])
     //     // println(pres)
     //     println(pprf.asInstanceOf[pprf.proof.ValidProofTactic].bot)
     //     sorry
     // }
-    import BigIntToRingElem.i
+    import RingElemConversions.i
     val ringEq1 = Theorem(ring(R, <=, +, *, -, |, `0`, `1`) |- i(2) === i(2)){
         have(thesis) by evalRingEq.apply
     }
@@ -153,16 +155,28 @@ object Rings extends lisa.Main
     val ringEq9 = Theorem((ring(R, <=, +, *, -, |, `0`, `1`)) |-  i(5) + i(10) === i(15)){
         have(thesis) by evalRingEq.apply
     }
+    // use 100 to stress test the kernel
+    val ringEq10 = Theorem((ring(R, <=, +, *, -, |, `0`, `1`)) |- i(10) === i(10)){
+        have(thesis) by evalRingEq.apply
+    }
+
+    val ringTyp1 = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R) |-  (-i(10) * i(10) + x) ∈ R){
+        have(thesis) by typeCheck.apply
+    }
+
+    val ringDiv1 = Theorem((ring(R, <=, +, *, -, |, `0`, `1`)) |- (10 | i(20))){
+        have(thesis) by divInts.apply
+    }
     // println(isVariable(x))
     // println(`1`.id.name)   
-    println("seregost")
-    println(isVariableOrNeg(x))
-    println(isVariableOrNeg(-c))
-    println(isNegVariable(-c))
-    println(isNegVariable(-(x)))
-    println(List(-x, -y).forall(isNegVariable))
-    println(isVariableOrNeg(`0`))
-    println(isVariableOrNeg(x + x))
+    // println("seregost")
+    // println(isVariableOrNeg(x))
+    // println(isVariableOrNeg(-c))
+    // println(isNegVariable(-c))
+    // println(isNegVariable(-(x)))
+    // println(List(-x, -y).forall(isNegVariable))
+    // println(isVariableOrNeg(`0`))
+    // println(isVariableOrNeg(x + x))
     
 }
 // end Rings

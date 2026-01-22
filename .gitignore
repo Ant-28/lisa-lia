@@ -1,7 +1,10 @@
-.metals/*
-.scala-build/*
-.vscode/*
-.bsp/*
-src/*.code-workspace
-theoremgen/
+Cooper/.bsp/
+Cooper/.metals/
+Cooper/.scala-build/
+Cooper/.vscode/
+Cooper/src/scratch/.ghc.environment.x86_64-linux-9.6.7
+Cooper/src/scratch/launch.json
+.bsp/
+.metals/
+.vscode/
 out/

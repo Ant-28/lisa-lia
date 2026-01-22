@@ -45,12 +45,12 @@ object EqReasoning extends lisa.Main {
         proof.InvalidProofTactic("I can't prove more than one sequent!")
       else
         val goalElem = goal.right.head 
-        TacticSubproof{
+        val r = TacticSubproof{
 
           assume(ring(R, <=, +, *, -, |, 0, 1))
           if (!is_eq(goalElem)) then return proof.InvalidProofTactic("I can't prove anything other than equality!")
           else
-            val sol = simplify(goalElem)
+            val sol = simplifyEq(goalElem)
             // println(have(sol).bot)
             if !sol.isValid then return proof.InvalidProofTactic("Checking sums failed!")
             else
@@ -63,6 +63,8 @@ object EqReasoning extends lisa.Main {
               val hprf = have(sol)
               var temp  = (getTypings(hprf.bot.left), hprf)
               val seqs = typing + hprf
+              // println("culprit")
+              // println(typing.size)
               // TODO: not this
               // thing that does not work that needs to work
               typing.toList.sortBy(proofStepDepth).map( x => {
@@ -108,25 +110,22 @@ object EqReasoning extends lisa.Main {
                 }
                 
               }
-                
-              )
-              
-                
-                  
+              ) 
               have(goal) by Restate.from(temp._2)
         }
+        r
     }
 
 
-    def simplify(using proof: library.Proof)(goal: Expr[Prop])(using myOrd: Ordering[Expr[Ind]]): proof.ProofTacticJudgement = 
-      {assume(ring(R, <=, +, *, -, |, 0, 1))
+    def simplifyEq(using proof: library.Proof)(goal: Expr[Prop])(using myOrd: Ordering[Expr[Ind]]): proof.ProofTacticJudgement = 
+      {
       TacticSubproof {
         goal match 
           case x `equality` y => {
             val (xval, xprf) = evalRing(x)
-            if !xprf.isValid then return proof.InvalidProofTactic("simplify failed!")
+            if !xprf.isValid then return proof.InvalidProofTactic("simplifyEq failed!")
             val (yval, yprf) = evalRing(y)
-            if !yprf.isValid then return proof.InvalidProofTactic("simplify failed!")
+            if !yprf.isValid then return proof.InvalidProofTactic("simplifyEq failed!")
             val (uvx, uvy) = (xval, yval).map[[t] =>> Expr[Ind]]([t] => x => unapply(x.asInstanceOf[Biased]))
             val (xeq, yeq) = (have(xprf), have(yprf))
             var equalities = SSet(xeq, yeq).map(_.bot.firstElemR)
@@ -149,7 +148,7 @@ object EqReasoning extends lisa.Main {
       
 
     def evalRing(using proof: library.Proof)(int: Expr[Ind])(using myOrd: Ordering[Expr[Ind]]): (Biased, proof.ProofTacticJudgement) = {
-      assume(ring(R, <=, +, *, -, |, 0, 1))
+      
       var res : Biased = NRB(0)
       TacticSubproofWithResult[Biased]{
         int match {
@@ -268,7 +267,6 @@ object EqReasoning extends lisa.Main {
     
     
     def evalPlus(using proof: library.Proof)(xint: Biased, yint: Biased)(using myOrd: Ordering[Expr[Ind]]): (Biased, proof.ProofTacticJudgement) = {
-      assume(ring(R, <=, +, *, -, |, 0, 1))
       var res : Biased = NRB(xint.tval)
       TacticSubproofWithResult[Biased]{
         (xint.tval, yint.tval) match {
@@ -984,6 +982,9 @@ object EqReasoning extends lisa.Main {
               if !mprf1.isValid then return (NRB(xint.tval * yint.tval), proof.InvalidProofTactic("evalMult failed!"))
               val (mres2, mprf2) = evalMult(RB(txs), RB(ty))
               if !mprf2.isValid then return (NRB(xint.tval * yint.tval), proof.InvalidProofTactic("evalMult failed!"))
+              // println(mres1.tval)
+              // println(mres2.tval)
+              // if(!treeHasVariables(mres2.tval)) then println(RingElemConversions.ci(mres2.tval))
               val (mres3, mprf3) = evalPlus(mres1, mres2)
               if !mprf3.isValid then return (NRB(xint.tval * yint.tval), proof.InvalidProofTactic("evalMult failed!"))
               val typings = SSet(tx ∈ R, txs ∈ R, ty ∈ R)
@@ -991,6 +992,7 @@ object EqReasoning extends lisa.Main {
               val pprf4 = have(typings |- (tx + txs) * ty === (tx * ty) + (txs * ty)) by Tautology.from(mul_dist_right of (y := tx, z := txs, x := ty))
               res = mres3
               val equalities = SSet(pprf, pprf2, pprf3, pprf4).map(_.bot.firstElemR)
+              // println("here?")
               have(equalities |- (tx + txs) * ty  === (tx + txs) * ty) by Restate
               thenHave(equalities |- (tx + txs) * ty === (tx * ty) + (txs * ty))  by RightSubstEq.withParameters(
                 Seq(((tx + txs) * ty,  (tx * ty) + (txs * ty))),

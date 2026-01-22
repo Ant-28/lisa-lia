@@ -14,10 +14,10 @@ import Utils.*
 // import lisa.utils.prooflib.WithTheorems.Proof.ValidProofTactic
 object RingStructure extends lisa.Main {
   implicit def intToExpr(x: BigInt): Expr[Ind] = {
-    BigIntToRingElem.ic(x)
+    RingElemConversions.ic(x)
   }
   implicit def intToExpr(x: Int): Expr[Ind] = {
-    BigIntToRingElem.ic(x)
+    RingElemConversions.ic(x)
   }
   val x   = variable[Ind]
   val y   = variable[Ind]
@@ -51,7 +51,24 @@ object RingStructure extends lisa.Main {
         case IRel(`leq`, a, b) => Some((a, b))
         case _ => None
 
-  // divisibility
+  object < extends Variable[Ind]("<"):
+      val ltq = this // just an alias, as `this` cannot be used in patterns
+
+      /**
+        * Constructs an expression representing a <= b
+        */
+      def construct(a: Expr[Ind], b: Expr[Ind]): Expr[Prop] = IRel(ltq, a, b)
+      
+      /**
+        * allow pattern matching on expressions of the form a < b
+        * as `case a < b => ...`
+        */
+      def unapply(e: Expr[Prop]): Option[(Expr[Ind], Expr[Ind])] = 
+        e match
+          case IRel(`ltq`, a, b) => Some((a, b))
+          case _ => None
+
+    // divisibility
 
   object | extends Variable[Ind]("|"):
     val divvy = this // just an alias, as `this` cannot be used in patterns
@@ -129,7 +146,7 @@ object RingStructure extends lisa.Main {
   // the properties are listed here in full for reference
   object ring:
     // wrap the curried definition for convenience
-    protected val ring = DEF( λ(R, λ(<=, λ(+, λ(*, λ(-, λ(|, λ(`0`, λ(`1`,
+    protected val ring = DEF( λ(R, λ(<=, λ(<, λ(+, λ(*, λ(-, λ(|, λ(`0`, λ(`1`,
       <= ⊆ (R × R) /\
       (`+` :: (R × R -> R)) /\
       (* :: (R × R -> R)) /\
@@ -174,8 +191,12 @@ object RingStructure extends lisa.Main {
       // ordered rings
       /\ ∀(x, ∀(y, ∀(z, x ∈ R /\ y ∈ R /\ z ∈ R ==> (x <= y)      ==> ((x + z) <= (y + z)))))
       /\ ∀(x, ∀(y, (x ∈ R /\ y ∈ R /\ (`0` <= x) ==> (`0` <= y))  ==> (`0` <= (x * y))))
+      /\ ∀(x, ∀(y, (x < y) <=>  ))
       // don't add redundant axioms
-      // 
+
+      
+
+
       /\ ∀(x, ∀(y, (x ∈ R /\ y ∈ R ==> ((x <= `0`) /\ (y <= `0`))  ==> (`0` <= (x * y)))))
       /\ ∀(x, ∀(y, (x ∈ R /\ y ∈ R ==> ((x <= `0`) /\  (`0` <= y)) ==> ((x * y) <= `0`))))
       // how should we represent our integers? 
@@ -193,9 +214,9 @@ object RingStructure extends lisa.Main {
       // /\ 
 
       
-    ))))))))).printAs(args => s"ring(${args.mkString(", ")})")
+    )))))))))).printAs(args => s"ring(${args.mkString(", ")})")
 
-    inline def apply(R: Expr[Ind], leq: Expr[Ind], pl: Expr[Ind], st: Expr[Ind], mi: Expr[Ind], div: Expr[Ind], zero: Expr[Ind], one: Expr[Ind]): Expr[Prop] = ring(R)(leq)(pl)(st)(mi)(div)(zero)(one)
+    inline def apply(R: Expr[Ind], leq: Expr[Ind], ltq: Expr[Ind], pl: Expr[Ind], st: Expr[Ind], mi: Expr[Ind], div: Expr[Ind], zero: Expr[Ind], one: Expr[Ind]): Expr[Prop] = ring(R)(leq)(ltq)(pl)(st)(mi)(div)(zero)(one)
 
     def unapply(e: Expr[Prop]): Option[(Expr[Ind], Expr[Ind], Expr[Ind], Expr[Ind], Expr[Ind], Expr[Ind], Expr[Ind], Expr[Ind])] = {
       e match
@@ -393,6 +414,10 @@ object RingStructure extends lisa.Main {
 
   val divisibility_defn = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R)) |- ((y | x) <=> ∃(c, (c ∈ R) /\ (x === y * c)))){
     have(thesis) by byRingDefn.apply
+  }
+
+  val div_qe = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R),  ∃(c, (c ∈ R) /\ (x === y * c))) |- (y | x)){
+    have(thesis) by Tautology.from(divisibility_defn)
   }
 
   val div_prod  =  Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R)) |- (y | (y * x))){
@@ -824,7 +849,7 @@ object RingStructure extends lisa.Main {
   val x_lt_y_iff_p1 = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- (x <= y) <=> (1 + x <= 1 + y))
 
   val does_not_divide = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R, z ∈ R) |- (z | x) ==> ∀(y, y ∈ R /\ (1 <= y) /\ (y <= (z + -1)) /\ !(z | (x + y))))
-  object BigIntToRingElem{
+  object RingElemConversions {
     def i(x : BigInt) : Expr[Ind] = {
       if x < 0 then 
         -.construct(i(-x))
@@ -841,6 +866,17 @@ object RingStructure extends lisa.Main {
         case x if x > 0 => `1` + ic(x - 1)
         case x if x < 0 => -(`1`) + ic(x + 1)
       } 
+    }
+
+    def ci(p: Expr[Ind]): BigInt = {
+      require(!treeHasVariables(p))
+      p match {
+        case `0` => 0
+        case `1` => 1
+        case tx * ty => ci(tx) * ci(ty)
+        case tx + ty => ci(tx) + ci(ty)
+        case -(tx) => -ci(tx)
+      }
     }
   }
 

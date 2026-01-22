@@ -239,11 +239,52 @@ object Utils {
 
     def is_eq(x: Expr[Prop]): Boolean = {
     x match {
-      case (_ `equality` _) => true
+      case (tx `equality` ty) => true
       case _ => false
     }
     }
 
+    def is_div(x: Expr[Prop]): Boolean = {
+      x match {
+        case RingStructure.`|`(x, y) => true
+        case _ => false
+      }
+    }
+
+    def is_le(x: Expr[Prop]): Boolean = {
+      x match {
+        case RingStructure.<=(x, y) => true
+        case _ => false
+      }
+    }
+
+    def is_incl(x: Expr[Prop]): Boolean = {
+      x match {
+        case (_ ∈ R) => true
+        case _ => false
+      }
+    }
+
+    def treeHasVariables(xt: Expr[Ind]): Boolean = {
+      xt match {
+        case `0` => false
+        case `1` => false
+        case  tx if isVariableOrNeg(tx) => true 
+        case tx + ty => treeHasVariables(tx) || treeHasVariables(ty)
+        case tx * ty => treeHasVariables(tx) || treeHasVariables(ty)
+        case -(tx) => treeHasVariables(tx) 
+      }
+    }
+
+    def exprHasVariables(xt : Expr[Prop]): Boolean = {
+      xt match {
+        case (tx `equality` ty) => treeHasVariables(tx) || treeHasVariables(ty)
+        case RingStructure.`|`(tx, ty) => treeHasVariables(tx) || treeHasVariables(ty)
+        case RingStructure.<=(tx, ty) => treeHasVariables(tx) || treeHasVariables(ty)
+        case RingStructure.<(tx, ty) => treeHasVariables(tx) || treeHasVariables(ty)
+        case _ => throw Exception("I don't know this expression!")
+      }
+    }
 
     // def evalRingCutHelperB(using proof: library.Proof)
     // (equalityToCut: proof.InstantiatedFact, consq: Expr[Prop], equalities: SSet[Expr[Prop]], ls: proof.ProofStep): (SSet[Expr[Prop]], proof.ProofTacticJudgement) = {
