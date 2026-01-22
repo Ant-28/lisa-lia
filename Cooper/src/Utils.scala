@@ -173,13 +173,18 @@ object Utils {
       * @return Either an instantiated fact or a proof of inclusion
       */
     def typeChecking(using proof: library.Proof)(s: SSet[Expr[Ind]]): SSet[proof.InstantiatedFact | proof.ProofStep] = 
-      s.map: 
-        case a + b  => add_closure of (x := a, y := b)
-        case -(a)   => neg_closure of (a)
-        case a * b  => mul_closure of (x := a, y := b)
+
+      s.map { 
+      sval => 
+      
+      sval match  
         case `0`    => have(`0` ∈ R) by Tautology.from(add_id_closure)
         case `1`    => have(`1` ∈ R) by Tautology.from(mul_id_closure)
+        case -(a)   => neg_closure of (x := a)
+        case a + b  => add_closure of (x := a, y := b)
+        case a * b  => mul_closure of (x := a, y := b)
         case  x     => have(x ∈ R |- x ∈ R) by Restate
+      }
 
     /**
       * Find the depth of an expression tree. Needed to sort sequents prior to cutting

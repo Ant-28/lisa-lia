@@ -101,22 +101,12 @@ object Rings extends lisa.Main
         val q = typeChecking(getTypingVarsInAnte(t.result.left))
         val r = getTypings(t.result.left)
         have(t.result)
-        // println(thesis)
-        println(t.result)
-
-        // r.map(qr => println(qr))
-        // q.map(qp => println(qp))
-
-        // Cut.withParameters(things to be cut, phi)(thing that has phi on right, thing that has phi on left)
         have(thesis) by Cut.withParameters(r.head)(q.head, t)
-        
-
-        // sorry
     }
     val tes2 = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (`1` ∈ R)) |- `1` + (`1` + `1`) === (`1` + `1`) + `1`){
         have(thesis) by Restate.from(add_assoc of (x := `1`, y := `1`, z := `1`))
     }
-    println("test")
+
     // val test = -(y)
     // println(treeDepth(test))
     override def main(args: Array[String]): Unit = {
@@ -142,13 +132,37 @@ object Rings extends lisa.Main
     val ringEq3 = Theorem(ring(R, <=, +, *, -, |, `0`, `1`) |- i(2) * i(2) === i(4)){
         have(thesis) by evalRingEq.apply
     }
+    val ringEq4 = Theorem(ring(R, <=, +, *, -, |, `0`, `1`) |-  i(-2) * i(2) === i(-4)){
+        have(thesis) by evalRingEq.apply
+    }
+    val ringEq5 = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R) |-  3*x === x + x + x){
+        have(thesis) by evalRingEq.apply
+    }
+
+    val ringEq6 = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R) |-  -3*x === -x + -x + -x){
+        have(thesis) by evalRingEq.apply
+    }
+
+    val ringEq7 = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R) |-  -(-x) === x){
+        have(thesis) by evalRingEq.apply
+    }
+    val ringEq8 = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R, z ∈ R) |-  (2*x + -3*y) + z === -y + -y + -y + x + z + x){
+        have(thesis) by evalRingEq.apply
+    }
+
+    val ringEq9 = Theorem((ring(R, <=, +, *, -, |, `0`, `1`)) |-  i(5) + i(10) === i(15)){
+        have(thesis) by evalRingEq.apply
+    }
     // println(isVariable(x))
-    println(`1`.id.name)   
-    
-    // println(isVariableOrNeg(x))
-    // println(isVariableOrNeg(-c))
-    // println(isVariableOrNeg(`0`))
-    // println(isVariableOrNeg(x + x))
+    // println(`1`.id.name)   
+    println("seregost")
+    println(isVariableOrNeg(x))
+    println(isVariableOrNeg(-c))
+    println(isNegVariable(-c))
+    println(isNegVariable(-(x)))
+    println(List(-x, -y).forall(isNegVariable))
+    println(isVariableOrNeg(`0`))
+    println(isVariableOrNeg(x + x))
     
 }
 // end Rings

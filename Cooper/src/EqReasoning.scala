@@ -54,35 +54,14 @@ object EqReasoning extends lisa.Main {
             // println(have(sol).bot)
             if !sol.isValid then return proof.InvalidProofTactic("Checking sums failed!")
             else
-              println("thing to cut")
-              println(have(sol).bot)
               val typing = typeChecking(getTypingVarsInAnte(have(sol).bot.left))
-              println("unsorted")
-              typing.map(proofStepDebugPrint)
-              // val typing2 = typing.map(_.asInstanceOf[proof.InstantiatedFact | proof.ProofStep])
-              // println("typing2")
-              // typing2.map(proofStepDebugPrint)
-              // println("end typing2")
+              // typing.map(proofStepDebugPrint)
               
-                           
-      
-              println("lengths")
-              
-              // .map(proofStepDebugPrint)
-              // val foo2 = SortedSet[proof.InstantiatedFact | proof.ProofStep]() ++ typing
-              // println(foo2.size)
-              
-              
-
               val invalidRes = TacticSubproof{
                 have(0 === 0) by Restate
               }
               val hprf = have(sol)
-
               var temp  = (getTypings(hprf.bot.left), hprf)
-              
-
-              // proof.sequentOfFact(hprf)
               val seqs = typing + hprf
               // TODO: not this
               // thing that does not work that needs to work
@@ -182,6 +161,10 @@ object EqReasoning extends lisa.Main {
             have(1 === 1) by Restate
             res = RB(1)
           }
+          case tx if (isVariable(tx) || isNegVariable(tx)) => {
+            have(tx ∈ R |- tx === tx) by Restate
+            res = RB(tx)
+          }
           case x + y => {
             val (vx, px) = evalRing(x)
             val (vy, py) = evalRing(y)
@@ -224,12 +207,12 @@ object EqReasoning extends lisa.Main {
             val (xeq, negeq) = (have(px), have(pneg))
             var equalities = SSet(xeq, negeq).map(_.bot.firstElemR)
             have(equalities |- -(x) === -(x)) by Restate 
-            thenHave(equalities |- -(x) === uvx) by RightSubstEq.withParameters(
-              Seq((-(x), uvx)),
-              (Seq(a), -(x) === a)
+            thenHave(equalities |- -(x) === -(uvx)) by RightSubstEq.withParameters(
+              Seq((x, uvx)),
+              (Seq(a), -(x) === -a)
             )
             thenHave(equalities |- -(x) === uvneg) by RightSubstEq.withParameters(
-              Seq((uvx, uvneg)),
+              Seq((-(uvx), uvneg)),
               (Seq(a), -(x) === a)
             )
             // WARNING: you may need val typs = SSet(x ∈ R, y ∈ R) ++ List(xeq, yeq, sumeq).map(l => getTypings(l.bot.left)).fold(Set())((x, y) => x ++ y)
@@ -260,7 +243,7 @@ object EqReasoning extends lisa.Main {
               Seq((y, uvy)),
               (Seq(a), x * y === uvx * a)
             )
-            println(uvx * uvy === uvmul)
+
             thenHave(equalities |- x * y === uvmul) by RightSubstEq.withParameters(
               Seq((((uvx) * (uvy)), uvmul)),
               (Seq(a), x * y === a)
@@ -529,7 +512,7 @@ object EqReasoning extends lisa.Main {
           val typings = SSet(tx ∈ R, ty ∈ R)
           have(typings |- tx + ty === ty + tx) by Tautology.from(add_comm of (x := tx, y := ty))
         }
-        case (tx, ty)  if List(tx, ty).forall(isVariable) || List(x, y).forall(isNegVariable) => {
+        case (tx, ty)  if List(tx, ty).forall(isVariable) || List(tx, ty).forall(isNegVariable) => {
           myOrd.compare(tx, ty)  match {
             case tcomp  if tcomp <= 0 => {
               res = RB(tx + ty)
@@ -596,7 +579,7 @@ object EqReasoning extends lisa.Main {
           temp = evalRingCutHelper(pprf2, tx + (ty + tys)  === ty + ires.tval, temp._1, lastStep)
           have(temp._2)
         }
-        case (tx, ty + tys)  if List(tx, ty).forall(isVariable) || List(x, y).forall(isNegVariable) => {
+        case (tx, ty + tys)  if List(tx, ty).forall(isVariable) || List(tx, ty).forall(isNegVariable) => {
           myOrd.compare(tx, ty) match {
             case tcomp if tcomp <= 0 => {
               val typings = SSet(tx ∈ R, ty ∈ R, tys ∈ R)
@@ -759,17 +742,20 @@ object EqReasoning extends lisa.Main {
             case `1` => {
               val (pres, pprf) = evalNegHelper(Pos, tx + txs) 
               if !pprf.isValid then return (NRB(int.tval), proof.InvalidProofTactic("evalNeg failed!"))  
+              res = pres
               have(pprf)
             }
             case (-(`1`)) => {
               val (pres, pprf) = evalNegHelper(Neg, tx + txs) 
               if !pprf.isValid then return (NRB(int.tval), proof.InvalidProofTactic("evalNeg failed!"))  
+              res = pres
               have(pprf)
             }
             case tx if isVariableOrNeg(tx) => {
               // Pos or Neg no longer matters for vars
               val (pres, pprf) = evalNegHelper(Pos, tx + txs) 
               if !pprf.isValid then return (NRB(int.tval), proof.InvalidProofTactic("evalNeg failed!"))  
+              res = pres
               have(pprf)
             }
             case _ => return (NRB(int.tval), proof.InvalidProofTactic("evalNeg Failed!"))
