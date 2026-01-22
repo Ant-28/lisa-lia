@@ -24,7 +24,7 @@ object DivReasoning extends lisa.Main {
       else
         val goalElem = goal.right.head 
         TacticSubproof{
-          assume(ring(R, <=, +, *, -, |, 0, 1))
+          assume(ring(R, <=, <, +, *, -, |, 0, 1))
           if (!is_div(goalElem)) then return proof.InvalidProofTactic("I can't prove anything other than divisibility!")
           else if (exprHasVariables(goalElem)) return proof.InvalidProofTactic("I am a lazy tactic, use <NAME> instead! I only work on numbers!")
           else
@@ -54,7 +54,7 @@ object DivReasoning extends lisa.Main {
             val tyr = have(ty ∈ R) by typeCheck.apply
             have(tc ∈ R /\ (tx === ty * tc)) by RightAnd(left, right) // is this right?
             thenHave(∃(c, c ∈ R /\ (tx === ty * c))) by RightExists
-            have((ring(R, <=, +, *, -, |, `0`, `1`),tx ∈ R, ty ∈ R) |- ∃(c, c ∈ R /\ (tx === ty * c))) by Tautology.from(lastStep, txr, tyr)
+            have((ring(R, <=, <, +, *, -, |, `0`, `1`),tx ∈ R, ty ∈ R) |- ∃(c, c ∈ R /\ (tx === ty * c))) by Tautology.from(lastStep, txr, tyr)
             have(goal) by Tautology.from(div_qe of (x := tx, y := ty), lastStep, txr, tyr)
           }
           case _ => return proof.InvalidProofTactic("Can only solve inequalities")

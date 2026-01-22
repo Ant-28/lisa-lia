@@ -31,7 +31,7 @@ object Rings extends lisa.Main
 
     val w : THM = RingStructure.add_closure
     // println(w.statement)
-    val dummy = Theorem(ring(R, <=, +, *, -, |, `0`, `1`) |- `1` ∈ R) {
+    val dummy = Theorem(ring(R, <=, <, +, *, -, |, `0`, `1`) |- `1` ∈ R) {
         have(thesis) by Restate.from(mul_id_closure)
     }
 
@@ -97,15 +97,15 @@ object Rings extends lisa.Main
     //     }
     // }
     
-    val test = Theorem( (ring(R, <=, +, *, -, |, `0`, `1`)) |- `1` + (`1` + `1`) === (`1` + `1`) + `1`){
-        assume(ring(R, <=, +, *, -, |, `0`, `1`))
+    val test = Theorem( (ring(R, <=, <, +, *, -, |, `0`, `1`)) |- `1` + (`1` + `1`) === (`1` + `1`) + `1`){
+        assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
         val t = add_assoc of (x := `1`, y := `1`, z := `1`)
         val q = typeChecking(getTypingVarsInAnte(t.result.left))
         val r = getTypings(t.result.left)
         have(t.result)
         have(thesis) by Cut.withParameters(r.head)(q.head, t)
     }
-    val tes2 = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (`1` ∈ R)) |- `1` + (`1` + `1`) === (`1` + `1`) + `1`){
+    val tes2 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), (`1` ∈ R)) |- `1` + (`1` + `1`) === (`1` + `1`) + `1`){
         have(thesis) by Restate.from(add_assoc of (x := `1`, y := `1`, z := `1`))
     }
 
@@ -119,52 +119,52 @@ object Rings extends lisa.Main
     println("Hello!")
     // val dummyTheorem = Theorem(P(x) |- P(x)){
     //     import RingStructure.RingElemConversions.*
-    //     val pprf = evalRingEq.apply((ring(R, <=, +, *, -, |, 0, 1) |- i(2) * i(2) === i(4)))(using summon[Ordering[Expr[Ind]]])
+    //     val pprf = evalRingEq.apply((ring(R, <=, <, +, *, -, |, 0, 1) |- i(2) * i(2) === i(4)))(using summon[Ordering[Expr[Ind]]])
     //     // println(pres)
     //     println(pprf.asInstanceOf[pprf.proof.ValidProofTactic].bot)
     //     sorry
     // }
     import RingElemConversions.i
-    val ringEq1 = Theorem(ring(R, <=, +, *, -, |, `0`, `1`) |- i(2) === i(2)){
+    val ringEq1 = Theorem(ring(R, <=, <, +, *, -, |, `0`, `1`) |- i(2) === i(2)){
         have(thesis) by evalRingEq.apply
     }
-    val ringEq2 = Theorem(ring(R, <=, +, *, -, |, `0`, `1`) |- i(2) + i(2) === i(4)){
+    val ringEq2 = Theorem(ring(R, <=, <, +, *, -, |, `0`, `1`) |- i(2) + i(2) === i(4)){
         have(thesis) by evalRingEq.apply
     }
-    val ringEq3 = Theorem(ring(R, <=, +, *, -, |, `0`, `1`) |- i(2) * i(2) === i(4)){
+    val ringEq3 = Theorem(ring(R, <=, <, +, *, -, |, `0`, `1`) |- i(2) * i(2) === i(4)){
         have(thesis) by evalRingEq.apply
     }
-    val ringEq4 = Theorem(ring(R, <=, +, *, -, |, `0`, `1`) |-  i(-2) * i(2) === i(-4)){
+    val ringEq4 = Theorem(ring(R, <=, <, +, *, -, |, `0`, `1`) |-  i(-2) * i(2) === i(-4)){
         have(thesis) by evalRingEq.apply
     }
-    val ringEq5 = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R) |-  3*x === x + x + x){
-        have(thesis) by evalRingEq.apply
-    }
-
-    val ringEq6 = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R) |-  -3*x === -x + -x + -x){
+    val ringEq5 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R) |-  3*x === x + x + x){
         have(thesis) by evalRingEq.apply
     }
 
-    val ringEq7 = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R) |-  -(-x) === x){
-        have(thesis) by evalRingEq.apply
-    }
-    val ringEq8 = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R, z ∈ R) |-  (2*x + -3*y) + z === -y + -y + -y + x + z + x){
+    val ringEq6 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R) |-  -3*x === -x + -x + -x){
         have(thesis) by evalRingEq.apply
     }
 
-    val ringEq9 = Theorem((ring(R, <=, +, *, -, |, `0`, `1`)) |-  i(5) + i(10) === i(15)){
+    val ringEq7 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R) |-  -(-x) === x){
+        have(thesis) by evalRingEq.apply
+    }
+    val ringEq8 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R, z ∈ R) |-  (2*x + -3*y) + z === -y + -y + -y + x + z + x){
+        have(thesis) by evalRingEq.apply
+    }
+
+    val ringEq9 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`)) |-  i(5) + i(10) === i(15)){
         have(thesis) by evalRingEq.apply
     }
     // use 100 to stress test the kernel
-    val ringEq10 = Theorem((ring(R, <=, +, *, -, |, `0`, `1`)) |- i(10) === i(10)){
+    val ringEq10 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`)) |- i(10) === i(10)){
         have(thesis) by evalRingEq.apply
     }
 
-    val ringTyp1 = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R) |-  (-i(10) * i(10) + x) ∈ R){
+    val ringTyp1 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R) |-  (-i(10) * i(10) + x) ∈ R){
         have(thesis) by typeCheck.apply
     }
 
-    val ringDiv1 = Theorem((ring(R, <=, +, *, -, |, `0`, `1`)) |- (10 | i(20))){
+    val ringDiv1 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`)) |- (10 | i(20))){
         have(thesis) by divInts.apply
     }
     // println(isVariable(x))

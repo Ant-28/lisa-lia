@@ -200,6 +200,7 @@ object Utils {
         case `1` => 1
         case -(a) => treeDepth(a) + 1
         case x : Variable[Ind] => 1
+        case _ => throw Exception("I don't know this expression!")
       }
     }
 
@@ -214,6 +215,7 @@ object Utils {
       exp match {
         case tx : Variable[Ind] => tx.id.name
         case -(tx) => getVarName(tx)
+        case _ => throw Exception("I don't know this expression!")
       }
     }
 
@@ -273,6 +275,7 @@ object Utils {
         case tx + ty => treeHasVariables(tx) || treeHasVariables(ty)
         case tx * ty => treeHasVariables(tx) || treeHasVariables(ty)
         case -(tx) => treeHasVariables(tx) 
+        case _ => throw Exception("I don't know this expression!")
       }
     }
 

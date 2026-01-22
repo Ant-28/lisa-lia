@@ -129,6 +129,7 @@ object RingStructure extends lisa.Main {
     // infix def  +(right : Expr[Ind]): Expr[Ind]   = RingStructure.+.construct(left, right)
     // infix def  *(right : Expr[Ind]): Expr[Ind]   = RingStructure.*.construct(left, right)
     infix def <=(right : Expr[Ind]): Expr[Prop]  = this.<=.construct(left, right)
+    infix def <(right : Expr[Ind]): Expr[Prop]  = this.<.construct(left, right)
     infix def |(right: Expr[Ind]):Expr[Prop]     = this.|.construct(left, right)
     // this is probably not right?
     def  - :Expr[Ind]                          = this.-.construct(left)
@@ -191,7 +192,7 @@ object RingStructure extends lisa.Main {
       // ordered rings
       /\ ∀(x, ∀(y, ∀(z, x ∈ R /\ y ∈ R /\ z ∈ R ==> (x <= y)      ==> ((x + z) <= (y + z)))))
       /\ ∀(x, ∀(y, (x ∈ R /\ y ∈ R /\ (`0` <= x) ==> (`0` <= y))  ==> (`0` <= (x * y))))
-      /\ ∀(x, ∀(y, (x < y) <=>  ))
+      /\ ∀(x, ∀(y, (x < y) <=>  (x <= y) /\ !(y <= x)))
       // don't add redundant axioms
 
       
@@ -218,9 +219,9 @@ object RingStructure extends lisa.Main {
 
     inline def apply(R: Expr[Ind], leq: Expr[Ind], ltq: Expr[Ind], pl: Expr[Ind], st: Expr[Ind], mi: Expr[Ind], div: Expr[Ind], zero: Expr[Ind], one: Expr[Ind]): Expr[Prop] = ring(R)(leq)(ltq)(pl)(st)(mi)(div)(zero)(one)
 
-    def unapply(e: Expr[Prop]): Option[(Expr[Ind], Expr[Ind], Expr[Ind], Expr[Ind], Expr[Ind], Expr[Ind], Expr[Ind], Expr[Ind])] = {
+    def unapply(e: Expr[Prop]): Option[(Expr[Ind], Expr[Ind], Expr[Ind], Expr[Ind], Expr[Ind], Expr[Ind], Expr[Ind], Expr[Ind], Expr[Ind])] = {
       e match
-        case App(App(App(App(App(App(App(App(`ring`, r), leq), pl), st), mi), div), zero), one) => Some((r, leq, pl, st, mi, div, zero, one))
+        case App(App(App(App(App(App(App(App(App(`ring`, r), leq), ltq), pl), st), mi), div), zero), one) => Some((r, leq, ltq, pl, st, mi, div, zero, one))
         case _ => None
       
     }
@@ -266,7 +267,7 @@ object RingStructure extends lisa.Main {
         // println(fvs)
         val statement: Expr[Prop] = goal.right.head
         val res = TacticSubproof:
-          assume(ring(R, <=, +, *, -, |, `0`, `1`))
+          assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
           val assumptions = goal.left.filterNot(isRingElem)
           // println(assumptions)
           assumptions.map(x => assume(x))
@@ -286,8 +287,8 @@ object RingStructure extends lisa.Main {
 
     }
   
-  val add_closure = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- ((x + y) ∈ R)){
-    assume(ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R)
+  val add_closure = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- ((x + y) ∈ R)){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R)
     have(app(+)((x, y)) ∈ R) by Tautology.from(
       ring.definition, 
       appTyping of (f := +, x := (x, y), A := R × R, B := R), 
@@ -296,8 +297,8 @@ object RingStructure extends lisa.Main {
     thenHave(thesis) by Substitution(infixBinaryFunction.definition of (f := +))
   }
 
-  val mul_closure = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- ((x * y) ∈ R)){
-    assume(ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R)
+  val mul_closure = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- ((x * y) ∈ R)){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R)
     have(app(*)((x, y)) ∈ R) by Tautology.from(
       ring.definition, 
       appTyping of (f := *, x := (x, y), A := R × R, B := R), 
@@ -306,8 +307,8 @@ object RingStructure extends lisa.Main {
     thenHave(thesis) by Substitution(infixBinaryFunction.definition of (f := *))
   }
 
-  val neg_closure = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R) |- (-(x) ∈ R)){
-    assume(ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R)
+  val neg_closure = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R) |- (-(x) ∈ R)){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R)
     have(app(-)(x) ∈ R) by Tautology.from(
       ring.definition, 
       appTyping of (f := -, x := x, A := R, B := R), 
@@ -316,53 +317,53 @@ object RingStructure extends lisa.Main {
     thenHave(thesis) by Substitution(infixUnaryFunction.definition of (f := -))
   }
 
-  val add_id_closure = Theorem(ring(R, <=, +, *, -, |, `0`, `1`) |- `0` ∈ R){
+  val add_id_closure = Theorem(ring(R, <=, <, +, *, -, |, `0`, `1`) |- `0` ∈ R){
     have(thesis) by byRingDefn.apply
   }
 
-  val mul_id_closure = Theorem(ring(R, <=, +, *, -, |, `0`, `1`) |- `1` ∈ R){
+  val mul_id_closure = Theorem(ring(R, <=, <, +, *, -, |, `0`, `1`) |- `1` ∈ R){
     have(thesis) by byRingDefn.apply
   }
-  val nmul_id_closure =Theorem(ring(R, <=, +, *, -, |, `0`, `1`) |- -(`1`) ∈ R){
-    assume(ring(R, <=, +, *, -, |, `0`, `1`))
+  val nmul_id_closure =Theorem(ring(R, <=, <, +, *, -, |, `0`, `1`) |- -(`1`) ∈ R){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
     have(`1` ∈ R) by Tautology.from(mul_id_closure)
     have(-(`1`) ∈ R) by Tautology.from(lastStep, neg_closure of (x := `1`))
   } 
-  val order_refl = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R) |- x <= x) {
+  val order_refl = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R) |- x <= x) {
     have(thesis) by byRingDefn.apply
   }
   
-  val order_antisym = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R, x <= y, y <= x) |- x === y){
+  val order_antisym = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R, x <= y, y <= x) |- x === y){
     have(thesis) by byRingDefn.apply
   }
 
 
-  val order_trans = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R) , (y ∈ R) , (z ∈ R) , (x <= y) , (y <= z)) |- x <= z){
+  val order_trans = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), (x ∈ R) , (y ∈ R) , (z ∈ R) , (x <= y) , (y <= z)) |- x <= z){
     have(thesis) by byRingDefn.apply
   }
 
-  val order_tot = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R) , (y ∈ R)) |- (x <= y) \/ (y <= x)){
+  val order_tot = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), (x ∈ R) , (y ∈ R)) |- (x <= y) \/ (y <= x)){
     have(thesis) by byRingDefn.apply
   }
 
 // ∀(x, y, z)
-  val add_comm = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R) , (y ∈ R)) |- (x + y) === (y + x)){
+  val add_comm = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), (x ∈ R) , (y ∈ R)) |- (x + y) === (y + x)){
     have(thesis) by byRingDefn.apply
   }
 
-  val add_assoc = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R) , (y ∈ R), (z ∈ R)) |- ((x + y) + z) === (x + (y + z))){
+  val add_assoc = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), (x ∈ R) , (y ∈ R), (z ∈ R)) |- ((x + y) + z) === (x + (y + z))){
     have(thesis) by byRingDefn.apply
   }
 
-  val add_id    = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R)) |- (x === (`0` + x))){ 
+  val add_id    = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), (x ∈ R)) |- (x === (`0` + x))){ 
     have(thesis) by byRingDefn.apply 
   }
 
-  val add_inv   = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R)) |- ((x + (-(x))) === `0`)){
+  val add_inv   = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), (x ∈ R)) |- ((x + (-(x))) === `0`)){
     have(thesis) by byRingDefn.apply 
   }
-  val add_comm_inv =  Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R)) |- ((-x + x) === `0`)){
-    assume(ring(R, <=, +, *, -, |, `0`, `1`))
+  val add_comm_inv =  Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), (x ∈ R)) |- ((-x + x) === `0`)){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
     assume(x ∈ R)
     val h1 = have(-x ∈ R) by Tautology.from(neg_closure of (x := x))
     val h2 = have(x + -x === -x + x) by Tautology.from(add_comm of (x := x, y := -x), lastStep)
@@ -371,20 +372,20 @@ object RingStructure extends lisa.Main {
     have(thesis) by Tautology.from(lastStep, h1, h2, h3)
   }
 
-  val mul_assoc = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R), (z ∈ R)) |- ((x * (y * z)) === ((x * y) * z))){
+  val mul_assoc = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R), (z ∈ R)) |- ((x * (y * z)) === ((x * y) * z))){
     have(thesis) by byRingDefn.apply
   }
   
-  val mul_id_right = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R)) |- (x === (`1` * x))){
+  val mul_id_right = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), (x ∈ R)) |- (x === (`1` * x))){
     have(thesis) by byRingDefn.apply 
   }
   
-  val mul_comm = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R)) |- (x * y) === (y * x)){
+  val mul_comm = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R)) |- (x * y) === (y * x)){
     have(thesis) by byRingDefn.apply 
   }
 
-  val mul_id_left =  Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R)) |- (x === (x * `1`))){
-    assume(ring(R, <=, +, *, -, |, `0`, `1`))
+  val mul_id_left =  Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), (x ∈ R)) |- (x === (x * `1`))){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
     assume(x ∈ R)
     val v1 = have(x === (`1` * x)) by Tautology.from(mul_id_right)
     val v2 = have(`1` ∈ R) by Tautology.from(mul_id_closure)
@@ -395,12 +396,12 @@ object RingStructure extends lisa.Main {
   // /\ ∀(x, ∀(y, ∀(z, x ∈ R /\ y ∈ R /\ z ∈ R ==> ((x * (y + z)) === ((x * y) + (x * z))))))
   //     /\ ∀(x, ∀(y, ∀(z, x ∈ R /\ y ∈ R /\ z ∈ R ==> (((y + z) * x) === ((x * y) + (x * z))))))
 
-  val mul_dist_left = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R), (z ∈ R)) |- ((x * (y + z)) === ((x * y) + (x * z)))){
+  val mul_dist_left = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R), (z ∈ R)) |- ((x * (y + z)) === ((x * y) + (x * z)))){
     have(thesis) by byRingDefn.apply 
   }
 
-  val mul_dist_right = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R), (z ∈ R)) |- (((y + z) * x) === ((y * x) + (z * x)))){
-    assume(ring(R, <=, +, *, -, |, `0`, `1`))
+  val mul_dist_right = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R), (z ∈ R)) |- (((y + z) * x) === ((y * x) + (z * x)))){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
     assume(x ∈ R)
     assume(y ∈ R)
     assume(z ∈ R)
@@ -412,16 +413,16 @@ object RingStructure extends lisa.Main {
     have(thesis) by Congruence.from(v1, v2, v0x, v0y)
   } 
 
-  val divisibility_defn = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R)) |- ((y | x) <=> ∃(c, (c ∈ R) /\ (x === y * c)))){
+  val divisibility_defn = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R)) |- ((y | x) <=> ∃(c, (c ∈ R) /\ (x === y * c)))){
     have(thesis) by byRingDefn.apply
   }
 
-  val div_qe = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R),  ∃(c, (c ∈ R) /\ (x === y * c))) |- (y | x)){
+  val div_qe = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R),  ∃(c, (c ∈ R) /\ (x === y * c))) |- (y | x)){
     have(thesis) by Tautology.from(divisibility_defn)
   }
 
-  val div_prod  =  Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R)) |- (y | (y * x))){
-    assume(ring(R, <=, +, *, -, |, `0`, `1`))
+  val div_prod  =  Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R)) |- (y | (y * x))){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
     assume(x ∈ R)
     assume(y ∈ R)
 
@@ -431,8 +432,8 @@ object RingStructure extends lisa.Main {
     have(y | (y * x)) by Tautology.from(lastStep, xyinR, divisibility_defn of (x := (y * x), y := y, c := x))
   }
   // val all_div_zero = Theorem()
-  val div_lcm_removal = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (y ∈ R), ∃(x, (x ∈ R) /\ P(y * x))) |- ∃(x, (x ∈ R) /\ (y | x) /\ P(x))){
-    assume(ring(R, <=, +, *, -, |, `0`, `1`))
+  val div_lcm_removal = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), (y ∈ R), ∃(x, (x ∈ R) /\ P(y * x))) |- ∃(x, (x ∈ R) /\ (y | x) /\ P(x))){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
     assume(y ∈ R)
 
     val xyinR = have((x ∈ R) |- (y * x) ∈ R) by Tautology.from(mul_closure of (x := y, y := x))
@@ -444,12 +445,12 @@ object RingStructure extends lisa.Main {
     thenHave(thesis) by LeftExists
   }
 
-  val zero_x_x  = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R)) |- (x === (`0` + x))){ 
+  val zero_x_x  = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), (x ∈ R)) |- (x === (`0` + x))){ 
     have(thesis) by Tautology.from(add_id)
   }
 
-  val x_zero_x  = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R)) |- (x === (x + `0`))){ 
-    assume(ring(R, <=, +, *, -, |, `0`, `1`))
+  val x_zero_x  = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), (x ∈ R)) |- (x === (x + `0`))){ 
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
     assume(x ∈ R)
     val a = have(`0` ∈ R) by Tautology.from(add_id_closure)
     val b = have((x + `0`) ∈ R) by Tautology.from(add_closure of (x := x, y := `0`), a)
@@ -457,23 +458,23 @@ object RingStructure extends lisa.Main {
     have(thesis) by Tautology.from(lastStep, a, b)
   }
   
-  val cong_test = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R), (z ∈ R), (x === y)) |- (x + z) === (y + z)){
-    assume(ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R), (z ∈ R), (x === y))
+  val cong_test = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R), (z ∈ R), (x === y)) |- (x + z) === (y + z)){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R), (z ∈ R), (x === y))
     val v1 = have((x + z) ∈ R) by Tautology.from(add_closure of (x:= x, y:=z))
     val v2 = have((y + z) ∈ R) by Tautology.from(add_closure of (x:= y, y:=z))
     have(thesis) by Congruence.from(v1, v2)
   }
 
-  val nontriviality = Theorem((ring(R, <=, +, *, -, |, `0`, `1`) ) |- ∃(x, ∃(y, x ∈ R /\ y ∈ R /\ !(x === y)))){
+  val nontriviality = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`) ) |- ∃(x, ∃(y, x ∈ R /\ y ∈ R /\ !(x === y)))){
     have(thesis) by byRingDefn.apply
   }
 
   
  
 
-  val mult_zero_x_zero = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R)) |- (`0` * x === `0`)) {
+  val mult_zero_x_zero = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), (x ∈ R)) |- (`0` * x === `0`)) {
     assume(x ∈ R)
-    assume(ring(R, <=, +, *, -, |, `0`, `1`))
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
     val zero_r = have(`0` ∈ R) by Tautology.from(add_id_closure)
     val p0xr = have((`0` * x) ∈ R) by Tautology.from(zero_r, mul_closure of (x := `0`, y := x))
     val m0xr = have(-(`0` * x) ∈ R) by Tautology.from(neg_closure of (x := (`0` * x)), lastStep)
@@ -499,9 +500,9 @@ object RingStructure extends lisa.Main {
     have(thesis) by Congruence.from(s9, s8, s7, s6, s5, s4)
   }
 
-  val mult_x_zero_zero = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R)) |- (x * 0 === 0)) {
+  val mult_x_zero_zero = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), (x ∈ R)) |- (x * 0 === 0)) {
     assume(x ∈ R)
-    assume(ring(R, <=, +, *, -, |, `0`, `1`))
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
     val zero_r = have(`0` ∈ R) by Tautology.from(add_id_closure)
 
     val h1 = have(x * 0 === 0 * x) by Tautology.from(mul_comm of (x := x, y := 0), zero_r)
@@ -510,8 +511,8 @@ object RingStructure extends lisa.Main {
     have(thesis) by Tautology.from(h1, h2, lastStep)
   } 
 
-  val double_negation_elimination = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R)) |- (-(-(x)) === x)){
-    assume(ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R))
+  val double_negation_elimination = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), (x ∈ R)) |- (-(-(x)) === x)){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`), (x ∈ R))
     val n1 = have(-(x) ∈ R) by Tautology.from(neg_closure of (x := x))
     val n2 = have(-(-(x)) ∈ R) by Tautology.from(neg_closure of (x := -(x)), n1)
 
@@ -524,8 +525,8 @@ object RingStructure extends lisa.Main {
   }
 
   
-  val neg_x_y_neg_xy = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R)) |- (-(x) * y) === -(x * y)){
-    assume(ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R))
+  val neg_x_y_neg_xy = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R)) |- (-(x) * y) === -(x * y)){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R))
     val h1 = have((x * y) ∈ R) by Tautology.from(mul_closure)
     // Discharge(h1)
     val h2 = have(-(x * y) ∈ R) by Tautology.from(neg_closure of (x := (x * y)), h1)
@@ -547,8 +548,8 @@ object RingStructure extends lisa.Main {
     have(thesis) by Tautology.from(lastStep, h1, h2, h3, h4, h5)
   }
 
-  val neg_x_neg_y_xy = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R)) |- (-(x) * -(y)) === (x * y)){
-    assume(ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R))
+  val neg_x_neg_y_xy = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R)) |- (-(x) * -(y)) === (x * y)){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R))
     val h1 = have((x * y) ∈ R) by Tautology.from(mul_closure)
     val h2 = have(-(x * y) ∈ R) by Tautology.from(neg_closure of (x := (x * y)), h1)
     val h3 = have(-(x) ∈ R) by Tautology.from(neg_closure)
@@ -566,8 +567,8 @@ object RingStructure extends lisa.Main {
   
   }
 
-  val negation_dist_add = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R)) |- -(x + y) === -(x) + -(y)){
-    assume(ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R))
+  val negation_dist_add = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R)) |- -(x + y) === -(x) + -(y)){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R))
     val h1 = have((x + y) ∈ R) by Tautology.from(add_closure)
     val h2 = have(-(x + y) ∈ R) by Tautology.from(neg_closure of (x := (x + y)), h1)
     val h3 = have(-(x) ∈ R) by Tautology.from(neg_closure)
@@ -605,16 +606,16 @@ object RingStructure extends lisa.Main {
                                                                         h1, h2, h3, h4, h5, h6, h7, h8)
     have(thesis) by Tautology.from(lastStep, h1, h2, h3, h4, h5, h6, h7, h8)
   }
-  val negation_zero = Theorem((ring(R, <=, +, *, -, |, `0`, `1`)) |- -(`0`) === `0`){
-    assume(ring(R, <=, +, *, -, |, `0`, `1`))
+  val negation_zero = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`)) |- -(`0`) === `0`){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
     val h6 = have(`0` ∈ R) by Tautology.from(add_id_closure) 
     val h7 = have(-(`0`) ∈ R) by Tautology.from(neg_closure of (x := `0`), h6)
     have(-(`0`) === `0`) by Congruence.from(lastStep, add_inv of (x := `0`), h6, h7, zero_x_x of (x := -(`0`)))
     have(thesis) by Tautology.from(lastStep, h6, h7)
   }
 
-  val one_mone_xs_xs = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R) |- `1` + (-(`1`) + x) === x){
-    assume(ring(R, <=, +, *, -, |, `0`, `1`))
+  val one_mone_xs_xs = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R) |- `1` + (-(`1`) + x) === x){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
     assume(x ∈ R)
     val h1 = have(`0` ∈ R) by Tautology.from(add_id_closure) 
     val h2 = have(`1` ∈ R) by Tautology.from(mul_id_closure)
@@ -642,8 +643,8 @@ object RingStructure extends lisa.Main {
     have(thesis) by Tautology.from(lastStep, h4, h5, h6)
   }
   
-  val mone_one_xs_xs =  Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R) |- -(`1`) + (`1` + x) === x){
-    assume(ring(R, <=, +, *, -, |, `0`, `1`))
+  val mone_one_xs_xs =  Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R) |- -(`1`) + (`1` + x) === x){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
     assume(x ∈ R)
     val h1 = have(`0` ∈ R) by Tautology.from(add_id_closure) 
     val h2 = have(`1` ∈ R) by Tautology.from(mul_id_closure)
@@ -658,8 +659,8 @@ object RingStructure extends lisa.Main {
   }
 
 
-  val mz_z_x_x = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R, z ∈ R) |- -(z) + (z + x) === x) {
-    assume(ring(R, <=, +, *, -, |, `0`, `1`))
+  val mz_z_x_x = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, z ∈ R) |- -(z) + (z + x) === x) {
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
     assume(x ∈ R)
     assume(z ∈ R)
     // val = 3
@@ -676,8 +677,8 @@ object RingStructure extends lisa.Main {
 
   }
 
-  val z_mz_x_x = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R, z ∈ R) |- z + (-z + x) === x){
-    assume(ring(R, <=, +, *, -, |, `0`, `1`))
+  val z_mz_x_x = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, z ∈ R) |- z + (-z + x) === x){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
     assume(x ∈ R)
     assume(z ∈ R)
     val h1 = have(-z ∈ R) by Tautology.from(neg_closure of (x := z))
@@ -687,8 +688,8 @@ object RingStructure extends lisa.Main {
     have(thesis) by Tautology.from(lastStep, h1, h2, h3) 
   }
 
-  val addPlusHelper1g = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R, z ∈ R) |- (z + x) + (-(z) + y) === x + y){
-    assume(ring(R, <=, +, *, -, |, `0`, `1`))
+  val addPlusHelper1g = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R, z ∈ R) |- (z + x) + (-(z) + y) === x + y){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
     assume(x ∈ R)
     assume(y ∈ R)
     assume(z ∈ R)
@@ -703,8 +704,8 @@ object RingStructure extends lisa.Main {
     have(thesis) by Tautology.from(lastStep, h1, h3, h4, h5, h6, h7, h8)
   }
 
-  val addPlusHelper2g = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R, z ∈ R) |- (-(z) + x) + (z + y) === x + y){
-    assume(ring(R, <=, +, *, -, |, `0`, `1`))
+  val addPlusHelper2g = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R, z ∈ R) |- (-(z) + x) + (z + y) === x + y){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
     assume(x ∈ R)
     assume(y ∈ R)
     assume(z ∈ R)
@@ -719,8 +720,8 @@ object RingStructure extends lisa.Main {
     have(thesis) by Tautology.from(lastStep, h1, h3, h4, h5, h6, h7, h8)
   }
 
-  val addPlusHelper1 = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- (`1` + x) + (-(`1`) + y) === x + y){
-    assume(ring(R, <=, +, *, -, |, `0`, `1`))
+  val addPlusHelper1 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- (`1` + x) + (-(`1`) + y) === x + y){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
     assume(x ∈ R)
     assume(y ∈ R)
     val h1 = have(`0` ∈ R) by Tautology.from(add_id_closure) 
@@ -736,8 +737,8 @@ object RingStructure extends lisa.Main {
     have(thesis) by Tautology.from(lastStep, h1, h2, h3, h4, h5, h6, h7, h8)
   }
 
-  val addPlusHelper2 = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- (-(`1`) + x) + (`1` + y) === x + y){
-    assume(ring(R, <=, +, *, -, |, `0`, `1`))
+  val addPlusHelper2 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- (-(`1`) + x) + (`1` + y) === x + y){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
     assume(x ∈ R)
     assume(y ∈ R)
     val h1 = have(`0` ∈ R) by Tautology.from(add_id_closure) 
@@ -751,8 +752,8 @@ object RingStructure extends lisa.Main {
     have(thesis) by Tautology.from(lastStep, h1, h2, h3, h4, h5, h6, h7, add_comm)
   }
 
-  val addPlusHelper3p = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R, z ∈ R, w ∈ R) |- (z + x) + (w + y) === x + (z + (w + y))){
-    assume(ring(R, <=, +, *, -, |, `0`, `1`))
+  val addPlusHelper3p = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R, z ∈ R, w ∈ R) |- (z + x) + (w + y) === x + (z + (w + y))){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
     assume(x ∈ R)
     assume(y ∈ R)
     assume(z ∈ R)
@@ -770,8 +771,8 @@ object RingStructure extends lisa.Main {
     have(thesis) by Tautology.from(h1, h3, h4, h5, h6, h7, h7p, lastStep)
   }
 
-  val addPlusHelper3 = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- (`1` + x) + (`1` + y) === x + (`1` + (`1` + y))){
-    assume(ring(R, <=, +, *, -, |, `0`, `1`))
+  val addPlusHelper3 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- (`1` + x) + (`1` + y) === x + (`1` + (`1` + y))){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
     assume(x ∈ R)
     assume(y ∈ R)
     val h1 = have(`0` ∈ R) by Tautology.from(add_id_closure) 
@@ -779,8 +780,8 @@ object RingStructure extends lisa.Main {
     val h3 = have(-(`1`) ∈ R) by Tautology.from(neg_closure of (x := `1`), h2)
     have(thesis) by Tautology.from(addPlusHelper3p of (x := x, y := y, z := `1`, w := `1`), h2)
   }
-  val addPlusHelper4 = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- (-(`1`) + x) + (-(`1`) + y) === x + (-(`1`) + (-(`1`) + y))){
-    assume(ring(R, <=, +, *, -, |, `0`, `1`))
+  val addPlusHelper4 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- (-(`1`) + x) + (-(`1`) + y) === x + (-(`1`) + (-(`1`) + y))){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
     assume(x ∈ R)
     assume(y ∈ R)
     val h1 = have(`0` ∈ R) by Tautology.from(add_id_closure) 
@@ -789,8 +790,8 @@ object RingStructure extends lisa.Main {
     have(thesis) by Tautology.from(addPlusHelper3p of (x := x, y := y, z := -(`1`), w := -`1`), h3)
   }
   
-  val addInsertHelper = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R, z ∈ R) |- x + (y + z) === y + (x + z)){
-    assume(ring(R, <=, +, *, -, |, `0`, `1`))
+  val addInsertHelper = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R, z ∈ R) |- x + (y + z) === y + (x + z)){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
     assume(x ∈ R)
     assume(y ∈ R)
     assume(z ∈ R)
@@ -802,8 +803,8 @@ object RingStructure extends lisa.Main {
   }
 
   // thank you past me
-  val mult_neg1_x_negx = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R) |- -(`1`)*x === -(x)){
-    assume(ring(R, <=, +, *, -, |, `0`, `1`))
+  val mult_neg1_x_negx = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R) |- -(`1`)*x === -(x)){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
     assume(x ∈ R)
     val h1 = have(`0` ∈ R) by Tautology.from(add_id_closure) 
     val h2 = have(`1` ∈ R) by Tautology.from(mul_id_closure)
@@ -813,9 +814,9 @@ object RingStructure extends lisa.Main {
     have(-(`1`)*x === -(x)) by Congruence.from(h1, h2, h3, h5, h6)
     have(thesis) by Tautology.from(lastStep, h1, h2, h3, h5, h6)
   }
-  val mult_x_neg1_negx = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R) |- x*(-1) === -(x)){
+  val mult_x_neg1_negx = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R) |- x*(-1) === -(x)){
     assume(x ∈ R)
-    assume(ring(R, <=, +, *, -, |, `0`, `1`))
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
     val id_r = have(1 ∈ R) by Tautology.from(mul_id_closure)
     val nid_r = have(-1 ∈ R) by Tautology.from(neg_closure of (x := 1), id_r)
     val h1 = have(x * -1 === -1 * x) by Tautology.from(mul_comm of (x := x, y := -1), nid_r)
@@ -824,8 +825,8 @@ object RingStructure extends lisa.Main {
     have(thesis) by Tautology.from(h1, h2, lastStep)
   }
 
-  val zero_eq_1_implies_triviality = Theorem((ring(R, <=, +, *, -, |, `0`, `1`) , 0 === 1, c ∈ R) |- (c === 0)){
-    assume(ring(R, <=, +, *, -, |, `0`, `1`))
+  val zero_eq_1_implies_triviality = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`) , 0 === 1, c ∈ R) |- (c === 0)){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
     val v = assume(0 === 1)
     val s1 = have(c ∈ R |- c*1 === c) by Tautology.from(mul_id_left of (x := c))
     val s2 = have(c ∈ R |- c*`0` === `0`) by Tautology.from(mult_x_zero_zero of (x := c))
@@ -835,8 +836,8 @@ object RingStructure extends lisa.Main {
 
   }
 
-   val zero_neq_1 = Theorem((ring(R, <=, +, *, -, |, `0`, `1`) ) |- (0 !== 1)){
-    assume(ring(R, <=, +, *, -, |, `0`, `1`))
+   val zero_neq_1 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`) ) |- (0 !== 1)){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
     val h0 = have(0 ∈ R) by Tautology.from(add_id_closure)
     val h1 = have(1 ∈ R) by Tautology.from(mul_id_closure)
     val res1 = have(0 ∈ R /\ 1 ∈ R) by Tautology.from(h0, h1)
@@ -845,10 +846,10 @@ object RingStructure extends lisa.Main {
   }
   
 
-  val x_y_1x_1y = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- (x === y) <=> (1 + x === 1 + y))
-  val x_lt_y_iff_p1 = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- (x <= y) <=> (1 + x <= 1 + y))
+  val x_y_1x_1y = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- (x === y) <=> (1 + x === 1 + y))
+  val x_lt_y_iff_p1 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- (x <= y) <=> (1 + x <= 1 + y))
 
-  val does_not_divide = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R, z ∈ R) |- (z | x) ==> ∀(y, y ∈ R /\ (1 <= y) /\ (y <= (z + -1)) /\ !(z | (x + y))))
+  val does_not_divide = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R, z ∈ R) |- (z | x) ==> ∀(y, y ∈ R /\ (1 <= y) /\ (y <= (z + -1)) /\ !(z | (x + y))))
   object RingElemConversions {
     def i(x : BigInt) : Expr[Ind] = {
       if x < 0 then 
@@ -898,7 +899,7 @@ object RingStructure extends lisa.Main {
 
 
 
-  val succ_succ_lr   = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R), (z ∈ R), (x + y === z)) |- (`1` + x) + y === (`1` + z)){
+  val succ_succ_lr   = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R), (z ∈ R), (x + y === z)) |- (`1` + x) + y === (`1` + z)){
     assume(goal.left.toSeq*)
     have(thesis) by Congruence.from(add_assoc of (x := `1`, y := x, z := y),
                                     (have(`1` ∈ R) by Tautology.from(mul_id_closure)))
@@ -906,8 +907,8 @@ object RingStructure extends lisa.Main {
 
   
 
-  val succ_succ_defn = Theorem((ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R)) |- (`1` + x) + (`1` + y) === (`1` + (`1` + (x + y)))){
-    assume(ring(R, <=, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R))
+  val succ_succ_defn = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R)) |- (`1` + x) + (`1` + y) === (`1` + (`1` + (x + y)))){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R))
     // have(`1` ∈ R) by Restate.from(add_id_closure)
     val g = (goal.right.toList(0): @unchecked) match 
       case a `equality` b => (a, b)

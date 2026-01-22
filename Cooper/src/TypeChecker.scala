@@ -11,7 +11,7 @@ import lisa.utils.prooflib.Library
 import SubProofWithRes.{TacticSubproofWithResult, DebugRightSubstEq}
 import Utils.*
 
-// proves ring(R, <=, +, *, -, |, `0`, `1`) |- tx ∈ R
+// proves ring(R, <=, <, +, *, -, |, `0`, `1`) |- tx ∈ R
 object TypeChecker extends lisa.Main {
   import RingStructure.*
     object typeCheck extends ProofTactic {
@@ -21,7 +21,7 @@ object TypeChecker extends lisa.Main {
         else
           val goalElem = goal.right.head
           TacticSubproof{
-            assume(ring(R, <=, +, *, -, |, 0, 1))
+            assume(ring(R, <=, <, +, *, -, |, 0, 1))
             val sol = simplifyTC(goalElem)
             if !sol.isValid then return proof.InvalidProofTactic("Typechecking failed!")
             have(sol)
@@ -44,7 +44,7 @@ object TypeChecker extends lisa.Main {
                 val prfx2 = simplifyTC(tx2 ∈ R)
                 if !prfx2.isValid then return proof.InvalidProofTactic("Typechecking failed!")
                 val (prf1, prf2) = (have(prfx1), have(prfx2))
-                val step1 = have((ring(R, <=, +, *, -, |, `0`, `1`), tx1 ∈ R, tx2 ∈ R) |- (tx1 + tx2) ∈ R) by Tautology.from(add_closure of (x := tx1, y := tx2))
+                val step1 = have((ring(R, <=, <, +, *, -, |, `0`, `1`), tx1 ∈ R, tx2 ∈ R) |- (tx1 + tx2) ∈ R) by Tautology.from(add_closure of (x := tx1, y := tx2))
                 val typings = SSet(prf1, prf2).map(_.sRightHead)
                 var temp = evalRingCutHelper(prf1, tx ∈ R, typings, lastStep)
                 have(temp._2)
@@ -57,7 +57,7 @@ object TypeChecker extends lisa.Main {
                 val prfx2 = simplifyTC(tx2 ∈ R)
                 if !prfx2.isValid then return proof.InvalidProofTactic("Typechecking failed!")
                 val (prf1, prf2) = (have(prfx1), have(prfx2))
-                val step1 = have((ring(R, <=, +, *, -, |, `0`, `1`), tx1 ∈ R, tx2 ∈ R) |- (tx1 * tx2) ∈ R) by Tautology.from(mul_closure of (x := tx1, y := tx2))
+                val step1 = have((ring(R, <=, <, +, *, -, |, `0`, `1`), tx1 ∈ R, tx2 ∈ R) |- (tx1 * tx2) ∈ R) by Tautology.from(mul_closure of (x := tx1, y := tx2))
                 val typings = SSet(prf1, prf2).map(_.sRightHead)
                 var temp = evalRingCutHelper(prf1, tx ∈ R, typings, lastStep)
                 have(temp._2)
@@ -68,7 +68,7 @@ object TypeChecker extends lisa.Main {
                 val prfx1 = simplifyTC(tx1 ∈ R)
                 if !prfx1.isValid then return proof.InvalidProofTactic("Typechecking failed!")
                 val prf1 = have(prfx1)
-                val step1 = have((ring(R, <=, +, *, -, |, `0`, `1`), tx1 ∈ R) |- -tx1 ∈ R) by Tautology.from(neg_closure of (x := tx1))
+                val step1 = have((ring(R, <=, <, +, *, -, |, `0`, `1`), tx1 ∈ R) |- -tx1 ∈ R) by Tautology.from(neg_closure of (x := tx1))
                 val typings = SSet(prf1).map(_.sRightHead)
                 var temp = evalRingCutHelper(prf1, tx ∈ R, typings, lastStep)
                 have(temp._2)
