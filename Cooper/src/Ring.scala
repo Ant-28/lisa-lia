@@ -160,10 +160,11 @@ object RingStructure extends lisa.Main {
         ∀(x, (x ∈ R) ==> x <= x) /\ // reflexivity
         ∀(x, ∀(y, ((x ∈ R) /\ (y ∈ R) /\ (x <= y) /\ (y <= x)) ==> (x === y))) /\ // antisymmetry
         ∀(x, ∀(y, ∀(z, ((x ∈ R) /\ (y ∈ R) /\ (z ∈ R) /\ (x <= y) /\ (y <= z)) ==> (x <= z)))) /\ // transitivity
-        ∀(x, ∀(y, (x ∈ R) /\ (y ∈ R) ==> (x <= y) \/ (y <= x))) // totality 
+        ∀(x, ∀(y, (x ∈ R) /\ (y ∈ R) ==> (x <= y) \/ (y <= x))) /\ // totality 
+        ∀(x, ∀(y, (x ∈ R) /\ (y ∈ R) ==> ((x < y) <=> ((x <= y) /\ !(y < x)))))
         /\ (`0` <= `1`)
-        /\ !(`0` === `1`) // note: does this need to be an axiom or a consequence of some other axiom??
-      // TODO: add denseness to work in the rationals?
+      // /\ !(`0` === `1`) // note: does this need to be an axiom or a consequence of some other axiom??
+      // TODO: add denseness to work in the rationals? NOPE.
       //    ∀(x, ∀(y, (x ∈ R /\ y ∈ R) ==> (x + y) ∈ R))
       // /\ ∀(x, ∀(y, (x ∈ R /\ y ∈ R) ==> (x * y) ∈ R))
       // abelian group under addition axioms
@@ -190,8 +191,16 @@ object RingStructure extends lisa.Main {
       /\ ∀(x, ∀(y, ∀(z, x ∈ R /\ y ∈ R /\ z ∈ R ==> (((y + z) * x) === ((x * y) + (x * z))))))
 
       // ordered rings
+      /*
+      add_le_add_left (a b : R) : a ≤ b → ∀ (c : R), a + c ≤ b + c
+      -- this follows from commutativity
+      add_le_add_right (a b : R) : a ≤ b → ∀ (c : R), c + a ≤ c + b
+      le_of_add_le_add_left (a b c : R) : a + b ≤ a + c → b ≤ c
+      le_of_add_le_add_right (a b c : R) : b + a ≤ c + a → b ≤ c
+      */
       /\ ∀(x, ∀(y, ∀(z, x ∈ R /\ y ∈ R /\ z ∈ R ==> (x <= y)      ==> ((x + z) <= (y + z)))))
       /\ ∀(x, ∀(y, (x ∈ R /\ y ∈ R /\ (`0` <= x) ==> (`0` <= y))  ==> (`0` <= (x * y))))
+      // strict ordering
       /\ ∀(x, ∀(y, (x < y) <=>  (x <= y) /\ !(y <= x)))
       // don't add redundant axioms
 
@@ -371,7 +380,8 @@ object RingStructure extends lisa.Main {
     have(-x + x === `0`) by Congruence.from(h2, h3)
     have(thesis) by Tautology.from(lastStep, h1, h2, h3)
   }
-
+  // surprisingly, not used.
+  // not that useful for Presburger arith ig.
   val mul_assoc = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R), (z ∈ R)) |- ((x * (y * z)) === ((x * y) * z))){
     have(thesis) by byRingDefn.apply
   }
@@ -412,6 +422,8 @@ object RingStructure extends lisa.Main {
     val v2 = have((x * (y + z)) === ((y + z) * x)) by Tautology.from(v0, mul_comm of (x := x, y := (y + z)))
     have(thesis) by Congruence.from(v1, v2, v0x, v0y)
   } 
+
+
 
   val divisibility_defn = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), (x ∈ R), (y ∈ R)) |- ((y | x) <=> ∃(c, (c ∈ R) /\ (x === y * c)))){
     have(thesis) by byRingDefn.apply
@@ -833,16 +845,44 @@ object RingStructure extends lisa.Main {
     val s3 = have(c ∈ R |- c*1 === c*0) by Congruence.from(v)
     val s4 = have(c ∈ R |- c === 0) by Congruence.from(s1, s2, s3, v)
     have(thesis) by Tautology.from(s1, s2, s3, s4, v)
-
   }
 
-   val zero_neq_1 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`) ) |- (0 !== 1)){
+  val triviality_lemma = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`) , 0 === 1) |- ∀(x, ∀(y, (x ∈ R /\ y ∈ R) ==> (x === y)))){
     assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
-    val h0 = have(0 ∈ R) by Tautology.from(add_id_closure)
-    val h1 = have(1 ∈ R) by Tautology.from(mul_id_closure)
-    val res1 = have(0 ∈ R /\ 1 ∈ R) by Tautology.from(h0, h1)
+    assume(0 === 1)
+    val aic = have(0 ∈ R) by Tautology.from(add_id_closure)
+    val v1 = have(c ∈ R |- (c === 0)) by Tautology.from(zero_eq_1_implies_triviality)
+    have(c ∈ R ==> (c === 0)) by Tautology.from(lastStep)
+    val v0 = thenHave(∀(c, (c ∈ R) ==> (c === 0))) by RightForall
+    val vx = have((x ∈ R) ==> (x === 0)) by InstantiateForall(x)(v0)
+    val vy = have((y ∈ R) ==> (y === 0)) by InstantiateForall(y)(v0)
+    val v2 = have(x ∈ R |- x === 0) by Tautology.from(vx)
+    val v3 = have(y ∈ R |- y === 0) by Tautology.from(vy)
+    // have((0 ∈ R /\ c ∈ R) ==> (c === 0)) by  Tautology.from(lastStep)
+    val v4 = have((x ∈ R, y ∈ R) |- x === y) by Congruence.from(v2, v3)
+    val v5 = have((x ∈ R /\ y ∈ R) ==> (x === y)) by Tautology.from(lastStep)
+    thenHave(∀(y, (x ∈ R /\ y ∈ R) ==> (x === y))) by RightForall
+    thenHave(thesis) by RightForall
+  }
+
+  val lem_inst = Theorem(!(∀(x, ∀(y, (x ∈ R /\ y ∈ R) ==> (x === y)))) |- (∃(x, ∃(y, (x ∈ R /\ y ∈ R) /\ !(x === y))))){
+    have(thesis) by Tableau
+  }
+
+  val lem_inst2 = Theorem((∀(x, ∀(y, (x ∈ R /\ y ∈ R) ==> (x === y)))) |- !(∃(x, ∃(y, (x ∈ R /\ y ∈ R) /\ !(x === y))))){
+    have(thesis) by Tableau
+  }
+
+  val zero_neq_1 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`) ) |- (0 !== 1)){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
+    // val h0 = have(0 ∈ R) by Tautology.from(add_id_closure)
+    // val h1 = have(1 ∈ R) by Tautology.from(mul_id_closure)
+    // val res1 = have(0 ∈ R /\ 1 ∈ R) by Tautology.from(h0, h1)
     // have(0 !== 1) by Tautology
-    sorry
+    val t1 = have((0 === 1) |- ∀(x, ∀(y, (x ∈ R /\ y ∈ R) ==> (x === y)))) by Tautology.from(triviality_lemma)
+    val t2 = have(∀(x, ∀(y, (x ∈ R /\ y ∈ R) ==> (x === y))) |- !(∃(x, ∃(y, (x ∈ R /\ y ∈ R) /\ !(x === y))))) by Tautology.from(lem_inst2)
+    val t3 = have(∃(x, ∃(y, (x ∈ R /\ y ∈ R) /\ !(x === y)))) by Tautology.from(nontriviality)
+    have(thesis) by Tautology.from(t1, t2, t3)
   }
   
 
