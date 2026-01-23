@@ -946,7 +946,7 @@ object RingStructure extends lisa.Main {
   val lt_nrefl = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R) |- !(x < x)){
     assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
     assume(x ∈ R)
-    have(thesis) by Tautology.from(le_refl, lt_defn)
+    have(thesis) by Tautology.from(le_refl, lt_defn of (x := x, y := x))
   }
 
   val x_y_1x_1y = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- (x === y) <=> (1 + x === 1 + y))
