@@ -45,7 +45,7 @@ object EqReasoning extends lisa.Main {
         proof.InvalidProofTactic("I can't prove more than one sequent!")
       else
         val goalElem = goal.right.head 
-        val r = TacticSubproof{
+        val r = TacticSubproof{ newProof ?=>
 
           assume(ring(R, <=, <, +, *, -, |, 0, 1))
           if (!is_eq(goalElem)) then return proof.InvalidProofTactic("I can't prove anything other than equality!")
@@ -68,6 +68,7 @@ object EqReasoning extends lisa.Main {
               // TODO: not this
               // thing that does not work that needs to work
               typing.toList.sortBy(proofStepDepth).map( x => {
+                newProof.getSequent(x)
                 (x: @unchecked) match {
                   case tx : Library#Proof#InnerProof#InstantiatedFact => {
                     val srh = tx.result.right.head
@@ -113,6 +114,8 @@ object EqReasoning extends lisa.Main {
               ) 
               have(goal) by Restate.from(temp._2)
         }
+        // println(goal)
+        // println("I'm done!")
         r
     }
 

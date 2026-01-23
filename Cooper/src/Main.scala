@@ -156,8 +156,10 @@ object Rings extends lisa.Main
         have(thesis) by evalRingEq.apply
     }
     // use 100 to stress test the kernel
-    val ringEq10 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`)) |- i(10) === i(10)){
+    val ringEq10 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`)) |- i(10) + i(10) === i(20)){
         have(thesis) by evalRingEq.apply
+        // proof checking takes time (possibly)!
+
     }
 
     val ringTyp1 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R) |-  (-i(10) * i(10) + x) ∈ R){

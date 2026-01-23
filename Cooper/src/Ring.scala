@@ -161,7 +161,7 @@ object RingStructure extends lisa.Main {
         ∀(x, ∀(y, ((x ∈ R) /\ (y ∈ R) /\ (x <= y) /\ (y <= x)) ==> (x === y))) /\ // antisymmetry
         ∀(x, ∀(y, ∀(z, ((x ∈ R) /\ (y ∈ R) /\ (z ∈ R) /\ (x <= y) /\ (y <= z)) ==> (x <= z)))) /\ // transitivity
         ∀(x, ∀(y, (x ∈ R) /\ (y ∈ R) ==> (x <= y) \/ (y <= x))) /\ // totality 
-        ∀(x, ∀(y, (x ∈ R) /\ (y ∈ R) ==> ((x < y) <=> ((x <= y) /\ !(y < x)))))
+        ∀(x, ∀(y, (x ∈ R) /\ (y ∈ R) ==> ((x < y) <=> ((x <= y) /\ !(y <= x))))) // strict order
         /\ (`0` <= `1`)
       // /\ !(`0` === `1`) // note: does this need to be an axiom or a consequence of some other axiom??
       // TODO: add denseness to work in the rationals? NOPE.
@@ -885,6 +885,63 @@ object RingStructure extends lisa.Main {
     have(thesis) by Tautology.from(t1, t2, t3)
   }
   
+  /*
+  ∀(x, (x ∈ R) ==> x <= x) /\ // reflexivity
+  ∀(x, ∀(y, ((x ∈ R) /\ (y ∈ R) /\ (x <= y) /\ (y <= x)) ==> (x === y))) /\ // antisymmetry
+  ∀(x, ∀(y, ∀(z, ((x ∈ R) /\ (y ∈ R) /\ (z ∈ R) /\ (x <= y) /\ (y <= z)) ==> (x <= z)))) /\ // transitivity
+  ∀(x, ∀(y, (x ∈ R) /\ (y ∈ R) ==> (x <= y) \/ (y <= x))) /\ // totality 
+  ∀(x, ∀(y, (x ∈ R) /\ (y ∈ R) ==> ((x < y) <=> ((x <= y) /\ !(y < x))))) // strict order
+  */
+
+  val le_refl = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R) |- x <= x){
+    have(thesis) by byRingDefn.apply
+  }
+  val le_antisym = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- (x <= y) /\ (y <= x) ==> (x === y)){
+    have(thesis) by byRingDefn.apply
+  }
+  val le_trans = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R, z ∈ R) |- ((x <= y) /\ (y <= z)) ==> (x <= z)){
+    have(thesis) by byRingDefn.apply
+  }
+  val le_totality = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- (x <= y) \/ (y <= x)){
+    have(thesis) by byRingDefn.apply
+  }
+  val lt_defn = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- ((x < y) <=> ((x <= y) /\ !(y <= x)))){
+    have(thesis) by byRingDefn.apply
+  }
+
+  val le_antisym_conv = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R, (x === y)) |-  ((x <= y) /\ (y <= x))) {
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
+    assume(x ∈ R)
+    assume(y ∈ R)
+    assume((x === y))
+    val p = have(x <= x) by Tautology.from(le_refl)
+    val p1 = thenHave(x <= y) by Congruence
+    val p2 = have(y <= x) by Congruence.from(p)
+    have(thesis) by RightAnd(p1, p2)
+  }
+
+  val le_antisym_iff = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- (x === y) <=> ((x <= y) /\ (y <= x))){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
+    assume(x ∈ R)
+    assume(y ∈ R)
+    have(thesis) by Tautology.from(le_antisym_conv, le_antisym)
+  }
+
+  val zero_le_1 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`)) |- (`0` <= 1)){
+    have(thesis) by byRingDefn.apply
+  }
+
+  val zero_lt_1 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`)) |- 0 < `1`){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
+    // have(0 <= `1`) by Tautology.from(zero_le_1)
+    // have(0 !== 1) by Tautology.from(zero_neq_1)
+    have((0 === 1) <=> ((0 <= `1`) /\ (`1` <= 0))) by Tautology.from(le_antisym_iff of (x := 0, y := 1), add_id_closure, mul_id_closure)
+    have(!(0 === 1) <=> (!(0 <= `1`) \/ !(`1` <= 0))) by Tautology.from(lastStep)
+    have((0 !== 1) <=> (!(0 <= `1`) \/ !(`1` <= 0))) by Tautology.from(lastStep)
+    have(!(`1` <= 0)) by Tautology.from(lastStep, zero_le_1, zero_neq_1)
+    have((`0` <= 1) /\ !(`1` <= 0)) by Tautology.from(lastStep, zero_le_1)
+    have(thesis) by Tautology.from(lastStep, add_id_closure, mul_id_closure, lt_defn of (x := 0, y := 1))
+  }
 
   val x_y_1x_1y = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- (x === y) <=> (1 + x === 1 + y))
   val x_lt_y_iff_p1 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- (x <= y) <=> (1 + x <= 1 + y))
@@ -917,6 +974,7 @@ object RingStructure extends lisa.Main {
         case tx * ty => ci(tx) * ci(ty)
         case tx + ty => ci(tx) + ci(ty)
         case -(tx) => -ci(tx)
+        case _ => throw Exception("ci no worky")
       }
     }
   }

@@ -43,6 +43,7 @@ object DivReasoning extends lisa.Main {
         goal match {
           case RingStructure.`|`(ty, tx) => {
             // ty | tx <=> ∃c. tx = c*ty
+            // BigInts are used as an oracle.
             val tyv = ci(ty)
             val txv = ci(tx)
             if ((txv % tyv) != 0) then return proof.InvalidProofTactic("Is not divisible")
