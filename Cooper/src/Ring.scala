@@ -943,6 +943,12 @@ object RingStructure extends lisa.Main {
     have(thesis) by Tautology.from(lastStep, add_id_closure, mul_id_closure, lt_defn of (x := 0, y := 1))
   }
 
+  val lt_nrefl = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R) |- !(x < x)){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
+    assume(x ∈ R)
+    have(thesis) by Tautology.from(le_refl, lt_defn)
+  }
+
   val x_y_1x_1y = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- (x === y) <=> (1 + x === 1 + y))
   val x_lt_y_iff_p1 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- (x <= y) <=> (1 + x <= 1 + y))
 
