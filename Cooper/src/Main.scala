@@ -112,18 +112,12 @@ object Rings extends lisa.Main
     // val test = -(y)
     // println(treeDepth(test))
     override def main(args: Array[String]): Unit = {
-        List(RingStructure, EqReasoning).map(_.main(args))
+        List(RingStructure, EqReasoning, RingDivisibility).map(_.main(args))
         super.main(args)
         // println(om.stringWriter.toString)
     }
     println("Hello!")
-    // val dummyTheorem = Theorem(P(x) |- P(x)){
-    //     import RingStructure.RingElemConversions.*
-    //     val pprf = evalRingEq.apply((ring(R, <=, <, +, *, -, |, 0, 1) |- i(2) * i(2) === i(4)))(using summon[Ordering[Expr[Ind]]])
-    //     // println(pres)
-    //     println(pprf.asInstanceOf[pprf.proof.ValidProofTactic].bot)
-    //     sorry
-    // }
+
     import RingElemConversions.i
     val ringEq1 = Theorem(ring(R, <=, <, +, *, -, |, `0`, `1`) |- i(2) === i(2)){
         have(thesis) by evalRingEq.apply
