@@ -10,6 +10,7 @@ import lisa.utils.prooflib.ProofTacticLib.ProofTactic
 import lisa.utils.prooflib.Library
 import SubProofWithRes.{TacticSubproofWithResult, DebugRightSubstEq}
 import Utils.*
+import RingDivOrdering.*
 // import lisa.utils.prooflib.WithTheorems.Proof.InvalidProofTactic
 // import lisa.utils.prooflib.WithTheorems.Proof.ValidProofTactic
 object RingStructure extends lisa.Main {
@@ -24,6 +25,7 @@ object RingStructure extends lisa.Main {
   val z   = variable[Ind]
   val w   = variable[Ind]
   val c   = variable[Ind]
+  val cpr = variable[Ind]
   val `0` = variable[Ind]
   val `1` = variable[Ind]
 
@@ -199,12 +201,13 @@ object RingStructure extends lisa.Main {
       le_of_add_le_add_right (a b c : R) : b + a ≤ c + a → b ≤ c
       */
       /\ ∀(x, ∀(y, ∀(z, x ∈ R /\ y ∈ R /\ z ∈ R ==> (x <= y)      ==> ((x + z) <= (y + z)))))
-      /\ ∀(x, ∀(y, (x ∈ R /\ y ∈ R /\ (`0` <= x) ==> (`0` <= y))  ==> (`0` <= (x * y))))
+      // /\ ∀(x, ∀(y, (x ∈ R /\ y ∈ R /\ (`0` <= x) ==> (`0` <= y))  ==> (`0` <= (x * y))))
       // strict ordering
       /\ ∀(x, ∀(y, (x < y) <=>  (x <= y) /\ !(y <= x)))
       // don't add redundant axioms
-      /\ ∀(x, ∀(y, (x ∈ R /\ y ∈ R ==> ((x <= `0`) /\ (y <= `0`))  ==> (`0` <= (x * y)))))
-      /\ ∀(x, ∀(y, (x ∈ R /\ y ∈ R ==> ((x <= `0`) /\  (`0` <= y)) ==> ((x * y) <= `0`))))
+      /\ ∀(x, ∀(y, ∀(z, ((x ∈ R /\ y ∈ R /\ z ∈ R) ==> (0 < x) /\ (y < z)) ==> (x * y) < (x * z))))
+      // /\ ∀(x, ∀(y, (x ∈ R /\ y ∈ R ==> ((x <= `0`) /\ (y <= `0`))  ==> (`0` <= (x * y)))))
+      // /\ ∀(x, ∀(y, (x ∈ R /\ y ∈ R ==> ((x <= `0`) /\  (`0` <= y)) ==> ((x * y) <= `0`))))
       // how should we represent our integers? 
       // what does HOL light do?
       // nontriviality
@@ -836,10 +839,74 @@ object RingStructure extends lisa.Main {
   }
 
 
-  val x_y_1x_1y = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- (x === y) <=> (1 + x === 1 + y))
-  val x_lt_y_iff_p1 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- (x <= y) <=> (1 + x <= 1 + y))
 
-  val does_not_divide = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R, z ∈ R) |- (z | x) ==> ∀(y, y ∈ R /\ (1 <= y) /\ (y <= (z + -1)) /\ !(z | (x + y))))
+  // val x_y_1x_1y = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- (x === y) <=> (1 + x === 1 + y))
+  // val x_lt_y_iff_p1 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- (x <= y) <=> (1 + x <= 1 + y))
+  val zdivx_zdiv_xz = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, z ∈ R, (z | x)) |- (z | (x + z))){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
+    assume(x ∈ R)
+    assume(z ∈ R)
+    assume(z | x)
+    val vx = have(∃(c, c ∈ R /\ (x === z * c))) by Tautology.from(divisibility_defn of (x := x, y := z))
+    have(∃(c, c ∈ R /\ (x === z * c)) |- ∃(c, c ∈ R /\ ((x + z) === z * c))) subproof {
+      inline def lp = c ∈ R /\ (x === z * c) 
+      val main = have(lp |- c ∈ R /\ (x === z * c)) by Restate
+      val left = have(lp |- c ∈ R) by Tautology
+      val right = have(lp  |-(x === z * c)) by Tautology
+      val cp1 = have(lp |- (c + 1) ∈ R) by Tautology.from(mul_id_closure, add_closure of (x := c, y := 1), left)
+      val cp2 = have(lp |- ((c + 1) * z) === ((c + 1) * z)) by Restate
+      val cp3 = have(lp |- ((c + 1) * z) === ((c * z) + z)) by Congruence.from(left, mul_id_closure, lastStep, 
+                                                                mul_id_right of (x := z, y := 1), 
+                                                                mul_dist_right of (x := z, y := c, z := 1))
+      val cp4 = have(lp |- (c + 1) * z === z * (c + 1)) by Tautology.from(cp1,  mul_comm of (x := (c + 1), y := z))
+
+      val cp5 = have(lp |- ((c + 1) * z) === ((c * z) + z)) by Tautology.from(left, mul_id_closure, cp3)                                                          
+      val cp6 = have(lp |- c * z === z * c) by Tautology.from(mul_comm of (x := c, y := z))
+      val cp7 = have(lp |- ((c + 1) * z) === (x + z)) by Congruence.from(cp5, cp6, right)
+      val cp8 = have(lp |- ((c + 1) * z) === x + z) by Tautology.from(lastStep, cp5, cp6, right)
+      val cp9 = have(lp |- (((c + 1) ∈ R) /\ ((x + z === (c + 1) * z)))) by Tautology.from(lastStep, cp1)
+
+      val cp10 = have(lp |- (((c + 1) ∈ R) /\ ((x + z) === (z * (c + 1))))) by Congruence.from(lastStep, cp4)
+      val cp11 = have(lp |- (((c + 1) ∈ R) /\ ((x + z) === (z * (c + 1))))) by Tautology.from(lastStep)
+      val cp12 = thenHave(lp |- ∃(c, ((c ∈ R) /\ ((x + z) === (z * c))))) by RightExists
+      
+      thenHave(thesis) by LeftExists
+
+    }
+    have(∃(c, c ∈ R /\ (x === z * c)) |- (z | (x + z))) by Tautology.from(lastStep, divisibility_defn of (x := (x + z), y := z), add_closure of (x := x, y := z))
+    have(thesis) by Tautology.from(vx, lastStep)
+  }
+
+  val does_not_divide = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, z ∈ R, (z | x), y ∈ R, 0 < y, y < z) |- !(z | (x + y))){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
+    assume(x ∈ R)
+    assume(y ∈ R)
+    assume(z ∈ R)
+    assume((z | x))
+    assume(0 < y)
+    assume(y < z)
+    val zdivxz = have(z | (x + z)) by Tautology.from(zdivx_zdiv_xz)
+    have(0 < z) by Tautology.from(lt_trans of (x := 0, y := y, z := z), add_id_closure)
+    have((z | (x + y)) |- ∃(cpr, cpr ∈ R /\ ((x + y) === z * cpr))) by Tautology.from(divisibility_defn of (c := cpr, x := (x + y), y := z), add_closure of (x := x, y := y))
+    inline def div(cprime: Expr[Ind], l : Expr[Ind], r: Expr[Ind]): Expr[Prop] = cprime ∈ R /\ (r === l * cprime)
+    have(∃(c, c ∈ R /\ (x === z * c))) by Tautology.from(divisibility_defn of (x := x, y := z))
+    have(∃(c, div(c, z, x + z))) by Tautology.from(divisibility_defn of (x := x + z, y := z), zdivxz)
+    // l | r
+
+    have((∃(c, div(c, z, x)), ∃(cpr, div(cpr, z, x + y)) )|- ∃(cpr, ∃(c, c ∈ R /\ cpr ∈ R /\ (c < cpr) /\ (cpr < c + 1)))) subproof {
+      val init = have((div(c, z, x), div(cpr, z, x + y)) |- (div(c, z, x) /\ div(cpr, z, x + y))) by Tautology
+      val left = have((div(c, z, x), div(cpr, z, x + y)) |- div(c, z, x)) by Tautology.from(init)
+      val right = have((div(c, z, x), div(cpr, z, x + y)) |- div(cpr, z, x + y)) by Tautology.from(init)
+      have(c < c + 1)
+
+    }
+    sorry
+  }
+  val dummyEps = Theorem(∃(x, P(x)) |- P(ε(x, P(x)))){
+    have(P(x) |- P(x)) by Restate
+    thenHave(P(x) |- P(ε(x, P(x)))) by RightEpsilon
+    thenHave(thesis) by LeftExists
+  }
   object RingElemConversions {
     def i(x : BigInt) : Expr[Ind] = {
       if x < 0 then 

@@ -11,7 +11,7 @@ import lisa.utils.prooflib.Library
 import SubProofWithRes.{TacticSubproofWithResult, DebugRightSubstEq}
 import Utils.*
 
-object RingDivisibility extends lisa.Main {
+object RingDivOrdering extends lisa.Main {
   import RingStructure.*
     
   val zero_eq_1_implies_triviality = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`) , 0 === 1, c ∈ R) |- (c === 0)){
@@ -187,6 +187,35 @@ object RingDivisibility extends lisa.Main {
     have(z <= x |- !(y < z)) by Tautology.from(lt_not_sym of (x := z, y := y), lastStep) 
     val contr = have(!(z <= x)) by Tautology.from(lastStep)
     have(thesis) by Tautology.from(contr, xlez, lt_defn of (x := x, y := z))
+  }
+  
+
+  val le_add_imp = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R, z ∈ R) |- (x <= y ==> (x + z) <= (y + z))){
+    have(thesis) by byRingDefn.apply
+  }
+  val le_add = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R, z ∈ R, x <= y) |- ((x + z) <= (y + z))){
+    have(thesis) by Tautology.from(le_add_imp)
+  }
+
+  val lt_mul_left_imp = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x∈ R, y ∈ R, z ∈ R) |- ((0 < x) /\ (y < z)) ==> ((x * y) < (x * z))){
+    have(thesis) by byRingDefn.apply
+  }
+  val lt_mul_left = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R, z ∈ R, 0 < x, y < z) |- ((x * y) < (x * z))){
+    
+    have(thesis) by Tautology.from(lt_mul_left_imp)
+  }
+  val lt_mul_right = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x∈ R, y ∈ R, z ∈ R, 0 < z, x < y) |- ((x * z) < (y * z))){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
+    assume(x ∈ R)
+    assume(y ∈ R)
+    assume(z ∈ R)
+    assume(0 < z)
+    assume(x < y)
+    val p1 = have(z * x < z * y) by Tautology.from(lt_mul_left of (x := z, y := x, z := y))
+    val e1 = have(z * x === x * z) by Tautology.from(mul_comm of (x := x, y := z))
+    val e2 = have(z * y === y * z) by Tautology.from(mul_comm of (x := y, y := z))
+    have(x * z < y * z) by Congruence.from(e1, e2, p1)
+    have(thesis) by Tautology.from(lastStep, p1, e1, e2)
   }
 
   val sparse_order = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- (x < y ==> x + 1 <= y)){

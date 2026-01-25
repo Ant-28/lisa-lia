@@ -112,7 +112,7 @@ object Rings extends lisa.Main
     // val test = -(y)
     // println(treeDepth(test))
     override def main(args: Array[String]): Unit = {
-        List(RingStructure, EqReasoning, RingDivisibility).map(_.main(args))
+        List(RingStructure, EqReasoning, RingDivOrdering).map(_.main(args))
         super.main(args)
         // println(om.stringWriter.toString)
     }
