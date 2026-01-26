@@ -252,6 +252,12 @@ object Utils {
         case _ => false
       }
     }
+    def is_indiv(x: Expr[Prop]): Boolean = {
+      x match {
+        case !(RingStructure.`|`(x, y)) => true
+        case _ => false
+      }
+    }
 
     def is_le(x: Expr[Prop]): Boolean = {
       x match {
