@@ -31,7 +31,7 @@ object RingStructure extends lisa.Main {
 
   val R = variable[Ind] // ring base set
   val P = variable[Ind >>: Prop]
-  
+  val Q = variable[Prop]
   // We introduce the signature of rings first. maybe PIDs?
 
   // leq order
@@ -367,6 +367,13 @@ object RingStructure extends lisa.Main {
 
   val add_id    = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), (x ∈ R)) |- (x === (`0` + x))){ 
     have(thesis) by byRingDefn.apply 
+  }
+  val add_id_right = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), (x ∈ R)) |- (x === (x + 0))){ 
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
+    assume(x ∈ R)
+    have(x + 0 === 0 + x) by Tautology.from(add_comm of (x := x, y := 0), add_id_closure)
+    have(x === (x + 0)) by Congruence.from(lastStep, add_id)
+    have(thesis) by Tautology.from(lastStep, add_id)
   }
 
   val add_inv   = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), (x ∈ R)) |- ((x + (-(x))) === `0`)){
@@ -890,15 +897,16 @@ object RingStructure extends lisa.Main {
     have((z | (x + y)) |- ∃(cpr, cpr ∈ R /\ ((x + y) === z * cpr))) by Tautology.from(divisibility_defn of (c := cpr, x := (x + y), y := z), add_closure of (x := x, y := y))
     inline def div(cprime: Expr[Ind], l : Expr[Ind], r: Expr[Ind]): Expr[Prop] = cprime ∈ R /\ (r === l * cprime)
     have(∃(c, c ∈ R /\ (x === z * c))) by Tautology.from(divisibility_defn of (x := x, y := z))
-    have(∃(c, div(c, z, x + z))) by Tautology.from(divisibility_defn of (x := x + z, y := z), zdivxz)
+    have(∃(c, c ∈ R /\ ((x + z) === z * c))) by Tautology.from(divisibility_defn of (x := x + z, y := z), zdivxz, add_closure of (x := x, y := z))
     // l | r
 
     have((∃(c, div(c, z, x)), ∃(cpr, div(cpr, z, x + y)) )|- ∃(cpr, ∃(c, c ∈ R /\ cpr ∈ R /\ (c < cpr) /\ (cpr < c + 1)))) subproof {
       val init = have((div(c, z, x), div(cpr, z, x + y)) |- (div(c, z, x) /\ div(cpr, z, x + y))) by Tautology
       val left = have((div(c, z, x), div(cpr, z, x + y)) |- div(c, z, x)) by Tautology.from(init)
       val right = have((div(c, z, x), div(cpr, z, x + y)) |- div(cpr, z, x + y)) by Tautology.from(init)
-      have(c < c + 1)
-
+      
+      have(c ∈ R |- (c < c + 1)) by Tautology.from(x_lt_xp1 of (x := c))
+      sorry
     }
     sorry
   }

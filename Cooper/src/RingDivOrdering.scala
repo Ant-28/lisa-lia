@@ -170,6 +170,28 @@ object RingDivOrdering extends lisa.Main {
     have(thesis) by Tautology.from(le_totality, lt_defn of (x := y, y := x))
   }
 
+  // FIXME: is actually a proof by contraposition
+  val lt_neg = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R, !(x < y)) |- y <= x){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
+    assume(x ∈ R)
+    assume(y ∈ R)
+    assume(!(x < y))
+    have(!((x <= y) /\ !(y <= x))) by Tautology.from(lt_defn)
+    have(!(x <= y) \/ (y <= x)) by Tautology.from(lastStep)
+    have((y < x) \/ (y <= x)) by Tautology.from(lastStep, le_neg)
+    have((y <= x) \/ (y <= x)) by Tautology.from(lastStep, lt_defn of (x := y, y := x))
+    have(thesis) by Tautology.from(lastStep)
+  }
+
+  val le_lt_neg_iff = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- !(x < y) <=> (y <= x)){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
+    assume(x ∈ R)
+    assume(y ∈ R)
+    val l = have(!(x < y) ==> y <= x)  by Tautology.from(lt_neg)
+    val r = have(y <= x ==> !(x < y)) by Tautology.from(lt_defn)
+    have(thesis) by Tautology.from(l, r)
+  }
+
   val lt_trans = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R, z ∈ R, x < y, y < z) |- x < z){
     assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
     assume(x ∈ R)
@@ -218,11 +240,96 @@ object RingDivOrdering extends lisa.Main {
     have(thesis) by Tautology.from(lastStep, p1, e1, e2)
   }
 
+  val le_lt_eq = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x∈ R, y ∈ R, x <= y) |- (x < y) \/ (x === y)){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
+    assume(x ∈ R)
+    assume(y ∈ R)
+    have(x <= y |- x <= y) by Restate
+    have(x <= y |- (x <= y) /\ ((y <= x) \/ !(y <= x))) by Tautology.from(lastStep)
+    have(x <= y |- ((x <= y) /\ (y <= x)) \/ ((x <= y) /\ !(y <= x))) by Tautology.from(lastStep)
+    have(x <= y |- (x < y) \/ (x === y)) by Tautology.from(lt_defn, le_antisym)
+    have(thesis) by Tautology.from(lastStep)
+  }
+  
+  val zxltzy_xlty = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x∈ R, y ∈ R, z ∈ R, 0 < z, z*x < z*y) |- x < y){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
+    assume(x ∈ R)
+    assume(y ∈ R)
+    assume(z ∈ R)
+    assume(0 < z)
+    assume(z * x < z * y)
+    val contra = have(!(x < y) |- (y < x) \/ (y === x)) by Tautology.from(lt_neg, le_lt_eq of (x := y, y := x)) 
+    val p1 = have(y === x |- z * y === z * x) by Congruence
+    val p2 = have(y === x |- !(z * x < z * y)) by Tautology.from(lastStep, trichotomy3 of (x := z*x, y := z*y), mul_closure of (x := z, y := x), mul_closure of (x := z, y := y))
+    val p3 = have(!(y === x)) by Tautology.from(lastStep)
+
+    val p4 = have(y < x |- z*y < z*x) by Tautology.from(lt_mul_left of (x := z, y:=y, z := x))
+    val p5 = have(y < x |- !(z*x < z*y)) by Tautology.from(lastStep, trichotomy2 of (x := z*x, y := z*y), mul_closure of (x := z, y := x), mul_closure of (x := z, y := y))
+    val p6 = have(!(y < x)) by Tautology.from(lastStep)
+
+    have(x < y) by Tautology.from(contra, p3, p6)
+
+  }
+  val lt_add = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R, z ∈ R, x < y) |- ((x + z) < (y + z))){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
+    assume(x ∈ R)
+    assume(y ∈ R)
+    assume(z ∈ R)
+    assume(x < y)
+    val l = have(x <= y) by Tautology.from(lt_defn)
+    val r = have(!(y <= x)) by Tautology.from(lt_defn)
+    val con = have((x + z) <= (y + z)) by Tautology.from(le_add, l)
+    val con1 = have((y + z) <= (x + z)|- (y + z) === (x + z)) by Tautology.from(con, le_antisym of (x := x + z, y := y + z), add_closure of (x := x, y := z), add_closure of (x := y, y := z))
+    val ls = have((y + z) === (x + z) |- ((y + z) + (-z)) === ((x + z) + (-z))) by Congruence
+    val asc1 = have(((x + (z + -z))) === ((x + z) + (-z))) by Tautology.from(add_assoc of (x := x, y := z, z := -z), neg_closure of (x := z))
+    val asc2 = have(((y + (z + -z))) === ((y + z) + (-z))) by Tautology.from(add_assoc of (x := y, y := z, z := -z), neg_closure of (x := z))
+    
+    val ls2 = have((y + z) === (x + z) |- ((y + (z + -z)) === ((x + (z + -z))))) by Congruence.from(ls, asc1, asc2) 
+    val asc3 = have(y + 0 === y) by Tautology.from(add_id_right of (x := y), add_id_closure)
+    val asc4 = have(x + 0 === x) by Tautology.from(add_id_right, add_id_closure)
+    val asc5 = have(z + -z === 0) by Tautology.from(neg_closure of (x := z), add_inv of (x := z))
+    val con2 = have((y + z) === (x + z) |- (y === x)) by Congruence.from(ls2, asc3, asc4, asc5)
+    val contr = have(y === x |- !(x < y)) by Tautology.from(trichotomy3 of (x := y, y := x))
+    have((y + z) <= (x + z) |- !(x < y)) by Tautology.from(contr, con2, con1)
+    val r2 = have(!((y + z) <= (x + z))) by Tautology.from(lastStep)
+    have(thesis) by Tautology.from(r2, con, lt_defn of (x := x + z, y := y + z), add_closure of (x := x, y := z), add_closure of (x := y, y := z))
+  }
+  
+  val x_lt_xp1 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R) |- x < x + 1){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
+    assume(x ∈ R)
+    val p1 = have(0 < `1`) by Tautology.from(zero_lt_1)
+    val p2 = have(0 + x === x) by Tautology.from(add_id)
+    val p3 = have(1 + x === x + 1) by Tautology.from(mul_id_closure, add_comm of (x := x, y := 1))
+    have(0 + x < 1 + x) by Tautology.from(p1, lt_add of (x := 0, y := 1, z := x), add_id_closure, mul_id_closure)
+    have(x < x + 1) by Congruence.from(p2, p3, lastStep)
+  }
+
   val sparse_order = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- (x < y ==> x + 1 <= y)){
     have(thesis) by byRingDefn.apply
   }
   val sparse_order_ext = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R, x < y) |- (x + 1 <= y)){
     have(thesis) by Tautology.from(sparse_order)
+  }
+
+  
+  val lem = Theorem(∀(x, !Q) |- !(∃(x, Q))){
+    have(thesis) by Tableau
+  }
+
+  val sparseness_alt = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), c ∈ R) |- !(∃(x, x ∈ R /\ (c < x) /\ (x < (c + 1))))){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
+    assume(c ∈ R)
+    have(x ∈ R |- ((c < x ==> (c + 1 <= x)))) by Tautology.from(sparse_order of (x := c, y := x))
+    have(x ∈ R |- !(!((c < x ==> (c + 1 <= x))))) by Tautology.from(lastStep)
+    have(x ∈ R |- !(!((c < x ==> (c + 1 <= x))))) by Tautology.from(lastStep)
+    val ls = have(x ∈ R |- !(((c < x) /\ !(c + 1 <= x)))) by Tautology.from(lastStep)
+    have(x ∈ R |- !(((c < x) /\ (x < (c + 1))))) by Tautology.from(ls, le_lt_neg_iff of (x := x, y := (c + 1)), mul_id_closure, add_closure of (x := c, y := 1))
+    have(!(x ∈ R) \/ !(((c < x) /\ (x < (c + 1))))) by Tautology.from(lastStep)
+    have(!(x ∈ R /\ (((c < x) /\ (x < (c + 1)))))) by Tautology.from(lastStep)
+    inline def Px : Expr[Prop] = (x ∈ R /\ (((c < x) /\ (x < (c + 1)))))
+    have(∀(x, !Px)) by RightForall(lastStep)
+    have(thesis) by Tautology.from(lastStep, lem of (x := x, Q := Px))
   }
 
   
