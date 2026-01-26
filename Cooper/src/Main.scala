@@ -116,7 +116,7 @@ object Rings extends lisa.Main
         super.main(args)
         // println(om.stringWriter.toString)
     }
-    println("Hello!")
+    println("Ždravo, ja sam mićo!")
 
     import RingElemConversions.i
     val ringEq1 = Theorem(ring(R, <=, <, +, *, -, |, `0`, `1`) |- i(2) === i(2)){

@@ -316,6 +316,8 @@ object RingDivOrdering extends lisa.Main {
   val lem = Theorem(∀(x, !Q) |- !(∃(x, Q))){
     have(thesis) by Tableau
   }
+  
+  
 
   val sparseness_alt = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), c ∈ R) |- !(∃(x, x ∈ R /\ (c < x) /\ (x < (c + 1))))){
     assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
@@ -330,6 +332,13 @@ object RingDivOrdering extends lisa.Main {
     inline def Px : Expr[Prop] = (x ∈ R /\ (((c < x) /\ (x < (c + 1)))))
     have(∀(x, !Px)) by RightForall(lastStep)
     have(thesis) by Tautology.from(lastStep, lem of (x := x, Q := Px))
+  }
+  val sparseness_corollary = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`)) |- !(∃(c, (∃(x, c ∈ R /\ x ∈ R /\ (c < x) /\ (x < (c + 1))))))){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
+    have(c ∈ R |- !(∃(x, x ∈ R /\ (c < x) /\ (x < (c + 1))))) by Tautology.from(sparseness_alt)
+    have(c ∈ R ==> !(∃(x, x ∈ R /\ (c < x) /\ (x < (c + 1))))) by Tautology.from(lastStep)
+    thenHave(∀(c, c ∈ R ==> !(∃(x, x ∈ R /\ (c < x) /\ (x < (c + 1)))))) by RightForall
+    thenHave(thesis) by Tableau
   }
 
   

@@ -893,22 +893,57 @@ object RingStructure extends lisa.Main {
     assume(0 < y)
     assume(y < z)
     val zdivxz = have(z | (x + z)) by Tautology.from(zdivx_zdiv_xz)
-    have(0 < z) by Tautology.from(lt_trans of (x := 0, y := y, z := z), add_id_closure)
-    have((z | (x + y)) |- ∃(cpr, cpr ∈ R /\ ((x + y) === z * cpr))) by Tautology.from(divisibility_defn of (c := cpr, x := (x + y), y := z), add_closure of (x := x, y := y))
+    val zlez = have(0 < z) by Tautology.from(lt_trans of (x := 0, y := y, z := z), add_id_closure)
+    val wipe = have((z | (x + y)) |- ∃(cpr, cpr ∈ R /\ ((x + y) === z * cpr))) by Tautology.from(divisibility_defn of (c := cpr, x := (x + y), y := z), add_closure of (x := x, y := y))
     inline def div(cprime: Expr[Ind], l : Expr[Ind], r: Expr[Ind]): Expr[Prop] = cprime ∈ R /\ (r === l * cprime)
-    have(∃(c, c ∈ R /\ (x === z * c))) by Tautology.from(divisibility_defn of (x := x, y := z))
+    val th = have(∃(c, c ∈ R /\ (x === z * c))) by Tautology.from(divisibility_defn of (x := x, y := z))
     have(∃(c, c ∈ R /\ ((x + z) === z * c))) by Tautology.from(divisibility_defn of (x := x + z, y := z), zdivxz, add_closure of (x := x, y := z))
     // l | r
-
-    have((∃(c, div(c, z, x)), ∃(cpr, div(cpr, z, x + y)) )|- ∃(cpr, ∃(c, c ∈ R /\ cpr ∈ R /\ (c < cpr) /\ (cpr < c + 1)))) subproof {
-      val init = have((div(c, z, x), div(cpr, z, x + y)) |- (div(c, z, x) /\ div(cpr, z, x + y))) by Tautology
-      val left = have((div(c, z, x), div(cpr, z, x + y)) |- div(c, z, x)) by Tautology.from(init)
-      val right = have((div(c, z, x), div(cpr, z, x + y)) |- div(cpr, z, x + y)) by Tautology.from(init)
+    inline def lp = (div(c, z, x), div(cpr, z, x + y))
+    val contra = have((∃(c, div(c, z, x)), ∃(cpr, div(cpr, z, x + y))) |- ∃(c, ∃(cpr, c ∈ R /\ cpr ∈ R /\ (c < cpr) /\ (cpr < (c + 1))))) subproof {
+      val init = have(lp |- (div(c, z, x) /\ div(cpr, z, x + y))) by Tautology
+      val left = have(lp |- x === z * c) by Tautology.from(init)
+      val mid = have(lp |- (x + y) === z * cpr) by Tautology.from(init)
       
-      have(c ∈ R |- (c < c + 1)) by Tautology.from(x_lt_xp1 of (x := c))
-      sorry
+      val cp1 = have(lp |- (c + 1) ∈ R) by Tautology.from(mul_id_closure, add_closure of (x := c, y := 1), left)
+      val right = have(lp |- x + z === z * (c + 1)) subproof {
+        val cp2 = have(lp |- ((c + 1) * z) === ((c + 1) * z)) by Restate
+        val cp3 = have(lp |- ((c + 1) * z) === ((c * z) + z)) by Congruence.from(left, mul_id_closure, lastStep, 
+                                                                  mul_id_right of (x := z, y := 1), 
+                                                                  mul_dist_right of (x := z, y := c, z := 1))
+        val cp4 = have(lp |- (c + 1) * z === z * (c + 1)) by Tautology.from(cp1,  mul_comm of (x := (c + 1), y := z))
+
+        val cp5 = have(lp |- ((c + 1) * z) === ((c * z) + z)) by Tautology.from(left, mul_id_closure, cp3)                                                          
+        val cp6 = have(lp |- c * z === z * c) by Tautology.from(mul_comm of (x := c, y := z))
+        val cp7 = have(lp |- (z * (c + 1)) === (x + z)) by Congruence.from(cp5, cp6, left, cp4)
+        val cp8 = have(lp |- (z * (c + 1)) === x + z) by Tautology.from(lastStep, cp5, cp6, left, cp4)
+      }
+      val v1 = have(0 + x < y + x) by Tautology.from(lt_add of (x := 0, y := y, z := x), add_id_closure)
+      val v2 = have(0 + x === x) by Tautology.from(add_id)
+      val v3 = have(y + x === x + y) by Tautology.from(add_comm)
+      val lt1 = have(x < x + y) by Congruence.from(v1, v2, v3)
+      val v4 = have(y + x < z + x) by Tautology.from(lt_add of (x := y, y := z, z := x))
+      val v5 = have(x + z === z + x) by Tautology.from(add_comm of (x := z, y := x))
+      val lt2 = have(x + y < x + z) by Congruence.from(v4, v5, v3)
+      have(lp |- c ∈ R /\ (c < c + 1)) by Tautology.from(x_lt_xp1 of (x := c))
+      val l1 = have(lp |- z * c < z * cpr) by Congruence.from(lt1, left, mid)
+      val r1 = have(lp |- z * cpr < z * (c + 1)) by Congruence.from(lt2, right, mid)
+      val l2 = have(lp |- c < cpr) by Tautology.from(l1, zxltzy_xlty of (x := c, y := cpr, z := z), zlez) 
+      val r2 = have(lp |- cpr < c + 1) by Tautology.from(r1, zxltzy_xlty of (x := cpr, y := c + 1, z := z), cp1, zlez)
+      have(lp |- c ∈ R /\ cpr ∈ R /\ (c < cpr) /\ (cpr < (c + 1)))  by Tautology.from(l2, r2)
+      thenHave((div(c, z, x), div(cpr, z, x + y)) |- ∃(cpr, c ∈ R /\ cpr ∈ R /\ (c < cpr) /\ (cpr < (c + 1)))) by RightExists
+      thenHave((div(c, z, x), div(cpr, z, x + y)) |- ∃(c, ∃(cpr, c ∈ R /\ cpr ∈ R /\ (c < cpr) /\ (cpr < (c + 1))))) by RightExists
+      thenHave((∃(c, div(c, z, x)), div(cpr, z, x + y)) |- ∃(c, ∃(cpr, c ∈ R /\ cpr ∈ R /\ (c < cpr) /\ (cpr < (c + 1))))) by LeftExists
+      thenHave(thesis) by LeftExists
     }
-    sorry
+    val contra2 = have((∃(c, div(c, z, x)), ∃(cpr, div(cpr, z, x + y))) |- !(∃(c, (∃(cpr, c ∈ R /\ cpr ∈ R /\ (c < cpr) /\ (cpr < (c + 1))))))) subproof {
+      have(lp |- !(∃(c, (∃(cpr, c ∈ R /\ cpr ∈ R /\ (c < cpr) /\ (cpr < (c + 1))))))) by Tautology.from(sparseness_corollary of (c := c, x := cpr))
+      thenHave((∃(c, div(c, z, x)), div(cpr, z, x + y)) |- !(∃(c, (∃(cpr, c ∈ R /\ cpr ∈ R /\ (c < cpr) /\ (cpr < (c + 1))))))) by LeftExists
+      thenHave(thesis) by LeftExists
+    }
+    val c1 = have(z | (x + y) |- ∃(c, ∃(cpr, c ∈ R /\ cpr ∈ R /\ (c < cpr) /\ (cpr < (c + 1))))) by Tautology.from(contra, wipe, th)
+    val c2 = have(z | (x + y) |- !(∃(c, ∃(cpr, c ∈ R /\ cpr ∈ R /\ (c < cpr) /\ (cpr < (c + 1)))))) by Tautology.from(contra2, wipe, th)
+    have(thesis) by Tautology.from(c1, c2)
   }
   val dummyEps = Theorem(∃(x, P(x)) |- P(ε(x, P(x)))){
     have(P(x) |- P(x)) by Restate
