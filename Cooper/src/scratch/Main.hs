@@ -244,6 +244,7 @@ evalMult (RB One) x  = x
 evalMult x (RB One)  = x
 evalMult (RB (Neg One)) x = evalNeg x
 evalMult x (RB (Neg One)) = evalNeg x
+evalMult x (RB (Plus a b)) | isVarOrNegation (u x) = evalMult (RB (Plus a b)) x
 -- evalMult (RB (Var x)) (RB (Var y))  = RB (Mult (Var x) (Var y))
 -- evalMult (RB (Neg (Var x))) (RB (Var y)) = RB (Mult (Neg (Var x)) (Var y))
 -- evalMult (RB (Var x)) (RB (Neg (Var y))) = RB (Mult (Neg (Var x)) (Var y))

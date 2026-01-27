@@ -159,6 +159,14 @@ object Rings extends lisa.Main
 
     }
 
+    val ringEq11 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R) |- x - 3 === -3 + x){
+        have(thesis) by evalRingEq.apply
+        // proof checking takes time (possibly)
+    }
+    val ringEq12 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R) |- (x + 3)*5 === i(20) `+` -5 + 3*x + 2*x){
+        have(thesis) by evalRingEq.apply
+        // proof checking takes time (possibly)
+    }
     val ringTyp1 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R) |-  (-i(10) * i(10) + x) ∈ R){
         have(thesis) by typeCheck.apply
     }

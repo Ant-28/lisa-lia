@@ -982,6 +982,30 @@ object EqReasoning extends lisa.Main {
               temp = evalRingCutHelper(pprf, ty * -1 === nres.tval, temp._1, lastStep)
               have(temp._2)
             }
+            // needs to be a summation. otherwise it could be a bunch of variables. We've already handled +- 1
+            case (tx, ty + tys) if isVariableOrNeg(tx) => {
+              val (mres1, mprf1) = evalMult(RB(ty + tys), RB(tx))
+              if !mprf1.isValid then return (NRB(xint.tval * yint.tval), proof.InvalidProofTactic("evalMult failed!"))
+              val typings = SSet(tx ∈ R, tys ∈ R, ty ∈ R)
+              res = mres1
+              val pprf = have(mprf1)
+              val pprf2 = have(typings |- (tx * (ty + tys)) === ((ty + tys)*tx)) by Tautology.from(add_closure of (x := ty, y := tys), mul_comm of (x := tx, y := (ty + tys)))
+              val equalities = SSet(pprf, pprf2).map(_.bot.firstElemR)
+
+              have(equalities |- (tx * (ty + tys))  === (tx * (ty + tys))) by Restate
+              thenHave(equalities |- (tx * (ty + tys)) === (ty + tys)*tx)  by RightSubstEq.withParameters(
+                Seq(((tx * (ty + tys)),  (ty + tys)*tx)),
+                (Seq(a), (tx * (ty + tys)) === a)
+              )
+              thenHave(equalities |- (tx * (ty + tys)) === mres1.tval ) by RightSubstEq.withParameters(
+                Seq(((ty + tys)*tx, mres1.tval)),
+                (Seq(a), (tx * (ty + tys)) === a)
+              )
+              var temp = evalRingCutHelper(pprf, (tx * (ty + tys)) === mres1.tval, equalities, lastStep)
+              have(temp._2)
+              temp = evalRingCutHelper(pprf2, (tx * (ty + tys)) === mres1.tval, temp._1, lastStep)
+              have(temp._2)
+            }
             case (tx + txs, ty) => {
               val (mres1, mprf1) = evalMult(RB(tx), RB(ty))
               if !mprf1.isValid then return (NRB(xint.tval * yint.tval), proof.InvalidProofTactic("evalMult failed!"))
