@@ -183,6 +183,25 @@ object Rings extends lisa.Main
     val ringInEq5 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R) |- -2 <= `0`){
         have(thesis) by inEquality.apply
     }
+
+    val ringInEq6 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`)) |- 0 < `1`){
+        have(thesis) by inEquality.apply
+    }
+
+    val ringInEq7 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`)) |- `0` < 2){
+        have(thesis) by inEquality.apply
+    }
+
+    val ringInEq8 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`)) |- !(`0` < 0)){
+        have(thesis) by inEquality.apply
+    }
+
+    val ringInEq9 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R) |- !(x < x)){
+        have(thesis) by inEquality.apply
+    }
+    val ringInEq10 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`)) |- -2 < `0`){
+        have(thesis) by inEquality.apply
+    }
     // println(isVariable(x))
     // println(`1`.id.name)   
     // println("seregost")
