@@ -335,6 +335,57 @@ object RingDivOrdering extends lisa.Main {
     have(thesis) by Tautology.from(lt_plus1 of (x := 0, y := y), add_id_closure)
   }
 
+  val le_xy_0ymx = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), y ∈ R, x ∈ R, x <= y) |- 0 <= (y + -x)){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
+    assume(y ∈ R)
+    assume(x ∈ R)
+    assume(x <= y)
+    val eq1 = have(x + -x === 0) by Tautology.from(add_inv)
+    val typ = have(-x ∈ R) by Tautology.from(neg_closure of (x := x))
+    have(x + -x <= y + -x) by Tautology.from(le_add of  (x := x, y := y, z := -x), typ)
+    have(thesis) by Congruence.from(lastStep, eq1)
+  }
+
+  val le_0ymx_xy = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), y ∈ R, x ∈ R, 0 <= (y + -x)) |- x <= y){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
+    assume(y ∈ R)
+    assume(x ∈ R)
+    assume(0 <= (y + -x))
+    val typ = have(-x ∈ R) by Tautology.from(neg_closure of (x := x))
+    val eq1 = have(-x + x === 0) by Congruence.from(add_inv, add_comm of (x := x, y := -x), typ)
+    val eq2 = have((y + -x) + x === y + (-x + x)) by Tautology.from(typ, add_assoc of (x := y, y := -x, z := x))
+    val eq3 = have(y + 0 === y) by Tautology.from(add_id_right of (x := y))
+    val eq4 = have((y + -x) + x === y) by Congruence.from(eq1, eq2, eq3)
+    have(0 + x <= (y + -x) + x) by Tautology.from(add_id_closure, le_add of  (x := 0, y := (y + -x), z := x), typ, add_closure of (x := y, y := -x))
+    have(thesis) by Congruence.from(lastStep, eq4, add_id)
+  }
+
+  val lt_xy_0ymx = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), y ∈ R, x ∈ R, x < y) |- 0 < (y + -x)){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
+    assume(y ∈ R)
+    assume(x ∈ R)
+    assume(x < y)
+    val eq1 = have(x + -x === 0) by Tautology.from(add_inv)
+    val typ = have(-x ∈ R) by Tautology.from(neg_closure of (x := x))
+    have(x + -x < y + -x) by Tautology.from(lt_add of  (x := x, y := y, z := -x), typ)
+    have(thesis) by Congruence.from(lastStep, eq1)
+  }
+
+  val lt_0ymx_xy = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), y ∈ R, x ∈ R, 0 < (y + -x)) |- x < y){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
+    assume(y ∈ R)
+    assume(x ∈ R)
+    assume(0 < (y + -x))
+    val typ = have(-x ∈ R) by Tautology.from(neg_closure of (x := x))
+    val eq1 = have(-x + x === 0) by Congruence.from(add_inv, add_comm of (x := x, y := -x), typ)
+    val eq2 = have((y + -x) + x === y + (-x + x)) by Tautology.from(typ, add_assoc of (x := y, y := -x, z := x))
+    val eq3 = have(y + 0 === y) by Tautology.from(add_id_right of (x := y))
+    val eq4 = have((y + -x) + x === y) by Congruence.from(eq1, eq2, eq3)
+    have(0 + x < (y + -x) + x) by Tautology.from(add_id_closure, lt_add of  (x := 0, y := (y + -x), z := x), typ, add_closure of (x := y, y := -x))
+    have(thesis) by Congruence.from(lastStep, eq4, add_id)
+  }
+
+
   val le_plus1 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R, x <= y) |- x <= y + 1) {
     assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
     assume(x ∈ R)
@@ -347,6 +398,8 @@ object RingDivOrdering extends lisa.Main {
   val le_0plus1 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), y ∈ R, 0 <= y) |- 0 <= y + 1){
     have(thesis) by Tautology.from(le_plus1 of (x := 0, y := y), add_id_closure)
   }
+
+
 
   val sparse_order = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- (x < y ==> x + 1 <= y)){
     have(thesis) by byRingDefn.apply

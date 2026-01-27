@@ -266,6 +266,29 @@ object Utils {
       }
     }
 
+    def is_lt(x: Expr[Prop]): Boolean = {
+      x match {
+        case RingStructure.<(x, y) => true
+        case _ => false
+      }
+    }
+
+    def is_nle(x: Expr[Prop]): Boolean = {
+      x match {
+        case !(RingStructure.<=(x, y)) => true
+        case _ => false
+      }
+    }
+
+    def is_nlt(x: Expr[Prop]): Boolean = {
+      x match {
+        case !(RingStructure.<(x, y)) => true
+        case _ => false
+      }
+    }
+
+    def is_ineq(x : Expr[Prop]) = is_lt(x) || is_le(x) || is_nlt(x) || is_nle(x)
+
     def is_incl(x: Expr[Prop]): Boolean = {
       x match {
         case (_ ∈ R) => true

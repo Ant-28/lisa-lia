@@ -25,7 +25,7 @@ object InDivReasoning extends lisa.Main {
         TacticSubproof{
           assume(ring(R, <=, <, +, *, -, |, 0, 1))
           if (!is_indiv(goalElem)) then return proof.InvalidProofTactic("I can't prove anything other than indivisibility!")
-          else if (exprHasVariables(goalElem)) return proof.InvalidProofTactic("I am a lazy tactic, use <NAME> instead! I only work on numbers!")
+          else if (exprHasVariables(goalElem)) return proof.InvalidProofTactic("I am a lazy tactic! I only work on numbers (mostly)!")
           else
             val sol = simplifyInDiv(goalElem)
             // println(have(sol).bot)
