@@ -945,6 +945,23 @@ object RingStructure extends lisa.Main {
     val c2 = have(z | (x + y) |- !(∃(c, ∃(cpr, c ∈ R /\ cpr ∈ R /\ (c < cpr) /\ (cpr < (c + 1)))))) by Tautology.from(contra2, wipe, th)
     have(thesis) by Tautology.from(c1, c2)
   }
+  val zero_ndiv_nonezero = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, x !== 0) |- !(0 | x)){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
+    assume(x ∈ R)
+    assume(x !== 0)
+    val contr = have((0 | x) |- ∃(c, c ∈ R /\ (x === 0*c))) by Tautology.from(divisibility_defn of (y := 0, x := x), add_id_closure)
+    val rst = have(c ∈ R /\ (x === 0*c) |- c ∈ R /\ (x === 0*c)) by Tautology.from(mult_zero_x_zero of (x := c))
+    have(c ∈ R /\ (x === 0*c) |- (0 * c === 0)) by Tautology.from(mult_zero_x_zero of (x := c))
+    have(c ∈ R /\ (x === 0*c) |- c ∈ R /\ (x === 0)) by Congruence.from(lastStep, rst)
+    val ls = have(c ∈ R /\ (x === 0*c) |- ∃(c, c ∈ R /\ (x === 0))) by RightExists(lastStep)
+    have(∃(c, c ∈ R /\ (x === 0)) |- ∃(c, c ∈ R) /\ (x === 0)) by Tableau
+    have(c ∈ R /\ (x === 0*c) |-  ∃(c, c ∈ R) /\ (x === 0)) by Tautology.from(ls, lastStep)
+    have(∃(c, c ∈ R /\ (x === 0*c)) |- ∃(c, c ∈ R) /\ (x === 0)) by LeftExists(lastStep)
+    have(!(∃(c, c ∈ R /\ (x === 0*c)))) by Tautology.from(lastStep)
+    have(thesis) by Tautology.from(contr, lastStep)
+    
+  }
+
   val dummyEps = Theorem(∃(x, P(x)) |- P(ε(x, P(x)))){
     have(P(x) |- P(x)) by Restate
     thenHave(P(x) |- P(ε(x, P(x)))) by RightEpsilon
