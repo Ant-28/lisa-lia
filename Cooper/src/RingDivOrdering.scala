@@ -76,9 +76,13 @@ object RingDivOrdering extends lisa.Main {
   val le_antisym = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- (x <= y) /\ (y <= x) ==> (x === y)){
     have(thesis) by byRingDefn.apply
   }
-  val le_trans = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R, z ∈ R) |- ((x <= y) /\ (y <= z)) ==> (x <= z)){
+  val le_trans_imp = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R, z ∈ R) |- ((x <= y) /\ (y <= z)) ==> (x <= z)){
     have(thesis) by byRingDefn.apply
   }
+  val le_trans = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R, z ∈ R, x <= y, y <= z) |- (x <= z)){
+    have(thesis) by Tautology.from(le_trans_imp)
+  }
+  
   val le_totality = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- (x <= y) \/ (y <= x)){
     have(thesis) by byRingDefn.apply
   }
@@ -107,6 +111,8 @@ object RingDivOrdering extends lisa.Main {
   val zero_le_1 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`)) |- (`0` <= 1)){
     have(thesis) by byRingDefn.apply
   }
+
+
 
   val zero_lt_1 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`)) |- 0 < `1`){
     assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
@@ -203,7 +209,7 @@ object RingDivOrdering extends lisa.Main {
     val ylez = have(y <= z) by Tautology.from(lt_defn of (x := y, y := z))
     val ynlex = have(!(y <= x)) by Tautology.from(lt_defn)
     val znley = have(!(z <= y)) by Tautology.from(lt_defn of (x := y, y := z))
-    val xlez = have(x <= z) by Tautology.from(le_trans, xley, ylez)
+    val xlez = have(x <= z) by Tautology.from(le_trans_imp, xley, ylez)
     val zlex_entails_xeqz  = have(z <= x |- x === z) by Tautology.from(lastStep, le_antisym of (x := x, y := z))
     have(z <= x |- z < y) by Congruence.from(lastStep)
     have(z <= x |- !(y < z)) by Tautology.from(lt_not_sym of (x := z, y := y), lastStep) 
@@ -218,6 +224,17 @@ object RingDivOrdering extends lisa.Main {
   val le_add = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R, z ∈ R, x <= y) |- ((x + z) <= (y + z))){
     have(thesis) by Tautology.from(le_add_imp)
   }
+
+  val ne1_le_zero = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`)) |- (-1 <= `0`)){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
+    val tv = have(`0` <= 1) by Tautology.from(zero_le_1)
+    val n1 = have(-1 ∈ R) by Tautology.from(neg_closure of (x := 1), mul_id_closure)
+    val e1 = have(`0` + -1 === -1) by Tautology.from(add_id of (x := -1), n1)
+    val e2 = have(1 + `-`(`1`) === 0) by Tautology.from(add_inv of (x := 1), mul_id_closure)
+    have(`0` + -1 <= `1` + -`1`) by Tautology.from(tv, le_add of (x := 0, y := 1, z := -`1`), add_id_closure, mul_id_closure, n1)
+    have(thesis) by Congruence.from(e1, e2, lastStep)
+  }
+
 
   val lt_mul_left_imp = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x∈ R, y ∈ R, z ∈ R) |- ((0 < x) /\ (y < z)) ==> ((x * y) < (x * z))){
     have(thesis) by byRingDefn.apply
@@ -239,6 +256,8 @@ object RingDivOrdering extends lisa.Main {
     have(x * z < y * z) by Congruence.from(e1, e2, p1)
     have(thesis) by Tautology.from(lastStep, p1, e1, e2)
   }
+
+  
 
   val le_lt_eq = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x∈ R, y ∈ R, x <= y) |- (x < y) \/ (x === y)){
     assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
@@ -303,6 +322,23 @@ object RingDivOrdering extends lisa.Main {
     val p3 = have(1 + x === x + 1) by Tautology.from(mul_id_closure, add_comm of (x := x, y := 1))
     have(0 + x < 1 + x) by Tautology.from(p1, lt_add of (x := 0, y := 1, z := x), add_id_closure, mul_id_closure)
     have(x < x + 1) by Congruence.from(p2, p3, lastStep)
+  }
+  val lt_plus1 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R, x < y) |- x < y + 1) {
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
+    assume(x ∈ R)
+    assume(y ∈ R)
+    assume(x < y)
+    have(y < y + 1) by Tautology.from(x_lt_xp1 of (x := y))
+    have(thesis) by Tautology.from(lastStep, lt_trans of (x := x, y := y, z := y + 1), add_closure of (x := y, y := 1), mul_id_closure)
+  }
+  val le_plus1 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R, x <= y) |- x <= y + 1) {
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
+    assume(x ∈ R)
+    assume(y ∈ R)
+    assume(x <= y)
+    have(y < y + 1) by Tautology.from(x_lt_xp1 of (x := y))
+    have(y <= y + 1) by Tautology.from(lastStep, add_closure of (x := y, y := 1), mul_id_closure, lt_defn of (x := y, y := y + 1))
+    have(thesis) by Tautology.from(lastStep, le_trans of (x := x, y := y, z := y + 1), add_closure of (x := y, y := 1), mul_id_closure)
   }
 
   val sparse_order = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- (x < y ==> x + 1 <= y)){
