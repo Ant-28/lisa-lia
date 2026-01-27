@@ -391,16 +391,16 @@ object EqReasoning extends lisa.Main {
             val pprf = have(tprf) // tx + ty === tres
             val ures = tres.tval
             val typings = SSet(1 ∈ R, tys ∈ R, txs ∈ R)
-            val pprf2 = have(typings |- (1 + txs) + (-1 + tys) === txs + tys) by Tautology.from(addPlusHelper1g of (x := tx, y := ty, z := 1))
+            val pprf2 = have(typings |- (1 + txs) + (-1 + tys) === txs + tys) by Tautology.from(addPlusHelper1 of (x := txs, y := tys))
             val equalities = SSet(pprf, pprf2).map(_.bot.firstElemR)
             res = tres
             have(equalities |-  (1 + txs) + (-1 + tys) === (1 + txs) + (-1 + tys)) by Restate
-            thenHave(equalities |- (1 + txs) + (-1 + tys) === tx + tys ) by RightSubstEq.withParameters(
+            thenHave(equalities |- (1 + txs) + (-1 + tys) === txs + tys ) by RightSubstEq.withParameters(
               Seq(((1 + txs) + (-1 + tys), txs + tys)),
               (Seq(a), (1 + txs) + (-1 + tys) === a)
             )
             thenHave(equalities |- (1 + txs) + (-1 + tys) === ures) by RightSubstEq.withParameters(
-              Seq(((1 + txs) + (-1 + tys), ures)),
+              Seq((txs + tys, ures)),
               (Seq(a), (1 + txs) + (-1 + tys) === a)
             )
             var temp = evalRingCutHelper(pprf2, (1 + txs) + (-1 + tys) === ures, equalities, lastStep)
@@ -414,7 +414,7 @@ object EqReasoning extends lisa.Main {
             val pprf = have(tprf) // tx + ty === tres
             val ures = tres.tval
             val typings = SSet(1 ∈ R, tys ∈ R, txs ∈ R)
-            val pprf2 = have(typings |- (1 + txs) + (-1 + tys) === txs + tys) by Tautology.from(addPlusHelper2g of (x := txs, y := tys, z := 1))
+            val pprf2 = have(typings |- (1 + txs) + (-1 + tys) === txs + tys) by Tautology.from(addPlusHelper2 of (x := txs, y := tys))
             val equalities = SSet(pprf, pprf2).map(_.bot.firstElemR)
             res = tres
             have(equalities |-  (-1 + txs) + (1 + tys) === (-1 + txs) + (1 + tys)) by Restate
@@ -423,7 +423,7 @@ object EqReasoning extends lisa.Main {
               (Seq(a), (1 + txs) + (-1 + tys) === a)
             )
             thenHave(equalities |- (1 + txs) + (-1 + tys) === ures) by RightSubstEq.withParameters(
-              Seq(((1 + txs) + (-1 + tys), ures)),
+              Seq((txs + tys, ures)),
               (Seq(a), (1 + txs) + (-1 + tys) === a)
             )
             var temp = evalRingCutHelper(pprf2, (1 + txs) + (-1 + tys) === ures, equalities, lastStep)
@@ -537,12 +537,14 @@ object EqReasoning extends lisa.Main {
               if isVariable(tx) && isNegVariable(ty) then {
                 res = RB(0)
                 val typings = SSet(tx ∈ R, ty ∈ R)
-                have(typings |- tx + ty === 0) by Tautology.from(add_inv of (x := tx, y := ty))
+                println(tx)
+                println(ty)
+                have(typings |- tx + ty === 0) by Tautology.from(add_inv of (x := tx))
               }
               else if isVariable(ty) && isNegVariable(tx) then {
                 res = RB(0)
                 val typings = SSet(tx ∈ R, ty ∈ R)
-                have(typings |- tx + ty === 0) by Tautology.from(add_comm_inv of (x := tx, y := ty))
+                have(typings |- tx + ty === 0) by Tautology.from(add_comm_inv of (x := ty))
               }
             }
             case tcomp if tcomp < 0 => {

@@ -240,10 +240,17 @@ object Utils {
     case object Neg extends Sign
 
     def is_eq(x: Expr[Prop]): Boolean = {
-    x match {
-      case (tx `equality` ty) => true
-      case _ => false
+      x match {
+        case (tx `equality` ty) => true
+        case _ => false
+      }
     }
+
+    def is_neq(x: Expr[Prop]): Boolean = {
+      x match {
+        case !(tx `equality` ty) => true
+        case _ => false
+      }
     }
 
     def is_div(x: Expr[Prop]): Boolean = {
@@ -287,7 +294,9 @@ object Utils {
       }
     }
 
-    def is_ineq(x : Expr[Prop]) = is_lt(x) || is_le(x) || is_nlt(x) || is_nle(x)
+    inline def is_ineq(x : Expr[Prop]) = is_lt(x) || is_le(x) || is_nlt(x) || is_nle(x)
+    inline def is_atom(x : Expr[Prop]) = is_ineq(x) || is_eq(x) || is_neq(x)
+
 
     def is_incl(x: Expr[Prop]): Boolean = {
       x match {

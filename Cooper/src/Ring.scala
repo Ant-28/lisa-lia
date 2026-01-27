@@ -138,6 +138,7 @@ object RingStructure extends lisa.Main {
     infix def  +(right : Expr[Ind]): Expr[Ind]   = this.+.construct(left, right)
     infix def  *(right : Expr[Ind]): Expr[Ind]   = this.*.construct(left, right)
     infix def !==(right: Expr[Ind]): Expr[Prop] = !(left === right)
+    inline infix def -(right: Expr[Ind]): Expr[Ind] = left + -right
     def unary_- = this.-.construct(left)
     
   }

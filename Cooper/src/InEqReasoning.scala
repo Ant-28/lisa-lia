@@ -43,10 +43,11 @@ object InEqReasoning extends lisa.Main {
         goal match {
           // ty < tx
           case RingStructure.<=(ty, tx) => {            
-            val diff = evalRing(tx + -ty)
+
             val tx_inR = have(tx ∈ R) by typeCheck.apply
             val ty_inR = have(ty ∈ R) by typeCheck.apply
             val (tres, tprf) = evalRing(tx + -ty)
+            if !(tprf.isValid) then return proof.InvalidProofTactic("evalRing failed!!")
             val hprf = have(tprf)
             val typing = typeChecking(getTypingVarsInAnte(hprf.bot.left))
             var temp  = (getTypings(hprf.bot.left), TacticSubproof {have(0 === 0) by Restate} )
@@ -61,7 +62,6 @@ object InEqReasoning extends lisa.Main {
                 have(temp._2)     
               }
             )
-            if !(tprf.isValid) then return proof.InvalidProofTactic("evalRing failed!!")
             if (treeHasVariables(tres.tval)) return proof.InvalidProofTactic("I am a lazy tactic! I only work on numbers (mostly)!")
             // tx - ty === tres
             val vprf = have(temp._2)
@@ -71,10 +71,11 @@ object InEqReasoning extends lisa.Main {
             have(ty <= tx) by Tautology.from(ls,  le_0ymx_xy of (x := ty, y := tx), tx_inR,ty_inR)
           }
           case RingStructure.<(ty, tx) => {            
-            val diff = evalRing(tx + -ty)
+
             val tx_inR = have(tx ∈ R) by typeCheck.apply
             val ty_inR = have(ty ∈ R) by typeCheck.apply
             val (tres, tprf) = evalRing(tx + -ty)
+            if !(tprf.isValid) then return proof.InvalidProofTactic("evalRing failed!!")
             val hprf = have(tprf)
             val typing = typeChecking(getTypingVarsInAnte(hprf.bot.left))
             var temp  = (getTypings(hprf.bot.left), TacticSubproof {have(0 === 0) by Restate} )
@@ -89,7 +90,6 @@ object InEqReasoning extends lisa.Main {
                 have(temp._2)     
               }
             )
-            if !(tprf.isValid) then return proof.InvalidProofTactic("evalRing failed!!")
             if (treeHasVariables(tres.tval)) return proof.InvalidProofTactic("I am a lazy tactic! I only work on numbers (mostly)!")
             // tx - ty === tres
             val vprf = have(temp._2)

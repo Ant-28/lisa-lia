@@ -16,6 +16,7 @@ import scala.collection.immutable.SortedSet
 import TypeChecker.typeCheck
 import DivReasoning.divInts
 import InEqReasoning.inEquality
+import DisEqReasoning.disEquality
 // object Rings extends lisa.Main: 
 //     import RingStructure.{*}
 //     import RingEqReasoning.{*} 
@@ -201,6 +202,14 @@ object Rings extends lisa.Main
     }
     val ringInEq10 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`)) |- -2 < `0`){
         have(thesis) by inEquality.apply
+    }
+
+    val ringInEq11 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`)) |- (`1` !== `0`)){
+        have(thesis) by disEquality.apply
+    }
+
+    val ringInEq12 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R) |- ((x + 2) !== (x + 3))){
+        have(thesis) by disEquality.apply
     }
     // println(isVariable(x))
     // println(`1`.id.name)   
