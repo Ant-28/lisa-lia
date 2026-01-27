@@ -15,6 +15,7 @@ import EqReasoning.evalRingEq
 import scala.collection.immutable.SortedSet
 import TypeChecker.typeCheck
 import DivReasoning.divInts
+import InEqReasoning.inEquality
 // object Rings extends lisa.Main: 
 //     import RingStructure.{*}
 //     import RingEqReasoning.{*} 
@@ -162,6 +163,25 @@ object Rings extends lisa.Main
 
     val ringDiv1 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`)) |- (10 | i(20))){
         have(thesis) by divInts.apply
+    }
+
+    val ringInEq1 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`)) |- 0 <= `1`){
+        have(thesis) by inEquality.apply
+    }
+
+    val ringInEq2 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`)) |- `0` <= 2){
+        have(thesis) by inEquality.apply
+    }
+
+    val ringInEq3 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`)) |- `0` <= 0){
+        have(thesis) by inEquality.apply
+    }
+
+    val ringInEq4 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R) |- x <= x){
+        have(thesis) by inEquality.apply
+    }
+    val ringInEq5 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R) |- -2 <= `0`){
+        have(thesis) by inEquality.apply
     }
     // println(isVariable(x))
     // println(`1`.id.name)   
