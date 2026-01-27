@@ -24,7 +24,7 @@ object DivReasoning extends lisa.Main {
       else
         val goalElem = goal.right.head 
         TacticSubproof{
-          assume(ring(R, <=, <, +, *, -, |, 0, 1))
+          goal.left.map(xs => assume(xs))
           if (!is_div(goalElem)) then return proof.InvalidProofTactic("I can't prove anything other than divisibility!")
           else if (exprHasVariables(goalElem)) return proof.InvalidProofTactic("I am a lazy tactic, use <NAME> instead! I only work on numbers!")
           else

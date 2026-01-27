@@ -47,7 +47,7 @@ object EqReasoning extends lisa.Main {
         val goalElem = goal.right.head 
         val r = TacticSubproof{ newProof ?=>
 
-          assume(ring(R, <=, <, +, *, -, |, 0, 1))
+          goal.left.map(xs => assume(xs))
           if (!is_eq(goalElem)) then return proof.InvalidProofTactic("I can't prove anything other than equality!")
           else
             val sol = simplifyEq(goalElem)

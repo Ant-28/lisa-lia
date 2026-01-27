@@ -17,6 +17,7 @@ import TypeChecker.typeCheck
 import DivReasoning.divInts
 import InEqReasoning.inEquality
 import DisEqReasoning.disEquality
+import InDivReasoning.inDivInts
 // object Rings extends lisa.Main: 
 //     import RingStructure.{*}
 //     import RingEqReasoning.{*} 
@@ -210,6 +211,10 @@ object Rings extends lisa.Main
 
     val ringInEq12 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R) |- ((x + 2) !== (x + 3))){
         have(thesis) by disEquality.apply
+    }
+
+    val ringInDiv1 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R) |- !(i(2) | i(3))){
+        have(thesis) by inDivInts.apply
     }
     // println(isVariable(x))
     // println(`1`.id.name)   

@@ -11,19 +11,21 @@ import scala.collection.SortedSet
 import scala.collection.SeqView.Sorted
 import RingStructure.{*}
 import Utils.{*, given Ordering[?]}
+import InEqReasoning.inEquality
+import DivReasoning.divInts
 
 object InDivReasoning extends lisa.Main {
   import RingElemConversions.*
   import EqReasoning.*
   import TypeChecker.*
-    object divInts extends ProofTactic {
+    object inDivInts extends ProofTactic {
     def apply(using proof: library.Proof)(goal: Sequent)(using myOrd: Ordering[Expr[Ind]]): proof.ProofTacticJudgement = {
       if (goal.right.size != 1) then
         proof.InvalidProofTactic("I can't prove more than one sequent!")
       else
         val goalElem = goal.right.head 
         TacticSubproof{
-          assume(ring(R, <=, <, +, *, -, |, 0, 1))
+          goal.left.map(xs => assume(xs))
           if (!is_indiv(goalElem)) then return proof.InvalidProofTactic("I can't prove anything other than indivisibility!")
           else if (exprHasVariables(goalElem)) return proof.InvalidProofTactic("I am a lazy tactic! I only work on numbers (mostly)!")
           else
@@ -40,25 +42,34 @@ object InDivReasoning extends lisa.Main {
         TacticSubproof{
       
         goal match {
-          case RingStructure.`|`(ty, tx) => {
+          case !(RingStructure.`|`(ty, tx)) => {
             // ty | tx <=> ∃c. tx = c*ty
             // BigInts are used as an oracle.
             val tyv = ci(ty)
             val txv = ci(tx)
             if ((txv % tyv) == 0) then return proof.InvalidProofTactic("Is divisible, use DivReasoning instead")
+            
             val tcv = txv/tyv
-            val diff = txv - (tyv * tcv)
+            val ddiv = tyv * tcv
+            val diff = txv - (ddiv)
             val tc  = ic(tcv)
-            val left = have(tx === ty * tc) by evalRingEq.apply
-            val right = have(tc ∈ R) by typeCheck.apply
-            val txr = have(tx ∈ R) by typeCheck.apply
+            val tdiff = ic(diff)
+            val tddiv = ic(ddiv)
+            
+            val l = have(0 < diff) by inEquality.apply
+            val r = have(diff < ty) by inEquality.apply
+            val leq = have(tx === tddiv + tdiff) by evalRingEq.apply
+            val c = have(ty | tddiv) by divInts.apply
+            
+            val txr = have(tddiv ∈ R) by typeCheck.apply
             val tyr = have(ty ∈ R) by typeCheck.apply
-            have(tc ∈ R /\ (tx === ty * tc)) by RightAnd(left, right) // is this right?
-            thenHave(∃(c, c ∈ R /\ (tx === ty * c))) by RightExists
-            have((ring(R, <=, <, +, *, -, |, `0`, `1`),tx ∈ R, ty ∈ R) |- ∃(c, c ∈ R /\ (tx === ty * c))) by Tautology.from(lastStep, txr, tyr)
-            have(goal) by Tautology.from(div_qe of (x := tx, y := ty), lastStep, txr, tyr)
+            val tdr = have(tdiff ∈ R) by typeCheck.apply
+
+            val vs = have(!(ty | (tddiv + tdiff))) by Tautology.from(does_not_divide of (x := tddiv, y := tdiff, z := ty), txr, tyr, tdr, l, r, c)
+            have(!(ty | (tx))) by Congruence.from(vs, leq)
+            
           }
-          case _ => return proof.InvalidProofTactic("Can only solve inequalities")
+          case _ => return proof.InvalidProofTactic("Can only solve indivs")
             
 
         

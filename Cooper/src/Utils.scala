@@ -323,6 +323,10 @@ object Utils {
         case RingStructure.`|`(tx, ty) => treeHasVariables(tx) || treeHasVariables(ty)
         case RingStructure.<=(tx, ty) => treeHasVariables(tx) || treeHasVariables(ty)
         case RingStructure.<(tx, ty) => treeHasVariables(tx) || treeHasVariables(ty)
+        case !(tx `equality` ty) => treeHasVariables(tx) || treeHasVariables(ty)
+        case !(RingStructure.`|`(tx, ty)) => treeHasVariables(tx) || treeHasVariables(ty)
+        case !(RingStructure.<=(tx, ty)) => treeHasVariables(tx) || treeHasVariables(ty)
+        case !(RingStructure.<(tx, ty)) => treeHasVariables(tx) || treeHasVariables(ty)
         case _ => throw Exception("I don't know this expression!")
       }
     }
