@@ -10,6 +10,7 @@ import lisa.utils.prooflib.Library
 import scala.collection.SortedSet
 import scala.collection.SeqView.Sorted
 import RingStructure.{*}
+import RingDivOrdering.{*}
 import Utils.{*, given Ordering[?]}
 import EqReasoning.evalRingEq.evalRing
 
@@ -26,7 +27,6 @@ object InEqReasoning extends lisa.Main {
         TacticSubproof{
           assume(ring(R, <=, <, +, *, -, |, 0, 1))
           if (!is_ineq(goalElem)) then return proof.InvalidProofTactic("I can't prove anything other than inequalities!")
-          else if (exprHasVariables(goalElem)) return proof.InvalidProofTactic("I am a lazy tactic! I only work on numbers (mostly)!")
           else
             val sol = simplifyInEq(goalElem)
             // println(have(sol).bot)
@@ -44,9 +44,13 @@ object InEqReasoning extends lisa.Main {
           // ty < tx
           case RingStructure.<=(ty, tx) => {            
             val diff = evalRing(tx + -ty)
-            have(tx ∈ R) by typeCheck.apply
-            have(ty ∈ R) by typeCheck.apply
-            // have()
+            val tx_inR = have(tx ∈ R) by typeCheck.apply
+            val ty_inR = have(ty ∈ R) by typeCheck.apply
+            val (tres, tprf) = evalRing(tx + -ty)
+            if !(tprf.isValid) then return proof.InvalidProofTactic("evalRing failed!!")
+            if (treeHasVariables(tres.tval)) return proof.InvalidProofTactic("I am a lazy tactic! I only work on numbers (mostly)!")
+            val vprf = have(tprf) // tx - ty === tres
+
           }
           case RingStructure.<(ty, tx) => {            
             
@@ -62,6 +66,24 @@ object InEqReasoning extends lisa.Main {
 
         
       }
+      }
     }
-  }
+
+    def evalLe(using proof: library.Proof)(goal: Expr[Prop])(using myOrd: Ordering[Expr[Ind]]): proof.ProofTacticJudgement = {
+    TacticSubproof{
+      if !is_le(goal) then return proof.InvalidProofTactic("internal tactic, don't use me!")
+        goal match {
+          case RingStructure.<=(`0`, `1`) => {
+            have(`0` <= `1`) by Tautology.from(zero_le_1)
+          }
+          case RingStructure.<=(`0`, tx) => {            
+            if !(BigInt(0) < ci(tx)) then return proof.InvalidProofTactic("Not LE!")
+            // val nres = evalRing(7tx + -1)
+            ???
+          }
+          case _ => return proof.InvalidProofTactic("Unreachable!")
+        } 
+      }
+    }
+
 }

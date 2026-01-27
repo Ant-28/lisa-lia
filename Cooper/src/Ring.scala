@@ -708,6 +708,28 @@ object RingStructure extends lisa.Main {
     have(thesis) by Tautology.from(lastStep, h1, h2, h3) 
   }
 
+  val x_mz_z_x = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, z ∈ R) |- (x + -z) + z === x){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
+    assume(x ∈ R)
+    assume(z ∈ R)
+    val typ = have(-z ∈ R) by Tautology.from(neg_closure of (x := z))
+    val eq1 = have(-z + z === 0) by Congruence.from(add_inv of (x := z), add_comm of (x := -z, y := z), typ)
+    val eq2 = have((x + -z) + z === x + (-z + z)) by Tautology.from(typ, add_assoc of (x := x, y := -z, z := z))
+    val eq3 = have(x + 0 === x) by Tautology.from(add_id_right )
+    val eq4 = have((x + -z) + z === x) by Congruence.from(eq1, eq2, eq3)
+  }
+
+  val x_z_mz_x = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, z ∈ R) |- (x + z) + -z === x){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
+    assume(x ∈ R)
+    assume(z ∈ R)
+    val typ = have(-z ∈ R) by Tautology.from(neg_closure of (x := z))
+    val eq1 = have(z + -z === 0) by Congruence.from(add_inv of (x := z), typ)
+    val eq2 = have((x + z) + -z === x + (z + -z)) by Tautology.from(typ, add_assoc of (x := x, y := z, z := -z))
+    val eq3 = have(x + 0 === x) by Tautology.from(add_id_right)
+    val eq4 = have((x + z) + -z === x) by Congruence.from(eq1, eq2, eq3)
+  }
+
   val addPlusHelper1g = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R, z ∈ R) |- (z + x) + (-(z) + y) === x + y){
     assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
     assume(x ∈ R)
