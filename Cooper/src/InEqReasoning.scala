@@ -50,7 +50,7 @@ object InEqReasoning extends lisa.Main {
             if !(tprf.isValid) then return proof.InvalidProofTactic("evalRing failed!!")
             val hprf = have(tprf)
             val typing = typeChecking(getTypingVarsInAnte(hprf.bot.left))
-            var temp  = (getTypings(hprf.bot.left), TacticSubproof {have(0 === 0) by Restate} )
+            var temp  = (getTypings(hprf.bot.left), TacticSubproof {have(`0` === `0`) by Restate} )
             val seqs = typing + hprf
             have(hprf.bot) by Restate.from(hprf)
             typing.toList.sortBy(proofStepDepth).map( x => {
@@ -65,10 +65,10 @@ object InEqReasoning extends lisa.Main {
             if (treeHasVariables(tres.tval)) return proof.InvalidProofTactic("I am a lazy tactic! I only work on numbers (mostly)!")
             // tx - ty === tres
             val vprf = have(temp._2)
-            val leprf = evalLe(0 <= tres.tval)
+            val leprf = evalLe(`0` <= tres.tval)
             if !leprf.isValid then return proof.InvalidProofTactic("tactic failed!")
-            val l = have(leprf) // 0 <= tres.tval
-            val ls = have(0 <= tx  + -ty) by Congruence.from(lastStep, vprf)
+            val l = have(leprf) // `0` <= tres.tval
+            val ls = have(`0` <= tx  + -ty) by Congruence.from(lastStep, vprf)
             have(ty <= tx) by Tautology.from(ls,  le_0ymx_xy of (x := ty, y := tx), tx_inR,ty_inR)
           }
           case RingStructure.<(ty, tx) => {            
@@ -79,7 +79,7 @@ object InEqReasoning extends lisa.Main {
             if !(tprf.isValid) then return proof.InvalidProofTactic("evalRing failed!!")
             val hprf = have(tprf)
             val typing = typeChecking(getTypingVarsInAnte(hprf.bot.left))
-            var temp  = (getTypings(hprf.bot.left), TacticSubproof {have(0 === 0) by Restate} )
+            var temp  = (getTypings(hprf.bot.left), TacticSubproof {have(`0` === `0`) by Restate} )
             val seqs = typing + hprf
             have(hprf.bot) by Restate.from(hprf)
             typing.toList.sortBy(proofStepDepth).map( x => {
@@ -94,10 +94,10 @@ object InEqReasoning extends lisa.Main {
             if (treeHasVariables(tres.tval)) return proof.InvalidProofTactic("I am a lazy tactic! I only work on numbers (mostly)!")
             // tx - ty === tres
             val vprf = have(temp._2)
-            val ltprf = evalLt(0 < tres.tval)
+            val ltprf = evalLt(`0` < tres.tval)
             if !ltprf.isValid then return proof.InvalidProofTactic("tactic failed!")
-            val l = have(ltprf) // 0 <= tres.tval
-            val ls = have(0 < tx  + -ty) by Congruence.from(lastStep, vprf)
+            val l = have(ltprf) // `0` <= tres.tval
+            val ls = have(`0` < tx  + -ty) by Congruence.from(lastStep, vprf)
             have(ty < tx) by Tautology.from(ls,  lt_0ymx_xy of (x := ty, y := tx), tx_inR,ty_inR)
           }
           case !(RingStructure.<=(ty, tx)) => {
@@ -129,23 +129,23 @@ object InEqReasoning extends lisa.Main {
       if !is_le(goal) then return proof.InvalidProofTactic("internal tactic, don't use me!")
         goal match {
           case RingStructure.<=(`0`, `0`) => {
-            have(`0` <= `0`) by Tautology.from(le_refl of (x := 0), add_id_closure)
+            have(`0` <= `0`) by Tautology.from(le_refl of (x := `0`), add_id_closure)
           }
           case RingStructure.<=(`0`, `1`) => {
             have(`0` <= `1`) by Tautology.from(zero_le_1)
           }
           case RingStructure.<=(`0`, tx) => {            
             if !(BigInt(0) <= ci(tx)) then return proof.InvalidProofTactic("Not LE!")
-            val nres = evalRing(tx + -1)
-            val res = evalLe(0 <= nres._1.tval)
+            val nres = evalRing(tx + `-`(`1`))
+            val res = evalLe(`0` <= nres._1.tval)
             if !res.isValid then return proof.InvalidProofTactic("le fail")
             val rprf = have(res)
             val vprf = have(nres._2)
             val tprf = have(tx ∈ R) by typeCheck.apply
-            have(0 <= (tx + -1)) by Congruence.from(rprf, vprf)
-            val cc = have(0 <= (tx + -1) + 1) by Tautology.from(lastStep, tprf, add_closure of (x := tx, y := -1), neg_closure of (x := 1), mul_id_closure, le_plus1 of (x := 0, y := (tx + -1)), add_id_closure)
+            have(`0` <= (tx + -1)) by Congruence.from(rprf, vprf)
+            val cc = have(`0` <= (tx + -1) + 1) by Tautology.from(lastStep, tprf, add_closure of (x := tx, y := -1), neg_closure of (x := 1), mul_id_closure, le_plus1 of (x := `0`, y := (tx + -1)), add_id_closure)
             val eqr = have((tx + -1) + 1 === tx) by Tautology.from(tprf, x_mz_z_x of (x := tx, z := 1), mul_id_closure)
-            have(0 <= tx) by Congruence.from(cc, eqr)
+            have(`0` <= tx) by Congruence.from(cc, eqr)
           }
           case _ => return proof.InvalidProofTactic("Unreachable!")
         } 
@@ -162,15 +162,15 @@ object InEqReasoning extends lisa.Main {
           case RingStructure.<(`0`, tx) => {            
             if !(BigInt(0) < ci(tx)) then return proof.InvalidProofTactic("Not LT!")
             val nres = evalRing(tx + -1)
-            val res = evalLt(0 < nres._1.tval)
+            val res = evalLt(`0` < nres._1.tval)
             if !res.isValid then return proof.InvalidProofTactic("lt fail")
             val rprf = have(res)
             val vprf = have(nres._2)
             val tprf = have(tx ∈ R) by typeCheck.apply
-            have(0 < (tx + -1)) by Congruence.from(rprf, vprf)
-            val cc = have(0 < (tx + -1) + 1) by Tautology.from(lastStep, tprf, add_closure of (x := tx, y := -1), neg_closure of (x := 1), mul_id_closure, lt_plus1 of (x := 0, y := (tx + -1)), add_id_closure)
+            have(`0` < (tx + -1)) by Congruence.from(rprf, vprf)
+            val cc = have(`0` < (tx + -1) + 1) by Tautology.from(lastStep, tprf, add_closure of (x := tx, y := -1), neg_closure of (x := 1), mul_id_closure, lt_plus1 of (x := `0`, y := (tx + -1)), add_id_closure)
             val eqr = have((tx + -1) + 1 === tx) by Tautology.from(tprf, x_mz_z_x of (x := tx, z := 1), mul_id_closure)
-            have(0 < tx) by Congruence.from(cc, eqr)
+            have(`0` < tx) by Congruence.from(cc, eqr)
           }
           case _ => return proof.InvalidProofTactic("Unreachable!")
         } 

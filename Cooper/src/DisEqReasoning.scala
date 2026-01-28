@@ -66,9 +66,9 @@ object DisEqReasoning extends lisa.Main {
             if (treeHasVariables(tres.tval)) return proof.InvalidProofTactic("I am a lazy tactic! I only work on numbers (mostly)!")
             // tx - ty === tres
             val vprf = have(temp._2)
-            val leprf = evalNeq(0 !== tres.tval)
+            val leprf = evalNeq(`0` !== tres.tval)
             val l = have(leprf) // 0 <= tres.tval
-            val ls = have(0 !== tx  + -ty) by Congruence.from(lastStep, vprf)
+            val ls = have(`0` !== tx  + -ty) by Congruence.from(lastStep, vprf)
             have(ty !== tx) by Tautology.from(ls,  x_neq_y_zero_neq_xmy_iff of (x := tx, y := ty), tx_inR,ty_inR)
           }
           case _ => proof.InvalidProofTactic("How did you get here?")
@@ -85,13 +85,13 @@ object DisEqReasoning extends lisa.Main {
               case ty_int if (ty_int == 0) => return proof.InvalidProofTactic("erm ackchually this is equal")
               case ty_int if (ty_int < 0) => {
                 val typ = have(ty ∈ R) by typeCheck.apply
-                have(ty < 0) by inEquality.apply
-                have((0 !== ty)) by Tautology.from(typ, lastStep, trichotomy1 of (x := ty, y := 0), add_id_closure)
+                have(ty < `0`) by inEquality.apply
+                have((`0` !== ty)) by Tautology.from(typ, lastStep, trichotomy1 of (x := ty, y := 0), add_id_closure)
               }
               case ty_int if (BigInt(0) < ty_int) => {
                 val typ = have(ty ∈ R) by typeCheck.apply
-                have(0 < ty) by inEquality.apply
-                have((0 !== ty)) by Tautology.from(typ, lastStep, trichotomy1 of (x := 0, y := ty), add_id_closure)
+                have(`0` < ty) by inEquality.apply
+                have((`0` !== ty)) by Tautology.from(typ, lastStep, trichotomy1 of (x := 0, y := ty), add_id_closure)
               }
             }
             
