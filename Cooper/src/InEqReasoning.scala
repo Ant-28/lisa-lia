@@ -66,6 +66,7 @@ object InEqReasoning extends lisa.Main {
             // tx - ty === tres
             val vprf = have(temp._2)
             val leprf = evalLe(0 <= tres.tval)
+            if !leprf.isValid then return proof.InvalidProofTactic("tactic failed!")
             val l = have(leprf) // 0 <= tres.tval
             val ls = have(0 <= tx  + -ty) by Congruence.from(lastStep, vprf)
             have(ty <= tx) by Tautology.from(ls,  le_0ymx_xy of (x := ty, y := tx), tx_inR,ty_inR)
@@ -94,6 +95,7 @@ object InEqReasoning extends lisa.Main {
             // tx - ty === tres
             val vprf = have(temp._2)
             val ltprf = evalLt(0 < tres.tval)
+            if !ltprf.isValid then return proof.InvalidProofTactic("tactic failed!")
             val l = have(ltprf) // 0 <= tres.tval
             val ls = have(0 < tx  + -ty) by Congruence.from(lastStep, vprf)
             have(ty < tx) by Tautology.from(ls,  lt_0ymx_xy of (x := ty, y := tx), tx_inR,ty_inR)
@@ -136,6 +138,7 @@ object InEqReasoning extends lisa.Main {
             if !(BigInt(0) <= ci(tx)) then return proof.InvalidProofTactic("Not LE!")
             val nres = evalRing(tx + -1)
             val res = evalLe(0 <= nres._1.tval)
+            if !res.isValid then return proof.InvalidProofTactic("le fail")
             val rprf = have(res)
             val vprf = have(nres._2)
             val tprf = have(tx ∈ R) by typeCheck.apply
@@ -160,6 +163,7 @@ object InEqReasoning extends lisa.Main {
             if !(BigInt(0) < ci(tx)) then return proof.InvalidProofTactic("Not LT!")
             val nres = evalRing(tx + -1)
             val res = evalLt(0 < nres._1.tval)
+            if !res.isValid then return proof.InvalidProofTactic("lt fail")
             val rprf = have(res)
             val vprf = have(nres._2)
             val tprf = have(tx ∈ R) by typeCheck.apply

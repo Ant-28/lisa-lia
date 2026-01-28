@@ -12,7 +12,7 @@ import lisa.utils.prooflib.ProofTacticLib.ProofTactic
 import lisa.utils.prooflib.Library
 import SubProofWithRes.{TacticSubproofWithResult, DebugRightSubstEq}
 import scala.quoted.Varargs
-import RingStructure.*
+import RingStructure.{variable => _, _}
 
 
 object Utils {
@@ -225,7 +225,14 @@ object Utils {
             summon[Ordering[String]].compare(getVarName(x), getVarName(y))
         }
     }
-   
+    def containsQuantifier(exp: Expr[Prop]): Boolean = {
+      exp match {
+        case exists(tx, p) => true
+        case forall(tx, p) => true 
+        case _ => false
+      }
+    }
+
     
     // class myProofOrdering(using val lib: library.type, val proof: lib.Proof){
     //   object meepo extends 
@@ -295,8 +302,8 @@ object Utils {
     }
 
     inline def is_ineq(x : Expr[Prop]) = is_lt(x) || is_le(x) || is_nlt(x) || is_nle(x)
-    inline def is_atom(x : Expr[Prop]) = is_ineq(x) || is_eq(x) || is_neq(x)
-
+    inline def is_atom(x : Expr[Prop]) = is_ineq(x) || is_eq(x) || is_neq(x) || is_div(x) || is_indiv(x)
+    
 
     def is_incl(x: Expr[Prop]): Boolean = {
       x match {
@@ -317,6 +324,18 @@ object Utils {
       }
     }
 
+    def treeVariables(xt: Expr[Ind]): SSet[Expr[Ind]] = {
+      xt match {
+        case `0` => SSet()
+        case `1` => SSet()
+        case  tx if isVariable(tx) => SSet(tx)
+        case tx + ty => treeVariables(tx) ++ treeVariables(ty)
+        case tx * ty => treeVariables(tx) ++ treeVariables(ty)
+        case -(tx) => treeVariables(tx) 
+        case _ => throw Exception("I don't know this expression!")
+      }
+    }
+
     def exprHasVariables(xt : Expr[Prop]): Boolean = {
       xt match {
         case (tx `equality` ty) => treeHasVariables(tx) || treeHasVariables(ty)
@@ -331,6 +350,136 @@ object Utils {
       }
     }
 
+
+    def freeVariables(ex : Expr[Prop]): SSet[Expr[Ind]] = {
+      ex match {
+        case !(RingStructure.<=(tx, ty)) => treeVariables(tx) ++  treeVariables(ty)
+        case !(RingStructure.<(tx, ty)) => treeVariables(tx) ++  treeVariables(ty) 
+        case !(RingStructure.|(tx, ty)) => treeVariables(tx) ++  treeVariables(ty) 
+        case !(tx `equality` ty) => treeVariables(tx) ++  treeVariables(ty)
+        case (RingStructure.<=(tx, ty)) => treeVariables(tx) ++  treeVariables(ty)
+        case (RingStructure.<(tx, ty)) => treeVariables(tx) ++  treeVariables(ty) 
+        case (RingStructure.|(tx, ty)) => treeVariables(tx) ++  treeVariables(ty)
+        case (tx `equality` ty) => treeVariables(tx) ++  treeVariables(ty)
+        case p1 `and` p2 => freeVariables(p1) ++ freeVariables(p2)
+        case p1 `or` p2 => freeVariables(p1) ++ freeVariables(p2)
+        case p1 `iff` p2 => freeVariables(p1) ++ freeVariables(p2)
+        case p1 `implies` p2 => freeVariables(p1) ++ freeVariables(p2)
+        case `neg`(p1) => freeVariables(p1)
+        case forall(tx, p1) => freeVariables(p1) - tx
+        case exists(tx, p1) => freeVariables(p1) - tx
+        case _ => throw Exception("custom logic!")
+      }
+    }
+    // assumes nnf 
+    def boundVars(ex : Expr[Prop]): List[Expr[Ind]] = {
+      ex match {
+        case forall(tx, p1) => List(tx) ++ boundVars(p1)
+        case exists(tx, p1) => List(tx) ++ boundVars(p1)
+        case _ => List()
+      }
+
+    }
+
+    // def collectLBs(exp: Expr[Prop]): SSet = {
+    //   case !(RingStructure.<=(tx, ty)) => SSet(tx, ty)
+    //   case !(RingStructure.<(tx, ty)) => SSet(tx, ty) 
+    //   case !(RingStructure.|(tx, ty)) => SSet(tx, ty) 
+    //   case !(tx `equality` ty) => SSet(tx, ty)
+    //   case (RingStructure.<=(tx, ty)) => SSet(tx, ty)
+    //   case (RingStructure.<(tx, ty)) => SSet(tx, ty) 
+    //   case (RingStructure.|(tx, ty)) => SSet(tx, ty)
+    //   case (tx `equality` ty) => SSet(tx, ty)
+    // }
+    
+
+    def nnf(ex: Expr[Prop]): Expr[Prop] = {
+      ex match {
+        case p if is_atom(p) => p
+        case p1 `and` p2 => nnf(p1) /\ nnf(p2)
+        case p1 `or` p2 => nnf(p1) \/ nnf(p2)
+        case p1 `implies` p2 => nnf(!p1) \/ nnf(p2)
+        case p1 `iff` p2 => nnf(p1 ==> p2) /\ nnf(p2 ==> p1)
+        case `neg`(p1) => p1 match {
+          case p if (is_eq(p) || is_lt(p) || is_le(p) || is_div(p)) => p
+          case !(RingStructure.<=(tx, ty)) => tx <= ty
+          case !(RingStructure.<(tx, ty)) => tx < ty 
+          case !(RingStructure.|(tx, ty)) => tx | ty 
+          case !(tx `equality` ty) => tx === ty
+          case p1 `and` p2 => nnf(!p1) \/ nnf(!p2)
+          case p1 `or` p2 => nnf(!p1) /\ nnf(!p2)
+          case p1 `implies` p2 => nnf(p1) /\ nnf(!p2)
+          case p1 `iff` p2 => nnf(p1 /\ !p2) \/ nnf(p2 /\ !p1) 
+          case forall(tx, p1) => exists(tx, nnf(!p1))
+          case exists(tx, p1) => forall(tx, nnf(!p1))
+        }
+        case forall(tx, p1) => forall(tx, nnf(p1))
+        case exists(tx, p1) => exists(tx, nnf(p1))
+        case _ => throw Exception("custom logic!")
+      }
+    }
+
+
+    def renameAllVars(ex: Expr[Prop]): Expr[Prop] = {
+      var counter = 0
+      val substList : Map[Expr[Ind], Expr[Ind]] = Map.empty
+      def renameHelper(ex: Expr[Prop], sl : Map[Expr[Ind], Expr[Ind]]): Expr[Prop] = {
+      inline def ctns(tx : Expr[Ind], ty : Expr[Ind]) = (sl.contains(tx) || sl.contains(ty))
+      ex match {
+        case !(RingStructure.<=(tx, ty)) if ctns(tx, ty)  =>  !(sl.getOrElse(tx, tx) <= sl.getOrElse(ty, ty) )
+        case !(RingStructure.<(tx, ty)) if ctns(tx, ty)  => !(sl.getOrElse(tx, tx) < sl.getOrElse(ty, ty) )
+        case !(RingStructure.|(tx, ty)) if ctns(tx, ty)  => !(sl.getOrElse(tx, tx) | sl.getOrElse(ty, ty) )
+        case !(tx `equality` ty) if ctns(tx, ty)  => !(sl.getOrElse(tx, tx) === sl.getOrElse(ty, ty))
+        case (RingStructure.<=(tx, ty)) if ctns(tx, ty)  => sl.getOrElse(tx, tx) <= sl.getOrElse(ty, ty)
+        case (RingStructure.<(tx, ty)) if ctns(tx, ty)  => sl.getOrElse(tx, tx) < sl.getOrElse(ty, ty) 
+        case (RingStructure.|(tx, ty)) if ctns(tx, ty)  => sl.getOrElse(tx, tx) | sl.getOrElse(ty, ty) 
+        case (tx `equality` ty) if ctns(tx, ty)=> sl.getOrElse(tx, tx) === sl.getOrElse(ty, ty)
+        case p1 `and` p2 => renameHelper(p1, sl) /\ renameHelper(p1, sl)
+        case p1 `or` p2 => renameHelper(p1, sl) \/ renameHelper(p1, sl)
+        case `neg`(p1) => renameHelper(p1, sl)
+        case forall(tx, p1) => {
+          val newsl = sl + (tx -> variable[Ind](s"x$counter"))
+          counter = counter + 1
+          forall(tx, renameHelper(p1, newsl))}
+        case exists(tx, p1) => {
+          val newsl = sl + (tx -> variable[Ind](s"x$counter"))
+          counter = counter + 1
+          exists(tx, renameHelper(p1, newsl))}
+        case _ => throw Exception("custom logic!")
+        }
+      }
+      renameHelper(ex, substList)
+    }
+    def prenex(ex: Expr[Prop]): Expr[Prop] = {
+      variable[Ind]("x")
+      ex match {
+        // renamed vars
+        case p if is_atom(p) => p
+        case forall(tx, p1) `and` forall(ty, p2) => forall(tx, forall(ty, prenex(p1 /\ p2)))
+        case forall(tx, p1) `or` forall(ty, p2) => forall(tx, forall(ty, prenex(p1 \/ p2)))
+        case forall(tx, p1) `and` exists(ty, p2) => forall(tx, exists(ty, prenex(p1 /\ p2)))
+        case forall(tx, p1) `or` exists(ty, p2) => forall(tx, exists(ty, prenex(p1 \/ p2)))
+        case exists(tx, p1) `and` forall(ty, p2) => exists(tx, forall(ty, prenex(p1 /\ p2)))
+        case exists(tx, p1) `or` forall(ty, p2) => exists(tx, forall(ty, prenex(p1 \/ p2)))
+        case exists(tx, p1) `and` exists(ty, p2) => exists(tx, exists(ty, prenex(p1 /\ p2)))
+        case exists(tx, p1) `or` exists(ty, p2) => exists(tx, exists(ty, prenex(p1 \/ p2)))
+        case forall(tx, p1) `or` p2 => forall(tx, prenex(p1 \/ p2))
+        case forall(tx, p1) `and` p2 => forall(tx, prenex(p1 /\ p2))
+        case exists(tx, p1) `and` p2 => exists(tx, prenex(p1 /\ p2))
+        case exists(tx, p1) `or` p2 => exists(tx, prenex(p1 \/ p2))
+        case p2 `or` forall(tx, p1) => forall(tx, prenex(p1 \/ p2))
+        case p2 `and` forall(tx, p1) => forall(tx, prenex(p1 /\ p2))
+        case p2 `and` exists(tx, p1) => exists(tx, prenex(p1 /\ p2))
+        case p2 `or` exists(tx, p1) => exists(tx, prenex(p1 \/ p2))
+        case forall(tx, p1) => forall(tx, prenex(p1))
+        case exists(tx, p1) => exists(tx, prenex(p1))
+        case !(p1) => !p1
+        case p1 `and` p2 => prenex(p1) /\ prenex(p2) 
+        case p1 `or` p2 => prenex(p1) \/ prenex(p2) 
+        case _ => throw Exception("idk missed a case")
+
+      }
+    }
     // def evalRingCutHelperB(using proof: library.Proof)
     // (equalityToCut: proof.InstantiatedFact, consq: Expr[Prop], equalities: SSet[Expr[Prop]], ls: proof.ProofStep): (SSet[Expr[Prop]], proof.ProofTacticJudgement) = {
     //   if(equalities.contains(equalityToCut.sRightHeadB)) then {

@@ -18,6 +18,7 @@ import DivReasoning.divInts
 import InEqReasoning.inEquality
 import DisEqReasoning.disEquality
 import InDivReasoning.inDivInts
+import liaByWitness.liaByWitnessProof
 // object Rings extends lisa.Main: 
 //     import RingStructure.{*}
 //     import RingEqReasoning.{*} 
@@ -224,6 +225,25 @@ object Rings extends lisa.Main
     val ringInDiv1 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R) |- !(i(2) | i(3))){
         have(thesis) by inDivInts.apply
     }
+
+    val ringConjunct1 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R) |- !(i(2) | i(3)) /\ (0 < `1`)){
+        have(liaByWitnessProof.apply(thesis)(List()))
+    }
+
+    val ringDisJunct1 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`)) |- (i(2) | i(3)) \/ (0 < `1`)){
+        have(liaByWitnessProof.apply(thesis)(List()))
+    }
+    val ringDisJunct2 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`)) |- !(i(2) | i(3)) \/ (1 < `1`)){
+        have(liaByWitnessProof.apply(thesis)(List()))
+    }
+
+    val ringConjunct2 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R) |- ∃(x, !(i(2) | i(3)) /\ (x < `1`))){
+        have(liaByWitnessProof.apply(thesis)(List(0)))
+    }
+    val R2 = variable[Ind >>: Prop]
+    // val test2 = Theorem(∀(x, P(x)) <=> ∀(y, P(y))){
+    //     have(thesis) by Tableau
+    // }
     // println(isVariable(x))
     // println(`1`.id.name)   
     // println("seregost")
