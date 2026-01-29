@@ -461,7 +461,29 @@ object RingDivOrdering extends lisa.Main {
     have(thesis) by Tautology.from(lastStep)
   } 
 
-  
+  val div_y_x_if_div_negy_x = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R, y | x) |- (-y | x)){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
+    assume(x ∈ R)
+    assume(y ∈ R)
+    assume(y | x)
+    have(c ∈ R /\ (x === y * c) |- (x === (y * c))) by Restate
+    have(c ∈ R /\ (x === y * c) |- (x === (-y * (-c)))) by Congruence.from(lastStep, neg_x_neg_y_xy of (x := y, y := c))
+    have(c ∈ R /\ (x === y * c) |- ((-c ∈ R) /\ (x === (-y * (-c))))) by Tautology.from(lastStep, neg_closure of (x := c))
+    thenHave(c ∈ R /\ (x === y * c) |- ∃(c, (c ∈ R) /\ (x === (-y * c)))) by RightExists
+    thenHave(∃(c, c ∈ R /\ (x === y * c)) |- ∃(c, (c ∈ R) /\ (x === (-y * c)))) by LeftExists
+    have(thesis) by Tautology.from(lastStep, divisibility_defn, divisibility_defn of (y := -y, x := x), neg_closure of (x := y))
+  }
+
+  val div_negy_x_if_div_y_x = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R, -y | x) |- (y | x)){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
+    assume(x ∈ R)
+    assume(y ∈ R)
+    assume(-y | x)
+    have(-(-y) | x) by Tautology.from(div_y_x_if_div_negy_x of (x := x, y := -(y)), neg_closure of (x := y))
+    have(thesis) by Congruence.from(lastStep, double_negation_elimination of (x := y))
+  }
+
+
   val x_neq_y_zero_neq_xmy_iff = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- ((x - y) !== 0) <=> (x !== y)){
     assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
     assume(x ∈ R)

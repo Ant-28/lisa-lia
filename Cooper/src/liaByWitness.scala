@@ -61,16 +61,16 @@ object liaByWitness extends lisa.Main {
             def subst(p : Expr[Prop], l: List[Expr[Ind]]): Expr[Prop] = {
               require(is_atom(p))
               def substHelper(t1: Expr[Ind], t2: Expr[Ind]): (Expr[Ind], Expr[Ind]) = {
-                val left = t1 match {
-                  case t if isVariable(t1) => if l.contains(t) then witnesses(l.indexOf(t)) else t
-                  case -(t) if isNegVariable(t1) => -(if l.contains(t) then witnesses(l.indexOf(t)) else t)
+                def sr(tp: Expr[Ind]): Expr[Ind] = tp  match {
+                  case tpp if isVariable(tpp) => if l.contains(tpp) then witnesses(l.indexOf(tpp)) else tpp
+                  case -(tpp) if isNegVariable(tp) => -(if l.contains(tpp) then witnesses(l.indexOf(tpp)) else tpp)
+                  case t1p + t2p => sr(t1p) + sr(t2p) 
+                  case -(t1p) => -(sr(t1p))
+                  case t1p * t2p => sr(t1p)*sr(t2p)
                   case t => t
                 }
-                val right = t2 match {
-                  case t if isVariable(t2) => if l.contains(t) then witnesses(l.indexOf(t)) else t
-                  case -(t) if isNegVariable(t2) => -(if l.contains(t) then witnesses(l.indexOf(t)) else t)
-                  case t => t
-                }
+                val left = sr(t1)
+                val right = sr(t2)
                 return (left, right)
               }
               p match {
@@ -108,6 +108,7 @@ object liaByWitness extends lisa.Main {
                 }
               }
             }
+            // println(makeNewGoal(rengoal, bvars))
             val simprf = simplRecurse(makeNewGoal(rengoal, bvars))
             if !simprf.isValid then return proof.InvalidProofTactic(s"simplRecurse Failed! ${simprf.toString()}")
             have(simprf)

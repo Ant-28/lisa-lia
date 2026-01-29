@@ -120,8 +120,7 @@ object Rings extends lisa.Main
         super.main(args)
         // println(om.stringWriter.toString)
     }
-    println("Ždravo, ja sam mićo!")
-
+    println("hello world!")
     import RingElemConversions.i
     val ringEq1 = Theorem(ring(R, <=, <, +, *, -, |, `0`, `1`) |- i(2) === i(2)){
         have(thesis) by evalRingEq.apply
@@ -240,6 +239,11 @@ object Rings extends lisa.Main
     val ringConjunct2 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R) |- ∃(x, !(i(2) | i(3)) /\ (x < `1`))){
         have(liaByWitnessProof.apply(thesis)(List(0)))
     }
+
+    val ringConjunct3 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R) |- ∃(x, x + 3 === 5)){
+        have(liaByWitnessProof.apply(thesis)(List(2)))
+    }
+  
     val R2 = variable[Ind >>: Prop]
     // val test2 = Theorem(∀(x, P(x)) <=> ∀(y, P(y))){
     //     have(thesis) by Tableau

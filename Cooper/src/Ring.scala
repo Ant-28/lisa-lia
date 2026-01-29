@@ -181,17 +181,15 @@ object RingStructure extends lisa.Main {
         ∀(x,  x ∈ R ==> ((x + (-(x))) === `0`)) 
       // cancellation law?
       // monoid
+      // commutativity
+      /\ ∀(x, ∀(y, (x ∈ R) /\ (y ∈ R) ==> ( (x * y) === (y * x) )))
       // associativity
       /\ ∀(x, ∀(y, ∀(z, (x ∈ R) /\ (y ∈ R) /\ (z ∈ R) ==> ((x * (y * z)) === ((x * y) * z)))))
       // identity on multiplication
       /\ ∀(x, x ∈ R ==> (x === (`1` * x)))
-      // commutative rings
-      /\ ∀(x, ∀(y, (x ∈ R) /\ (y ∈ R) ==> ( (x * y) === (y * x) )))
-      // this is a corollary so I should remove it
-      // /\ ∀(x, x ∈ R ==> ((x *`1`) === x))
       // distributivity
       /\ ∀(x, ∀(y, ∀(z, x ∈ R /\ y ∈ R /\ z ∈ R ==> ((x * (y + z)) === ((x * y) + (x * z))))))
-      /\ ∀(x, ∀(y, ∀(z, x ∈ R /\ y ∈ R /\ z ∈ R ==> (((y + z) * x) === ((x * y) + (x * z))))))
+      // /\ ∀(x, ∀(y, ∀(z, x ∈ R /\ y ∈ R /\ z ∈ R ==> (((y + z) * x) === ((x * y) + (x * z))))))
 
       // ordered rings
       /*
@@ -204,7 +202,7 @@ object RingStructure extends lisa.Main {
       /\ ∀(x, ∀(y, ∀(z, x ∈ R /\ y ∈ R /\ z ∈ R ==> (x <= y)      ==> ((x + z) <= (y + z)))))
       // /\ ∀(x, ∀(y, (x ∈ R /\ y ∈ R /\ (`0` <= x) ==> (`0` <= y))  ==> (`0` <= (x * y))))
       // strict ordering
-      /\ ∀(x, ∀(y, (x < y) <=>  (x <= y) /\ !(y <= x)))
+      // /\ ∀(x, ∀(y, (x < y) <=>  (x <= y) /\ !(y <= x)))
       // don't add redundant axioms
       /\ ∀(x, ∀(y, ∀(z, ((x ∈ R /\ y ∈ R /\ z ∈ R) ==> (0 < x) /\ (y < z)) ==> (x * y) < (x * z))))
       // /\ ∀(x, ∀(y, (x ∈ R /\ y ∈ R ==> ((x <= `0`) /\ (y <= `0`))  ==> (`0` <= (x * y)))))
@@ -217,7 +215,7 @@ object RingStructure extends lisa.Main {
       // linear arithmetic normalization in rings
       // proofs such as x * 0 = x * (0 + 0)
       // divisibility axioms
-      /\ ∀(x, ∀(y, (y | x) <=> ∃(c, (c ∈ R) /\ (x === y * c))))
+      /\ ∀(x, ∀(y, ((x ∈ R) /\ (y ∈ R)) ==> (y | x) <=> ∃(c, (c ∈ R) /\ (x === y * c))))
       // /\ ∀(x, x | `0`) // TODO: elim??
       // sparseness
       /\ ∀(x, ∀(y, (x ∈ R /\ y ∈ R) ==> ((x < y) ==> (x + 1 <= y))))
