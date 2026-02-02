@@ -1,0 +1,1010 @@
+info Compiling with standard Scala 3.7.2 compiler front end...info Finished compiling                                       
+info Preprocessing the symbols...                             info Preprocessing finished                                   
+info Running phase ConstructsUsage                            info Running phase PartialFunctions                           info Running phase XlangLowering                              info Running phase InnerClasses                               info Running phase Laws                                       info Running phase SuperInvariants                            info Running phase SuperCalls                                 info Running phase Sealing                                    info Running phase MethodLifting                              info Running phase MergeInvariants                            info Running phase FieldAccessors                             info Running phase ValueClasses                               info Running phase MethodsLowering                            info Running phase ExceptionLifting                           info Running phase EffectElaboration                          info Running phase AntiAliasing                               info Running phase ReturnElimination                          info Running phase ImperativeCodeElimination                  info Running phase ImperativeCleanup                          info Running phase AdtSpecialization                          info Running phase RefinementLifting                          info Running phase TypeEncoding                               info Running phase InvariantInitialization                    info Running phase FunctionClosure                            info Running phase FunctionSpecialization                     info Running phase UnfoldOpaque                               info Running phase CallSiteInline                             info Running phase ChooseInjector                             info Running phase ChooseEncoder                              info Running phase FunctionInlining                           info Running phase TraceInductElimination                     info Running phase SizedADTExtraction                         info Running phase InductElimination                          info Running phase MeasureInference                           info Inferring measure for content...                         info Inferring measure for size...                            info Inferring measure for rbhelper...                        info Inferring measure for treeDepth...                       info Inferring measure for hasVariables...                    info Inferring measure for dropNoContains...                  info Inferring measure for isLinear...                        info Inferring measure for rb_plus_both_rb_h...               info Running phase PartialEvaluation                          info Finished lowering the symbols                            
+info Generating VCs for 34 functions...                       info Finished generating VCs                                  
+Starting verification...
+info  Verified: 0 / 717info Verifying: 717 verification conditions:info  Verified: 1 / 717                     info  Verified: 2 / 717                     info  Verified: 3 / 717                     info  Verified: 4 / 717                     info  Verified: 5 / 717                     info  Verified: 6 / 717                     info  Verified: 7 / 717                     info  Verified: 8 / 717                     info  Verified: 9 / 717                     info  Verified: 10 / 717                    info  Verified: 11 / 717                    info  Verified: 12 / 717                    info  Verified: 13 / 717                    info  Verified: 14 / 717                    info  Verified: 15 / 717                    info  Verified: 16 / 717                    info  Verified: 17 / 717                    info  Verified: 18 / 717                    info  Verified: 19 / 717                    info  Verified: 20 / 717                    info  Verified: 21 / 717                    info  Verified: 22 / 717                    info  Verified: 23 / 717                    info  Verified: 24 / 717                    info  Verified: 25 / 717                    info  Verified: 26 / 717                    info  Verified: 27 / 717                    info  Verified: 28 / 717                    info  Verified: 29 / 717                    info  Verified: 30 / 717                    info  Verified: 31 / 717                    info  Verified: 32 / 717                    info  Verified: 33 / 717                    info  Verified: 34 / 717                    info  Verified: 35 / 717                    info  Verified: 36 / 717                    info  Verified: 37 / 717                    info  Verified: 38 / 717                    info  Verified: 39 / 717                    info  Verified: 40 / 717                    info  Verified: 41 / 717                    info  Verified: 42 / 717                    info  Verified: 43 / 717                    info  Verified: 44 / 717                    info  Verified: 45 / 717                    info  Verified: 46 / 717                    info  Verified: 47 / 717                    info  Verified: 48 / 717                    info  Verified: 49 / 717                    info  Verified: 50 / 717                    info  Verified: 51 / 717                    info  Verified: 52 / 717                    info  Verified: 53 / 717                    info  Verified: 54 / 717                    info  Verified: 55 / 717                    info  Verified: 56 / 717                    info  Verified: 57 / 717                    info  Verified: 58 / 717                    info  Verified: 59 / 717                    info  Verified: 60 / 717                    info  Verified: 61 / 717                    info  Verified: 62 / 717                    info  Verified: 63 / 717                    info  Verified: 64 / 717                    info  Verified: 65 / 717                    info  Verified: 66 / 717                    info  Verified: 67 / 717                    info  Verified: 68 / 717                    info  Verified: 69 / 717                    info  Verified: 70 / 717                    info  Verified: 71 / 717                    info  Verified: 72 / 717                    info  Verified: 73 / 717                    info  Verified: 74 / 717                    info  Verified: 75 / 717                    info  Verified: 76 / 717                    info  Verified: 77 / 717                    info  Verified: 78 / 717                    info  Verified: 79 / 717                    info  Verified: 80 / 717                    info  Verified: 81 / 717                    info  Verified: 82 / 717                    info  Verified: 83 / 717                    info  Verified: 84 / 717                    info  Verified: 85 / 717                    info  Verified: 86 / 717                    info  Verified: 87 / 717                    info  Verified: 88 / 717                    info  Verified: 89 / 717                    info  Verified: 90 / 717                    info  Verified: 91 / 717                    info  Verified: 92 / 717                    info  Verified: 93 / 717                    info  Verified: 94 / 717                    info  Verified: 95 / 717                    info  Verified: 96 / 717                    info  Verified: 97 / 717                    info  Verified: 98 / 717                    info  Verified: 99 / 717                    info  Verified: 100 / 717                   info  Verified: 101 / 717                   info  Verified: 102 / 717                   info  Verified: 103 / 717                   info  Verified: 104 / 717                   info  Verified: 105 / 717                   info  Verified: 106 / 717                   info  Verified: 107 / 717                   info  Verified: 108 / 717                   info  Verified: 109 / 717                   info  Verified: 110 / 717                   info  Verified: 111 / 717                   info  Verified: 112 / 717                   info  Verified: 113 / 717                   info  Verified: 114 / 717                   info  Verified: 115 / 717                   info  Verified: 116 / 717                   info  Verified: 117 / 717                   info  Verified: 118 / 717                   info  Verified: 119 / 717                   info  Verified: 120 / 717                   info  Verified: 121 / 717                   info  Verified: 122 / 717                   info  Verified: 123 / 717                   info  Verified: 124 / 717                   info  Verified: 125 / 717                   info  Verified: 126 / 717                   info  Verified: 127 / 717                   info  Verified: 128 / 717                   info  Verified: 129 / 717                   info  Verified: 130 / 717                   info  Verified: 131 / 717                   info  Verified: 132 / 717                   info  Verified: 133 / 717                   info  Verified: 134 / 717                   info  Verified: 135 / 717                   info  Verified: 136 / 717                   info  Verified: 137 / 717                   info  Verified: 138 / 717                   info  Verified: 139 / 717                   info  Verified: 140 / 717                   info  Verified: 141 / 717                   info  Verified: 142 / 717                   info  Verified: 143 / 717                   info  Verified: 144 / 717                   info  Verified: 145 / 717                   info  Verified: 146 / 717                   info  Verified: 147 / 717                   info  Verified: 148 / 717                   info  Verified: 149 / 717                   info  Verified: 150 / 717                   info  Verified: 151 / 717                   info  Verified: 152 / 717                   info  Verified: 153 / 717                   info  Verified: 154 / 717                   info  Verified: 155 / 717                   info  Verified: 156 / 717                   info  Verified: 157 / 717                   info  Verified: 158 / 717                   info  Verified: 159 / 717                   info  Verified: 160 / 717                   info  Verified: 161 / 717                   info  Verified: 162 / 717                   info  Verified: 163 / 717                   info  Verified: 164 / 717                   info  Verified: 165 / 717                   info  Verified: 166 / 717                   info  Verified: 167 / 717                   info  Verified: 168 / 717                   info  Verified: 169 / 717                   info  Verified: 170 / 717                   info  Verified: 171 / 717                   info  Verified: 172 / 717                   info  Verified: 173 / 717                   info  Verified: 174 / 717                   info  Verified: 175 / 717                   info  Verified: 176 / 717                   info  Verified: 177 / 717                   info  Verified: 178 / 717                   info  Verified: 179 / 717                   info  Verified: 180 / 717                   info  Verified: 181 / 717                   info  Verified: 182 / 717                   info  Verified: 183 / 717                   info  Verified: 184 / 717                   info  Verified: 185 / 717                   info  Verified: 186 / 717                   info  Verified: 187 / 717                   info  Verified: 188 / 717                   info  Verified: 189 / 717                   info  Verified: 190 / 717                   info  Verified: 191 / 717                   info  Verified: 192 / 717                   info  Verified: 193 / 717                   info  Verified: 194 / 717                   info  Verified: 195 / 717                   info  Verified: 196 / 717                   info  Verified: 197 / 717                   info  Verified: 198 / 717                   info  Verified: 199 / 717                   info  Verified: 200 / 717                   info  Verified: 201 / 717                   info  Verified: 202 / 717                   info  Verified: 203 / 717                   info  Verified: 204 / 717                   info  Verified: 205 / 717                   info  Verified: 206 / 717                   info  Verified: 207 / 717                   info  Verified: 208 / 717                   info  Verified: 209 / 717                   info  Verified: 210 / 717                   info  Verified: 211 / 717                   info  Verified: 212 / 717                   info  Verified: 213 / 717                   info  Verified: 214 / 717                   info  Verified: 215 / 717                   info  Verified: 216 / 717                   info  Verified: 217 / 717                   info  Verified: 218 / 717                   info  Verified: 219 / 717                   info  Verified: 220 / 717                   info  Verified: 221 / 717                   info  Verified: 222 / 717                   info  Verified: 223 / 717                   info  Verified: 224 / 717                   info  Verified: 225 / 717                   info  Verified: 226 / 717                   info  Verified: 227 / 717                   info  Verified: 228 / 717                   info  Verified: 229 / 717                   info  Verified: 230 / 717                   info  Verified: 231 / 717                   info  Verified: 232 / 717                   info  Verified: 233 / 717                   info  Verified: 234 / 717                   info  Verified: 235 / 717                   info  Verified: 236 / 717                   info  Verified: 237 / 717                   info  Verified: 238 / 717                   info  Verified: 239 / 717                   
+warning:  - Result for 'body assertion' VC for rb_plus_both_rb_h @395:36:
+warning: !rbhelper(x, list) || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || isVarOrNegation(x) || x.isInstanceOf[Plus] && (isVarOrNegation(x.r) || isOneOrNegOne(x.r)) || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[One] || (contains[Tree](list.data, Neg(One())) || exists[Tree](list.data, isVarOrNegation)) || x.r.isInstanceOf[One] || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Neg] && x.r.l.l.isInstanceOf[One] || !x.r.isInstanceOf[Plus] || !isVarOrNegation(x.r.l) || !rbhelper(x.r, VarList(::[Tree](list.data, x.r.l))) || {
+  val tmp: Unit = rb_plus_both_rb_h(x.r, VarList(::[Tree](list.data, x.r.l)))
+  val tmp: Unit = rb_empty(x.r, VarList(::[Tree](list.data, x.r.l)))
+  isRightBiased(x.l)
+}
+src/RightBiasing.scala:395:36: warning:  => TIMEOUT
+                                       assert(isRightBiased(t1))
+                                              ^^^^^^^^^^^^^^^^^
+info  Verified: 239 / 717info  Verified: 240 / 717info  Verified: 241 / 717
+warning:  - Result for 'body assertion' VC for rb_plus_both_rb_h @400:28:
+warning: !rbhelper(x, list) || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || isVarOrNegation(x) || x.isInstanceOf[Plus] && (isVarOrNegation(x.r) || isOneOrNegOne(x.r)) || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[One] || {
+  val t: Unit = if ((contains[Tree](list.data, Neg(One())) || exists[Tree](list.data, isVarOrNegation)) || x.r.isInstanceOf[One]) {
+    ()
+  } else if (x.r.isInstanceOf[Var]) {
+    val tmp: Unit = rb_plus_both_rb_h(x.r, VarList(::[Tree](list.data, x.l)))
+    val tmp: Unit = rb_empty(x.r, VarList(::[Tree](list.data, x.l)))
+    ()
+  } else if (x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var]) {
+    val tmp: Unit = rb_plus_both_rb_h(x.r, VarList(::[Tree](list.data, x.l)))
+    val tmp: Unit = rb_empty(x.r, VarList(::[Tree](list.data, x.l)))
+    ()
+  } else if (x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[One]) {
+    val tmp: Unit = rb_plus_both_rb_h(x.r, VarList(::[Tree](list.data, x.l)))
+    val tmp: Unit = rb_empty(x.r, VarList(::[Tree](list.data, x.l)))
+    ()
+  } else if (x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Neg] && x.r.l.l.isInstanceOf[One]) {
+    ()
+  } else if (x.r.isInstanceOf[Plus] && isVarOrNegation(x.r.l)) {
+    val tmp: Unit = rb_plus_both_rb_h(x.r, VarList(::[Tree](list.data, x.r.l)))
+    val tmp: Unit = rb_empty(x.r, VarList(::[Tree](list.data, x.r.l)))
+    ()
+  } else {
+    ()
+  }
+  isRightBiased(x.l)
+}
+src/RightBiasing.scala:400:28: warning:  => TIMEOUT
+                               assert(isRightBiased(t1))
+                                      ^^^^^^^^^^^^^^^^^
+info  Verified: 241 / 717info  Verified: 242 / 717info  Verified: 243 / 717info  Verified: 244 / 717info  Verified: 245 / 717info  Verified: 246 / 717info  Verified: 247 / 717info  Verified: 248 / 717info  Verified: 249 / 717info  Verified: 250 / 717info  Verified: 251 / 717info  Verified: 252 / 717info  Verified: 253 / 717info  Verified: 254 / 717info  Verified: 255 / 717info  Verified: 256 / 717info  Verified: 257 / 717info  Verified: 258 / 717info  Verified: 259 / 717
+warning:  - Result for 'body assertion' VC for rb_plus_both_rb_h @443:36:
+warning: !rbhelper(x, list) || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || isVarOrNegation(x) || x.isInstanceOf[Plus] && (isVarOrNegation(x.r) || isOneOrNegOne(x.r)) || x.isInstanceOf[Plus] && x.l.isInstanceOf[One] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[Neg] || !x.l.l.isInstanceOf[One] || (contains[Tree](list.data, One()) || exists[Tree](list.data, isVarOrNegation)) || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[One] || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Neg] && x.r.l.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[One] || !x.r.isInstanceOf[Plus] || !isVarOrNegation(x.r.l) || !rbhelper(x.r, VarList(::[Tree](list.data, x.r.l))) || {
+  val tmp: Unit = rb_empty(x.r, VarList(::[Tree](list.data, x.r.l)))
+  !isRightBiased(x.r) || {
+    val tmp: Unit = rb_plus_both_rb_h(x.r, VarList(::[Tree](list.data, x.r.l)))
+    isRightBiased(x.l)
+  }
+}
+src/RightBiasing.scala:443:36: warning:  => TIMEOUT
+                                       assert(isRightBiased(t1))
+                                              ^^^^^^^^^^^^^^^^^
+info  Verified: 259 / 717info  Verified: 260 / 717info  Verified: 261 / 717
+warning:  - Result for 'body assertion' VC for rb_plus_both_rb_h @448:28:
+warning: !rbhelper(x, list) || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || isVarOrNegation(x) || x.isInstanceOf[Plus] && (isVarOrNegation(x.r) || isOneOrNegOne(x.r)) || x.isInstanceOf[Plus] && x.l.isInstanceOf[One] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[Neg] || !x.l.l.isInstanceOf[One] || {
+  val t: Unit = if ((contains[Tree](list.data, One()) || exists[Tree](list.data, isVarOrNegation)) || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[One]) {
+    ()
+  } else if (x.r.isInstanceOf[Var]) {
+    val tmp: Unit = rb_empty(x.r, VarList(::[Tree](list.data, x.l)))
+    val tmp: Unit = rb_plus_both_rb_h(x.r, VarList(::[Tree](list.data, x.l)))
+    ()
+  } else if (x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var]) {
+    val tmp: Unit = rb_empty(x.r, VarList(::[Tree](list.data, x.l)))
+    val tmp: Unit = rb_plus_both_rb_h(x.r, VarList(::[Tree](list.data, x.l)))
+    ()
+  } else if (x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Neg] && x.r.l.l.isInstanceOf[One]) {
+    val tmp: Unit = rb_empty(x.r, VarList(::[Tree](list.data, x.l)))
+    val tmp: Unit = rb_plus_both_rb_h(x.r, VarList(::[Tree](list.data, x.l)))
+    ()
+  } else if (x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[One]) {
+    ()
+  } else if (x.r.isInstanceOf[Plus] && isVarOrNegation(x.r.l)) {
+    val tmp: Unit = rb_empty(x.r, VarList(::[Tree](list.data, x.r.l)))
+    val tmp: Unit = rb_plus_both_rb_h(x.r, VarList(::[Tree](list.data, x.r.l)))
+    ()
+  } else {
+    ()
+  }
+  isRightBiased(x.l)
+}
+src/RightBiasing.scala:448:28: warning:  => TIMEOUT
+                               assert(isRightBiased(t1))
+                                      ^^^^^^^^^^^^^^^^^
+info  Verified: 261 / 717info  Verified: 262 / 717info  Verified: 263 / 717info  Verified: 264 / 717info  Verified: 265 / 717info  Verified: 266 / 717info  Verified: 267 / 717info  Verified: 268 / 717info  Verified: 269 / 717info  Verified: 270 / 717info  Verified: 271 / 717info  Verified: 272 / 717info  Verified: 273 / 717info  Verified: 274 / 717info  Verified: 275 / 717info  Verified: 276 / 717info  Verified: 277 / 717info  Verified: 278 / 717info  Verified: 279 / 717info  Verified: 280 / 717info  Verified: 281 / 717info  Verified: 282 / 717info  Verified: 283 / 717info  Verified: 284 / 717info  Verified: 285 / 717info  Verified: 286 / 717info  Verified: 287 / 717info  Verified: 288 / 717info  Verified: 289 / 717info  Verified: 290 / 717info  Verified: 291 / 717info  Verified: 292 / 717info  Verified: 293 / 717info  Verified: 294 / 717info  Verified: 295 / 717info  Verified: 296 / 717info  Verified: 297 / 717info  Verified: 298 / 717info  Verified: 299 / 717info  Verified: 300 / 717info  Verified: 301 / 717info  Verified: 302 / 717info  Verified: 303 / 717info  Verified: 304 / 717info  Verified: 305 / 717info  Verified: 306 / 717info  Verified: 307 / 717info  Verified: 308 / 717info  Verified: 309 / 717info  Verified: 310 / 717info  Verified: 311 / 717info  Verified: 312 / 717info  Verified: 313 / 717info  Verified: 314 / 717info  Verified: 315 / 717info  Verified: 316 / 717info  Verified: 317 / 717info  Verified: 318 / 717info  Verified: 319 / 717info  Verified: 320 / 717info  Verified: 321 / 717info  Verified: 322 / 717info  Verified: 323 / 717info  Verified: 324 / 717info  Verified: 325 / 717info  Verified: 326 / 717info  Verified: 327 / 717info  Verified: 328 / 717info  Verified: 329 / 717info  Verified: 330 / 717
+warning:  - Result for 'class invariant: inv' VC for rb_plus_both_rb_h @386:42:
+warning: !rbhelper(x, list) || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || isVarOrNegation(x) || x.isInstanceOf[Plus] && (isVarOrNegation(x.r) || isOneOrNegOne(x.r)) || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[One] || (contains[Tree](list.data, Neg(One())) || exists[Tree](list.data, isVarOrNegation)) || x.r.isInstanceOf[One] || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || !x.r.isInstanceOf[Plus] || !x.r.l.isInstanceOf[One] || !rbhelper(x.r, VarList(::[Tree](list.data, x.l))) || {
+  val tmp: Unit = rb_plus_both_rb_h(x.r, VarList(::[Tree](list.data, x.l)))
+  inv(VarList(::[Tree](list.data, x.l)))
+}
+src/RightBiasing.scala:386:42: warning:  => TIMEOUT
+                                       rb_empty(t2, VarList(list.data.::(t1)))
+                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+info  Verified: 330 / 717info  Verified: 331 / 717info  Verified: 332 / 717info  Verified: 333 / 717info  Verified: 334 / 717info  Verified: 335 / 717info  Verified: 336 / 717info  Verified: 337 / 717info  Verified: 338 / 717info  Verified: 339 / 717info  Verified: 340 / 717info  Verified: 341 / 717info  Verified: 342 / 717info  Verified: 343 / 717info  Verified: 344 / 717info  Verified: 345 / 717info  Verified: 346 / 717
+warning:  - Result for 'class invariant: inv' VC for rb_plus_both_rb_h @431:51:
+warning: !rbhelper(x, list) || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || isVarOrNegation(x) || x.isInstanceOf[Plus] && (isVarOrNegation(x.r) || isOneOrNegOne(x.r)) || x.isInstanceOf[Plus] && x.l.isInstanceOf[One] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[Neg] || !x.l.l.isInstanceOf[One] || (contains[Tree](list.data, One()) || exists[Tree](list.data, isVarOrNegation)) || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[One] || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || !x.r.isInstanceOf[Plus] || !x.r.l.isInstanceOf[Neg] || !x.r.l.l.isInstanceOf[One] || !rbhelper(x.r, VarList(::[Tree](list.data, x.l))) || {
+  val tmp: Unit = rb_empty(x.r, VarList(::[Tree](list.data, x.l)))
+  !isRightBiased(x.r) || inv(VarList(::[Tree](list.data, x.l)))
+}
+src/RightBiasing.scala:431:51: warning:  => TIMEOUT
+                                       rb_plus_both_rb_h(t2, VarList(list.data.::(t1)))
+                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^
+info  Verified: 346 / 717info  Verified: 347 / 717info  Verified: 348 / 717info  Verified: 349 / 717info  Verified: 350 / 717info  Verified: 351 / 717info  Verified: 352 / 717info  Verified: 353 / 717info  Verified: 354 / 717info  Verified: 355 / 717info  Verified: 356 / 717info  Verified: 357 / 717info  Verified: 358 / 717info  Verified: 359 / 717info  Verified: 360 / 717info  Verified: 361 / 717info  Verified: 362 / 717info  Verified: 363 / 717
+warning:  - Result for 'class invariant: inv' VC for rb_plus_both_rb_h @481:51:
+warning: !rbhelper(x, list) || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || isVarOrNegation(x) || x.isInstanceOf[Plus] && (isVarOrNegation(x.r) || isOneOrNegOne(x.r)) || x.isInstanceOf[Plus] && x.l.isInstanceOf[One] || x.isInstanceOf[Plus] && x.l.isInstanceOf[Neg] && x.l.l.isInstanceOf[One] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[Var] || contains[Tree](list.data, Neg(Var(x.l.s))) || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Neg] && x.r.l.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[One] || !x.r.isInstanceOf[Plus] || !x.r.l.isInstanceOf[Var] || x.l.s > x.r.l.s || !rbhelper(x.r, VarList(::[Tree](list.data, x.r.l))) || {
+  val tmp: Unit = rb_empty(x.r, VarList(::[Tree](list.data, x.r.l)))
+  !isRightBiased(x.r) || inv(VarList(::[Tree](list.data, x.r.l)))
+}
+src/RightBiasing.scala:481:51: warning:  => TIMEOUT
+                                       rb_plus_both_rb_h(t2, VarList(list.data.::(t)))
+                                                             ^^^^^^^^^^^^^^^^^^^^^^^^
+info  Verified: 363 / 717info  Verified: 364 / 717info  Verified: 365 / 717info  Verified: 366 / 717
+warning:  - Result for 'class invariant: inv' VC for rb_plus_both_rb_h @493:51:
+warning: !rbhelper(x, list) || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || isVarOrNegation(x) || x.isInstanceOf[Plus] && (isVarOrNegation(x.r) || isOneOrNegOne(x.r)) || x.isInstanceOf[Plus] && x.l.isInstanceOf[One] || x.isInstanceOf[Plus] && x.l.isInstanceOf[Neg] && x.l.l.isInstanceOf[One] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[Var] || contains[Tree](list.data, Neg(Var(x.l.s))) || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Neg] && x.r.l.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Var] || !x.r.isInstanceOf[Plus] || !x.r.l.isInstanceOf[Neg] || !x.r.l.l.isInstanceOf[Var] || x.l.s > x.r.l.l.s || !rbhelper(x.r, VarList(::[Tree](list.data, x.r.l))) || {
+  val tmp: Unit = rb_empty(x.r, VarList(::[Tree](list.data, x.r.l)))
+  !isRightBiased(x.r) || inv(VarList(::[Tree](list.data, x.r.l)))
+}
+src/RightBiasing.scala:493:51: warning:  => TIMEOUT
+                                       rb_plus_both_rb_h(t2, VarList(list.data.::(t)))
+                                                             ^^^^^^^^^^^^^^^^^^^^^^^^
+info  Verified: 366 / 717info  Verified: 367 / 717info  Verified: 368 / 717info  Verified: 369 / 717info  Verified: 370 / 717info  Verified: 371 / 717info  Verified: 372 / 717info  Verified: 373 / 717info  Verified: 374 / 717info  Verified: 375 / 717info  Verified: 376 / 717info  Verified: 377 / 717info  Verified: 378 / 717info  Verified: 379 / 717
+warning:  - Result for 'class invariant: inv' VC for rb_plus_both_rb_h @530:47:
+warning: !rbhelper(x, list) || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || isVarOrNegation(x) || x.isInstanceOf[Plus] && (isVarOrNegation(x.r) || isOneOrNegOne(x.r)) || x.isInstanceOf[Plus] && x.l.isInstanceOf[One] || x.isInstanceOf[Plus] && x.l.isInstanceOf[Neg] && x.l.l.isInstanceOf[One] || x.isInstanceOf[Plus] && x.l.isInstanceOf[Var] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[Neg] || !x.l.l.isInstanceOf[Var] || contains[Tree](list.data, Var(x.l.l.s)) || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Neg] && x.r.l.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[One] || !x.r.isInstanceOf[Plus] || !x.r.l.isInstanceOf[Var] || x.l.l.s > x.r.l.s || !rbhelper(x.r, VarList(::[Tree](list.data, x.r.l))) || {
+  val tmp: Unit = rb_empty(x.r, VarList(::[Tree](list.data, x.r.l)))
+  !isRightBiased(x.r) || inv(VarList(::[Tree](list.data, x.r.l)))
+}
+src/RightBiasing.scala:530:47: warning:  => TIMEOUT
+                                   rb_plus_both_rb_h(t2, VarList(list.data.::(t)))
+                                                         ^^^^^^^^^^^^^^^^^^^^^^^^
+info  Verified: 379 / 717info  Verified: 380 / 717info  Verified: 381 / 717info  Verified: 382 / 717
+warning:  - Result for 'class invariant: inv' VC for rb_plus_both_rb_h @541:47:
+warning: !rbhelper(x, list) || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || isVarOrNegation(x) || x.isInstanceOf[Plus] && (isVarOrNegation(x.r) || isOneOrNegOne(x.r)) || x.isInstanceOf[Plus] && x.l.isInstanceOf[One] || x.isInstanceOf[Plus] && x.l.isInstanceOf[Neg] && x.l.l.isInstanceOf[One] || x.isInstanceOf[Plus] && x.l.isInstanceOf[Var] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[Neg] || !x.l.l.isInstanceOf[Var] || contains[Tree](list.data, Var(x.l.l.s)) || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Neg] && x.r.l.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Var] || !x.r.isInstanceOf[Plus] || !x.r.l.isInstanceOf[Neg] || !x.r.l.l.isInstanceOf[Var] || x.l.l.s > x.r.l.l.s || !rbhelper(x.r, VarList(::[Tree](list.data, x.r.l))) || {
+  val tmp: Unit = rb_empty(x.r, VarList(::[Tree](list.data, x.r.l)))
+  !isRightBiased(x.r) || inv(VarList(::[Tree](list.data, x.r.l)))
+}
+src/RightBiasing.scala:541:47: warning:  => TIMEOUT
+                                   rb_plus_both_rb_h(t2, VarList(list.data.::(t)))
+                                                         ^^^^^^^^^^^^^^^^^^^^^^^^
+info  Verified: 382 / 717info  Verified: 383 / 717info  Verified: 384 / 717info  Verified: 385 / 717info  Verified: 386 / 717info  Verified: 387 / 717info  Verified: 388 / 717info  Verified: 389 / 717info  Verified: 390 / 717info  Verified: 391 / 717info  Verified: 392 / 717info  Verified: 393 / 717info  Verified: 394 / 717info  Verified: 395 / 717info  Verified: 396 / 717info  Verified: 397 / 717info  Verified: 398 / 717info  Verified: 399 / 717info  Verified: 400 / 717info  Verified: 401 / 717info  Verified: 402 / 717info  Verified: 403 / 717info  Verified: 404 / 717info  Verified: 405 / 717
+warning:  - Result for 'precond. (call rb_empty((scrut.r): @DropVCs , VarLis...)' VC for rb_empty @229:33:
+warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || x.isInstanceOf[Var] || x.isInstanceOf[Neg] && x.l.isInstanceOf[Var] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[One] || (contains[Tree](list.data, Neg(One())) || exists[Tree](list.data, isVarOrNegation)) || x.r.isInstanceOf[One] || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || !x.r.isInstanceOf[Plus] || !x.r.l.isInstanceOf[One] || !rbhelper(x.r, VarList(::[Tree](list.data, x.l))) || rbhelper(x.r, list)
+src/RightBiasing.scala:229:33: warning:  => TIMEOUT
+                                           rb_empty(t2, VarList(list.data))   
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+info  Verified: 405 / 717
+warning:  - Result for 'precond. (call rb_empty(x, VarList((scrut.t): @DropV...)' VC for rb_empty @230:33:
+warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || x.isInstanceOf[Var] || x.isInstanceOf[Neg] && x.l.isInstanceOf[Var] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[One] || (contains[Tree](list.data, Neg(One())) || exists[Tree](list.data, isVarOrNegation)) || x.r.isInstanceOf[One] || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || !x.r.isInstanceOf[Plus] || !x.r.l.isInstanceOf[One] || !rbhelper(x.r, VarList(::[Tree](list.data, x.l))) || {
+  val tmp: Unit = rb_empty(x.r, list)
+  rbhelper(x, VarList(list.data.t))
+}
+src/RightBiasing.scala:230:33: warning:  => TIMEOUT
+                                           rb_empty(x, VarList(cdr)) 
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^
+info  Verified: 405 / 717info  Verified: 406 / 717
+warning:  - Result for 'precond. (call rb_empty(x, VarList((scrut.t): @DropV...)' VC for rb_empty @236:33:
+warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || x.isInstanceOf[Var] || x.isInstanceOf[Neg] && x.l.isInstanceOf[Var] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[One] || (contains[Tree](list.data, Neg(One())) || exists[Tree](list.data, isVarOrNegation)) || x.r.isInstanceOf[One] || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Neg] && x.r.l.l.isInstanceOf[One] || !x.r.isInstanceOf[Plus] || !isVarOrNegation(x.r.l) || !rbhelper(x.r, VarList(::[Tree](list.data, x.r.l))) || {
+  val tmp: Unit = rb_empty(x.r.l, list)
+  rbhelper(x, VarList(list.data.t))
+}
+src/RightBiasing.scala:236:33: warning:  => TIMEOUT
+                                           rb_empty(x, VarList(cdr))   
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^
+info  Verified: 406 / 717info  Verified: 407 / 717info  Verified: 408 / 717info  Verified: 409 / 717info  Verified: 410 / 717info  Verified: 411 / 717info  Verified: 412 / 717info  Verified: 413 / 717
+warning:  - Result for 'precond. (call rb_empty((scrut.r): @DropVCs , VarLis...)' VC for rb_empty @264:33:
+warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || x.isInstanceOf[Var] || x.isInstanceOf[Neg] && x.l.isInstanceOf[Var] || x.isInstanceOf[Plus] && x.l.isInstanceOf[One] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[Neg] || !x.l.l.isInstanceOf[One] || (contains[Tree](list.data, One()) || exists[Tree](list.data, isVarOrNegation)) || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[One] || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || !x.r.isInstanceOf[Plus] || !x.r.l.isInstanceOf[Neg] || !x.r.l.l.isInstanceOf[One] || !rbhelper(x.r, VarList(::[Tree](list.data, x.l))) || rbhelper(x.r, list)
+src/RightBiasing.scala:264:33: warning:  => TIMEOUT
+                                           rb_empty(t2, VarList(list.data))  
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+info  Verified: 413 / 717
+warning:  - Result for 'precond. (call rb_empty(x, VarList((scrut.t): @DropV...)' VC for rb_empty @265:33:
+warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || x.isInstanceOf[Var] || x.isInstanceOf[Neg] && x.l.isInstanceOf[Var] || x.isInstanceOf[Plus] && x.l.isInstanceOf[One] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[Neg] || !x.l.l.isInstanceOf[One] || (contains[Tree](list.data, One()) || exists[Tree](list.data, isVarOrNegation)) || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[One] || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || !x.r.isInstanceOf[Plus] || !x.r.l.isInstanceOf[Neg] || !x.r.l.l.isInstanceOf[One] || !rbhelper(x.r, VarList(::[Tree](list.data, x.l))) || {
+  val tmp: Unit = rb_empty(x.r, list)
+  rbhelper(x, VarList(list.data.t))
+}
+src/RightBiasing.scala:265:33: warning:  => TIMEOUT
+                                           rb_empty(x, VarList(cdr))  
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^
+info  Verified: 413 / 717info  Verified: 414 / 717
+warning:  - Result for 'precond. (call rb_empty(x, VarList((scrut.t): @DropV...)' VC for rb_empty @271:33:
+warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || x.isInstanceOf[Var] || x.isInstanceOf[Neg] && x.l.isInstanceOf[Var] || x.isInstanceOf[Plus] && x.l.isInstanceOf[One] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[Neg] || !x.l.l.isInstanceOf[One] || (contains[Tree](list.data, One()) || exists[Tree](list.data, isVarOrNegation)) || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[One] || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Neg] && x.r.l.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[One] || !x.r.isInstanceOf[Plus] || !isVarOrNegation(x.r.l) || !rbhelper(x.r, VarList(::[Tree](list.data, x.r.l))) || {
+  val tmp: Unit = rb_empty(x.r.l, list)
+  rbhelper(x, VarList(list.data.t))
+}
+src/RightBiasing.scala:271:33: warning:  => TIMEOUT
+                                           rb_empty(x, VarList(cdr))  
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^
+info  Verified: 414 / 717info  Verified: 415 / 717info  Verified: 416 / 717info  Verified: 417 / 717info  Verified: 418 / 717
+warning:  - Result for 'precond. (call rb_empty((scrut.r): @DropVCs , VarLis...)' VC for rb_empty @295:33:
+warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || x.isInstanceOf[Var] || x.isInstanceOf[Neg] && x.l.isInstanceOf[Var] || x.isInstanceOf[Plus] && x.l.isInstanceOf[One] || x.isInstanceOf[Plus] && x.l.isInstanceOf[Neg] && x.l.l.isInstanceOf[One] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[Var] || contains[Tree](list.data, Neg(Var(x.l.s))) || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Neg] && x.r.l.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[One] || !x.r.isInstanceOf[Plus] || !x.r.l.isInstanceOf[Var] || x.l.s > x.r.l.s || !rbhelper(x.r, VarList(::[Tree](list.data, x.r.l))) || rbhelper(x.r, list)
+src/RightBiasing.scala:295:33: warning:  => TIMEOUT
+                                           rb_empty(t2, VarList(list.data))
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+info  Verified: 418 / 717
+warning:  - Result for 'precond. (call rb_empty(x, VarList((scrut.t): @DropV...)' VC for rb_empty @296:33:
+warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || x.isInstanceOf[Var] || x.isInstanceOf[Neg] && x.l.isInstanceOf[Var] || x.isInstanceOf[Plus] && x.l.isInstanceOf[One] || x.isInstanceOf[Plus] && x.l.isInstanceOf[Neg] && x.l.l.isInstanceOf[One] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[Var] || contains[Tree](list.data, Neg(Var(x.l.s))) || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Neg] && x.r.l.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[One] || !x.r.isInstanceOf[Plus] || !x.r.l.isInstanceOf[Var] || x.l.s > x.r.l.s || !rbhelper(x.r, VarList(::[Tree](list.data, x.r.l))) || {
+  val tmp: Unit = rb_empty(x.r, list)
+  rbhelper(x, VarList(list.data.t))
+}
+src/RightBiasing.scala:296:33: warning:  => TIMEOUT
+                                           rb_empty(x, VarList(cdr))    
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^
+info  Verified: 418 / 717
+warning:  - Result for 'precond. (call rb_empty((scrut.r): @DropVCs , VarLis...)' VC for rb_empty @303:33:
+warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || x.isInstanceOf[Var] || x.isInstanceOf[Neg] && x.l.isInstanceOf[Var] || x.isInstanceOf[Plus] && x.l.isInstanceOf[One] || x.isInstanceOf[Plus] && x.l.isInstanceOf[Neg] && x.l.l.isInstanceOf[One] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[Var] || contains[Tree](list.data, Neg(Var(x.l.s))) || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Neg] && x.r.l.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Var] || !x.r.isInstanceOf[Plus] || !x.r.l.isInstanceOf[Neg] || !x.r.l.l.isInstanceOf[Var] || x.l.s > x.r.l.l.s || !rbhelper(x.r, VarList(::[Tree](list.data, x.r.l))) || rbhelper(x.r, list)
+src/RightBiasing.scala:303:33: warning:  => TIMEOUT
+                                           rb_empty(t2, VarList(list.data))   
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+info  Verified: 418 / 717
+warning:  - Result for 'precond. (call rb_empty(x, VarList((scrut.t): @DropV...)' VC for rb_empty @304:33:
+warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || x.isInstanceOf[Var] || x.isInstanceOf[Neg] && x.l.isInstanceOf[Var] || x.isInstanceOf[Plus] && x.l.isInstanceOf[One] || x.isInstanceOf[Plus] && x.l.isInstanceOf[Neg] && x.l.l.isInstanceOf[One] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[Var] || contains[Tree](list.data, Neg(Var(x.l.s))) || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Neg] && x.r.l.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Var] || !x.r.isInstanceOf[Plus] || !x.r.l.isInstanceOf[Neg] || !x.r.l.l.isInstanceOf[Var] || x.l.s > x.r.l.l.s || !rbhelper(x.r, VarList(::[Tree](list.data, x.r.l))) || {
+  val tmp: Unit = rb_empty(x.r, list)
+  rbhelper(x, VarList(list.data.t))
+}
+src/RightBiasing.scala:304:33: warning:  => TIMEOUT
+                                           rb_empty(x, VarList(cdr)) 
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^
+info  Verified: 418 / 717info  Verified: 419 / 717info  Verified: 420 / 717info  Verified: 421 / 717info  Verified: 422 / 717
+warning:  - Result for 'precond. (call rb_empty((scrut.r): @DropVCs , VarLis...)' VC for rb_empty @329:33:
+warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || x.isInstanceOf[Var] || x.isInstanceOf[Neg] && x.l.isInstanceOf[Var] || x.isInstanceOf[Plus] && x.l.isInstanceOf[One] || x.isInstanceOf[Plus] && x.l.isInstanceOf[Neg] && x.l.l.isInstanceOf[One] || x.isInstanceOf[Plus] && x.l.isInstanceOf[Var] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[Neg] || !x.l.l.isInstanceOf[Var] || contains[Tree](list.data, Var(x.l.l.s)) || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Neg] && x.r.l.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[One] || !x.r.isInstanceOf[Plus] || !x.r.l.isInstanceOf[Var] || x.l.l.s > x.r.l.s || !rbhelper(x.r, VarList(::[Tree](list.data, x.r.l))) || rbhelper(x.r, list)
+src/RightBiasing.scala:329:33: warning:  => TIMEOUT
+                                           rb_empty(t2, VarList(list.data))    
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+info  Verified: 422 / 717
+warning:  - Result for 'precond. (call rb_empty(x, VarList((scrut.t): @DropV...)' VC for rb_empty @330:33:
+warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || x.isInstanceOf[Var] || x.isInstanceOf[Neg] && x.l.isInstanceOf[Var] || x.isInstanceOf[Plus] && x.l.isInstanceOf[One] || x.isInstanceOf[Plus] && x.l.isInstanceOf[Neg] && x.l.l.isInstanceOf[One] || x.isInstanceOf[Plus] && x.l.isInstanceOf[Var] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[Neg] || !x.l.l.isInstanceOf[Var] || contains[Tree](list.data, Var(x.l.l.s)) || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Neg] && x.r.l.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[One] || !x.r.isInstanceOf[Plus] || !x.r.l.isInstanceOf[Var] || x.l.l.s > x.r.l.s || !rbhelper(x.r, VarList(::[Tree](list.data, x.r.l))) || {
+  val tmp: Unit = rb_empty(x.r, list)
+  rbhelper(x, VarList(list.data.t))
+}
+src/RightBiasing.scala:330:33: warning:  => TIMEOUT
+                                           rb_empty(x, VarList(cdr))
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^
+info  Verified: 422 / 717
+warning:  - Result for 'precond. (call rb_empty((scrut.r): @DropVCs , VarLis...)' VC for rb_empty @337:33:
+warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || x.isInstanceOf[Var] || x.isInstanceOf[Neg] && x.l.isInstanceOf[Var] || x.isInstanceOf[Plus] && x.l.isInstanceOf[One] || x.isInstanceOf[Plus] && x.l.isInstanceOf[Neg] && x.l.l.isInstanceOf[One] || x.isInstanceOf[Plus] && x.l.isInstanceOf[Var] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[Neg] || !x.l.l.isInstanceOf[Var] || contains[Tree](list.data, Var(x.l.l.s)) || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Neg] && x.r.l.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Var] || !x.r.isInstanceOf[Plus] || !x.r.l.isInstanceOf[Neg] || !x.r.l.l.isInstanceOf[Var] || x.l.l.s > x.r.l.l.s || !rbhelper(x.r, VarList(::[Tree](list.data, x.r.l))) || rbhelper(x.r, list)
+src/RightBiasing.scala:337:33: warning:  => TIMEOUT
+                                           rb_empty(t2, VarList(list.data))   
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+info  Verified: 422 / 717
+warning:  - Result for 'precond. (call rb_empty(x, VarList((scrut.t): @DropV...)' VC for rb_empty @338:33:
+warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || x.isInstanceOf[Var] || x.isInstanceOf[Neg] && x.l.isInstanceOf[Var] || x.isInstanceOf[Plus] && x.l.isInstanceOf[One] || x.isInstanceOf[Plus] && x.l.isInstanceOf[Neg] && x.l.l.isInstanceOf[One] || x.isInstanceOf[Plus] && x.l.isInstanceOf[Var] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[Neg] || !x.l.l.isInstanceOf[Var] || contains[Tree](list.data, Var(x.l.l.s)) || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Neg] && x.r.l.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Var] || !x.r.isInstanceOf[Plus] || !x.r.l.isInstanceOf[Neg] || !x.r.l.l.isInstanceOf[Var] || x.l.l.s > x.r.l.l.s || !rbhelper(x.r, VarList(::[Tree](list.data, x.r.l))) || {
+  val tmp: Unit = rb_empty(x.r, list)
+  rbhelper(x, VarList(list.data.t))
+}
+src/RightBiasing.scala:338:33: warning:  => TIMEOUT
+                                           rb_empty(x, VarList(cdr)) 
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^
+info  Verified: 422 / 717info  Verified: 423 / 717info  Verified: 424 / 717info  Verified: 425 / 717info  Verified: 426 / 717
+warning:  - Result for 'body assertion' VC for rb_empty @177:32:
+warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || !x.isInstanceOf[One] || list.data.h == Neg(One()) || isVarOrNegation(list.data.h) || forall[Tree](list.data, (_$5: Tree) => !isVarOrNegation(_$5))
+src/RightBiasing.scala:177:32: warning:  => TIMEOUT
+                                   assert(list.data.forall(!isVarOrNegation(_)))
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+info  Verified: 426 / 717info  Verified: 427 / 717info  Verified: 428 / 717info  Verified: 429 / 717
+warning:  - Result for 'body assertion' VC for rb_empty @187:32:
+warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || !x.isInstanceOf[Neg] || !x.l.isInstanceOf[One] || list.data.h == One() || isVarOrNegation(list.data.h) || forall[Tree](list.data, (_$6: Tree) => !isVarOrNegation(_$6))
+src/RightBiasing.scala:187:32: warning:  => TIMEOUT
+                                   assert(list.data.forall(!isVarOrNegation(_)))
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+info  Verified: 429 / 717info  Verified: 430 / 717info  Verified: 431 / 717info  Verified: 432 / 717info  Verified: 433 / 717info  Verified: 434 / 717info  Verified: 435 / 717info  Verified: 436 / 717info  Verified: 437 / 717
+warning:  - Result for 'body assertion' VC for rb_empty @213:40:
+warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || x.isInstanceOf[Var] || x.isInstanceOf[Neg] && x.l.isInstanceOf[Var] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[One] || (contains[Tree](list.data, Neg(One())) || exists[Tree](list.data, isVarOrNegation)) || !x.r.isInstanceOf[One] || contains[Tree](list.data, Neg(One())) || {
+  val tmp: Unit = dropNoContains[Tree](list.data, Neg(One()))
+  list.data.t != drop[Tree](list.data, BigInt("1")) || forall[Tree](list.data, (_$8: Tree) => !isVarOrNegation(_$8))
+}
+src/RightBiasing.scala:213:40: warning:  => TIMEOUT
+                                           assert(list.data.forall(!isVarOrNegation(_)))
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+info  Verified: 437 / 717info  Verified: 438 / 717info  Verified: 439 / 717info  Verified: 440 / 717info  Verified: 441 / 717info  Verified: 442 / 717info  Verified: 443 / 717info  Verified: 444 / 717info  Verified: 445 / 717info  Verified: 446 / 717
+warning:  - Result for 'body assertion' VC for rb_empty @248:40:
+warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || x.isInstanceOf[Var] || x.isInstanceOf[Neg] && x.l.isInstanceOf[Var] || x.isInstanceOf[Plus] && x.l.isInstanceOf[One] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[Neg] || !x.l.l.isInstanceOf[One] || (contains[Tree](list.data, One()) || exists[Tree](list.data, isVarOrNegation)) || !x.r.isInstanceOf[Neg] || !x.r.l.isInstanceOf[One] || contains[Tree](list.data, One()) || {
+  val tmp: Unit = dropNoContains[Tree](list.data, One())
+  list.data.t != drop[Tree](list.data, BigInt("1")) || forall[Tree](list.data, (_$10: Tree) => !isVarOrNegation(_$10))
+}
+src/RightBiasing.scala:248:40: warning:  => TIMEOUT
+                                           assert(list.data.forall(!isVarOrNegation(_)))
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+info  Verified: 446 / 717info  Verified: 447 / 717info  Verified: 448 / 717info  Verified: 449 / 717info  Verified: 450 / 717info  Verified: 451 / 717info  Verified: 452 / 717info  Verified: 453 / 717info  Verified: 454 / 717info  Verified: 455 / 717info  Verified: 456 / 717info  Verified: 457 / 717info  Verified: 458 / 717info  Verified: 459 / 717info  Verified: 460 / 717info  Verified: 461 / 717info  Verified: 462 / 717info  Verified: 463 / 717info  Verified: 464 / 717info  Verified: 465 / 717info  Verified: 466 / 717info  Verified: 467 / 717info  Verified: 468 / 717info  Verified: 469 / 717info  Verified: 470 / 717info  Verified: 471 / 717info  Verified: 472 / 717info  Verified: 473 / 717info  Verified: 474 / 717info  Verified: 475 / 717info  Verified: 476 / 717info  Verified: 477 / 717info  Verified: 478 / 717info  Verified: 479 / 717info  Verified: 480 / 717info  Verified: 481 / 717info  Verified: 482 / 717info  Verified: 483 / 717info  Verified: 484 / 717info  Verified: 485 / 717info  Verified: 486 / 717info  Verified: 487 / 717info  Verified: 488 / 717info  Verified: 489 / 717info  Verified: 490 / 717info  Verified: 491 / 717info  Verified: 492 / 717info  Verified: 493 / 717info  Verified: 494 / 717info  Verified: 495 / 717info  Verified: 496 / 717info  Verified: 497 / 717info  Verified: 498 / 717info  Verified: 499 / 717info  Verified: 500 / 717info  Verified: 501 / 717info  Verified: 502 / 717info  Verified: 503 / 717info  Verified: 504 / 717info  Verified: 505 / 717info  Verified: 506 / 717info  Verified: 507 / 717info  Verified: 508 / 717info  Verified: 509 / 717info  Verified: 510 / 717info  Verified: 511 / 717info  Verified: 512 / 717info  Verified: 513 / 717info  Verified: 514 / 717info  Verified: 515 / 717info  Verified: 516 / 717info  Verified: 517 / 717info  Verified: 518 / 717info  Verified: 519 / 717info  Verified: 520 / 717info  Verified: 521 / 717info  Verified: 522 / 717info  Verified: 523 / 717info  Verified: 524 / 717info  Verified: 525 / 717info  Verified: 526 / 717info  Verified: 527 / 717info  Verified: 528 / 717info  Verified: 529 / 717info  Verified: 530 / 717info  Verified: 531 / 717info  Verified: 532 / 717info  Verified: 533 / 717info  Verified: 534 / 717info  Verified: 535 / 717info  Verified: 536 / 717info  Verified: 537 / 717info  Verified: 538 / 717info  Verified: 539 / 717info  Verified: 540 / 717info  Verified: 541 / 717info  Verified: 542 / 717info  Verified: 543 / 717info  Verified: 544 / 717info  Verified: 545 / 717info  Verified: 546 / 717info  Verified: 547 / 717info  Verified: 548 / 717info  Verified: 549 / 717info  Verified: 550 / 717info  Verified: 551 / 717info  Verified: 552 / 717info  Verified: 553 / 717info  Verified: 554 / 717info  Verified: 555 / 717info  Verified: 556 / 717info  Verified: 557 / 717info  Verified: 558 / 717info  Verified: 559 / 717info  Verified: 560 / 717info  Verified: 561 / 717info  Verified: 562 / 717info  Verified: 563 / 717info  Verified: 564 / 717info  Verified: 565 / 717info  Verified: 566 / 717info  Verified: 567 / 717info  Verified: 568 / 717info  Verified: 569 / 717info  Verified: 570 / 717info  Verified: 571 / 717info  Verified: 572 / 717info  Verified: 573 / 717info  Verified: 574 / 717info  Verified: 575 / 717info  Verified: 576 / 717info  Verified: 577 / 717info  Verified: 578 / 717info  Verified: 579 / 717info  Verified: 580 / 717info  Verified: 581 / 717info  Verified: 582 / 717info  Verified: 583 / 717info  Verified: 584 / 717info  Verified: 585 / 717info  Verified: 586 / 717info  Verified: 587 / 717info  Verified: 588 / 717info  Verified: 589 / 717info  Verified: 590 / 717info  Verified: 591 / 717info  Verified: 592 / 717info  Verified: 593 / 717info  Verified: 594 / 717info  Verified: 595 / 717info  Verified: 596 / 717info  Verified: 597 / 717info  Verified: 598 / 717info  Verified: 599 / 717info  Verified: 600 / 717info  Verified: 601 / 717info  Verified: 602 / 717info  Verified: 603 / 717info  Verified: 604 / 717info  Verified: 605 / 717info  Verified: 606 / 717info  Verified: 607 / 717info  Verified: 608 / 717info  Verified: 609 / 717info  Verified: 610 / 717info  Verified: 611 / 717info  Verified: 612 / 717info  Verified: 613 / 717info  Verified: 614 / 717info  Verified: 615 / 717info  Verified: 616 / 717info  Verified: 617 / 717info  Verified: 618 / 717info  Verified: 619 / 717info  Verified: 620 / 717info  Verified: 621 / 717info  Verified: 622 / 717info  Verified: 623 / 717info  Verified: 624 / 717info  Verified: 625 / 717info  Verified: 626 / 717info  Verified: 627 / 717info  Verified: 628 / 717info  Verified: 629 / 717info  Verified: 630 / 717info  Verified: 631 / 717info  Verified: 632 / 717info  Verified: 633 / 717info  Verified: 634 / 717info  Verified: 635 / 717info  Verified: 636 / 717info  Verified: 637 / 717info  Verified: 638 / 717info  Verified: 639 / 717info  Verified: 640 / 717info  Verified: 641 / 717info  Verified: 642 / 717info  Verified: 643 / 717info  Verified: 644 / 717info  Verified: 645 / 717info  Verified: 646 / 717info  Verified: 647 / 717info  Verified: 648 / 717info  Verified: 649 / 717info  Verified: 650 / 717info  Verified: 651 / 717info  Verified: 652 / 717info  Verified: 653 / 717info  Verified: 654 / 717info  Verified: 655 / 717info  Verified: 656 / 717info  Verified: 657 / 717info  Verified: 658 / 717info  Verified: 659 / 717info  Verified: 660 / 717info  Verified: 661 / 717info  Verified: 662 / 717info  Verified: 663 / 717info  Verified: 664 / 717info  Verified: 665 / 717info  Verified: 666 / 717info  Verified: 667 / 717info  Verified: 668 / 717info  Verified: 669 / 717info  Verified: 670 / 717info  Verified: 671 / 717info  Verified: 672 / 717info  Verified: 673 / 717info  Verified: 674 / 717info  Verified: 675 / 717info  Verified: 676 / 717info  Verified: 677 / 717info  Verified: 678 / 717info  Verified: 679 / 717info  Verified: 680 / 717info  Verified: 681 / 717info  Verified: 682 / 717info  Verified: 683 / 717info  Verified: 684 / 717info  Verified: 685 / 717info  Verified: 686 / 717info  Verified: 687 / 717info  Verified: 688 / 717info  Verified: 689 / 717
+Done in 390.69s
+  
+ stainless summary 
+                                                                                                                                               
+src/ListUtils.scala:75:9:         appendForAll          postcondition                                                           valid from cache              0.0  
+src/ListUtils.scala:50:9:         applyForallNot0       postcondition                                                           valid from cache              0.0  
+src/ListUtils.scala:53:16:        applyForallNot0       body assertion                                                          valid from cache              0.0  
+src/ListUtils.scala:53:16:        applyForallNot0       precond. (call applyForAll[BigInt](l, k, (x: BigInt)...)                valid from cache              0.0  
+src/ListUtils.scala:55:21:        applyForallNot0       precond. (call apply[BigInt](l, k))                                     valid from cache              0.0  
+src/ListUtils.scala:91:13:        applyThenDrop         measure decreases                                                       valid from cache              0.0  
+src/ListUtils.scala:91:13:        applyThenDrop         precond. (call applyThenDrop(tail[BigInt](l), i - Bi...)                valid from cache              0.0  
+src/ListUtils.scala:91:27:        applyThenDrop         precond. (call tail[BigInt](l))                                         valid from cache              0.0  
+src/ListUtils.scala:92:21:        applyThenDrop         postcondition                                                           valid from cache              0.0  
+src/ListUtils.scala:92:21:        applyThenDrop         postcondition                                                           valid from cache              0.0  
+src/ListUtils.scala:92:22:        applyThenDrop         precond. (call apply[BigInt](l, i))                                     valid from cache              0.0  
+src/ListUtils.scala:92:22:        applyThenDrop         precond. (call apply[BigInt](l, i))                                     valid from cache              0.0  
+src/ListUtils.scala:92:53:        applyThenDrop         non-negative measure                                                    valid from cache              0.0  
+src/ListUtils.scala:104:9:        consInj               postcondition                                                           valid from cache              0.1  
+src/ListUtils.scala:16:9:         dropComm              body assertion: match exhaustiveness                                    trivial                       0.0  
+src/ListUtils.scala:16:9:         dropComm              postcondition                                                           trivial                       0.0  
+src/ListUtils.scala:17:52:        dropComm              postcondition                                                           valid from cache              0.0  
+src/ListUtils.scala:18:52:        dropComm              postcondition                                                           valid from cache              0.0  
+src/ListUtils.scala:19:52:        dropComm              postcondition                                                           valid from cache              0.0  
+src/ListUtils.scala:20:52:        dropComm              postcondition                                                           valid from cache              0.0  
+src/ListUtils.scala:21:53:        dropComm              postcondition                                                           valid from cache              0.0  
+src/ListUtils.scala:21:60:        dropComm              body assertion                                                          valid from cache              0.0  
+src/ListUtils.scala:22:53:        dropComm              postcondition                                                           valid from cache              0.0  
+src/ListUtils.scala:22:60:        dropComm              body assertion                                                          valid from cache              0.0  
+src/ListUtils.scala:24:24:        dropComm              body assertion                                                          valid from cache              0.0  
+src/ListUtils.scala:25:17:        dropComm              measure decreases                                                       valid from cache              0.0  
+src/ListUtils.scala:25:17:        dropComm              precond. (call dropComm(l, BigInt("1"), i - BigInt("... (require 1/2))  valid from cache              0.0  
+src/ListUtils.scala:25:17:        dropComm              precond. (call dropComm(l, BigInt("1"), i - BigInt("... (require 2/2))  valid from cache              0.0  
+src/ListUtils.scala:26:24:        dropComm              body assertion                                                          valid from cache              0.0  
+src/ListUtils.scala:27:24:        dropComm              body assertion                                                          valid from cache              0.0  
+src/ListUtils.scala:28:17:        dropComm              measure decreases                                                       valid from cache              0.0  
+src/ListUtils.scala:28:17:        dropComm              precond. (call dropComm((scrut._3.t): @DropVCs , i -... (require 1/2))  valid from cache              0.0  
+src/ListUtils.scala:28:17:        dropComm              precond. (call dropComm((scrut._3.t): @DropVCs , i -... (require 2/2))  valid from cache              0.0  
+src/ListUtils.scala:29:24:        dropComm              body assertion                                                          valid from cache              0.0  
+src/ListUtils.scala:30:24:        dropComm              body assertion                                                          valid from cache              0.0  
+src/ListUtils.scala:31:17:        dropComm              measure decreases                                                       valid from cache              0.0  
+src/ListUtils.scala:31:17:        dropComm              precond. (call dropComm(l, BigInt("1"), (i - BigInt(... (require 1/2))  valid from cache              0.0  
+src/ListUtils.scala:31:17:        dropComm              precond. (call dropComm(l, BigInt("1"), (i - BigInt(... (require 2/2))  valid from cache              0.0  
+src/ListUtils.scala:32:24:        dropComm              body assertion                                                          valid from cache              0.0  
+src/ListUtils.scala:33:17:        dropComm              postcondition                                                           valid from cache              0.0  
+src/ListUtils.scala:33:24:        dropComm              body assertion                                                          valid from cache              0.0  
+src/ListUtils.scala:37:51:        dropComm              non-negative measure                                                    valid from cache              0.0  
+src/ListUtils.scala:44:9:         dropCommTail          precond. (call dropComm(l, k, BigInt("1")) (require 1/2))               valid from cache              0.0  
+src/ListUtils.scala:44:9:         dropCommTail          precond. (call dropComm(l, k, BigInt("1")) (require 2/2))               valid from cache              0.0  
+src/ListUtils.scala:45:9:         dropCommTail          postcondition                                                           valid from cache              0.0  
+src/ListUtils.scala:45:16:        dropCommTail          body assertion                                                          valid from cache              0.0  
+src/ListUtils.scala:45:16:        dropCommTail          precond. (call tail[BigInt](drop[BigInt](l, k)))                        valid from cache              0.0  
+src/ListUtils.scala:46:23:        dropCommTail          precond. (call tail[BigInt](drop[BigInt](l, k)))                        valid from cache              0.0  
+src/ListUtils.scala:46:48:        dropCommTail          non-negative measure                                                    valid from cache              0.0  
+src/ListUtils.scala:60:19:        dropForAll            non-negative measure                                                    valid from cache              0.0  
+src/ListUtils.scala:62:9:         dropForAll            body assertion: match exhaustiveness                                    valid from cache              0.0  
+src/ListUtils.scala:64:56:        dropForAll            body assertion                                                          valid from cache              0.0  
+src/ListUtils.scala:65:73:        dropForAll            measure decreases                                                       valid from cache              0.0  
+src/ListUtils.scala:65:73:        dropForAll            precond. (call dropForAll[T](tail[T](l), scrut._1 - ...)                valid from cache              0.0  
+src/ListUtils.scala:65:84:        dropForAll            precond. (call tail[T](l))                                              valid from cache              0.0  
+src/ListUtils.scala:68:9:         dropForAll            postcondition                                                           valid from cache              0.0  
+src/ListUtils.scala:110:9:        dropNoContains        non-negative measure                                                    valid from cache              0.0  
+src/ListUtils.scala:113:9:        dropNoContains        body assertion: match exhaustiveness                                    valid from cache              0.0  
+src/ListUtils.scala:113:9:        dropNoContains        postcondition                                                           valid from cache              0.0  
+src/ListUtils.scala:114:27:       dropNoContains        postcondition                                                           valid from cache              0.0  
+src/ListUtils.scala:115:32:       dropNoContains        measure decreases                                                       valid from cache              0.0  
+src/ListUtils.scala:115:32:       dropNoContains        postcondition                                                           valid from cache              0.0  
+src/ListUtils.scala:115:32:       dropNoContains        precond. (call dropNoContains[T]((scrut.t): @DropVCs...)                valid from cache              0.0  
+src/RightBiasing.scala:579:9:     hasVariables          non-negative measure                                                    valid from cache              0.0  
+src/RightBiasing.scala:580:9:     hasVariables          body assertion: match exhaustiveness                                    trivial                       0.0  
+src/RightBiasing.scala:584:32:    hasVariables          measure decreases                                                       valid from cache              0.0  
+src/RightBiasing.scala:584:51:    hasVariables          measure decreases                                                       valid from cache              0.0  
+src/RightBiasing.scala:585:28:    hasVariables          measure decreases                                                       valid from cache              0.0  
+src/RightBiasing.scala:586:32:    hasVariables          measure decreases                                                       valid from cache              0.0  
+src/RightBiasing.scala:586:51:    hasVariables          measure decreases                                                       valid from cache              0.0  
+src/ListUtils.scala:98:38:        indexDrop             postcondition                                                           valid from cache              0.0  
+src/ListUtils.scala:100:13:       indexDrop             measure decreases                                                       valid from cache              0.0  
+src/ListUtils.scala:100:13:       indexDrop             postcondition                                                           valid from cache              0.0  
+src/ListUtils.scala:100:13:       indexDrop             precond. (call indexDrop(tail[BigInt](l), i - BigInt...)                valid from cache              0.0  
+src/ListUtils.scala:100:23:       indexDrop             precond. (call tail[BigInt](l))                                         valid from cache              0.0  
+src/ListUtils.scala:101:21:       indexDrop             precond. (call apply[BigInt](drop[BigInt](l, i), Big...)                valid from cache              0.0  
+src/ListUtils.scala:101:21:       indexDrop             precond. (call apply[BigInt](drop[BigInt](l, i), Big...)                valid from cache              0.0  
+src/ListUtils.scala:101:37:       indexDrop             precond. (call apply[BigInt](l, i))                                     valid from cache              0.0  
+src/ListUtils.scala:101:37:       indexDrop             precond. (call apply[BigInt](l, i))                                     valid from cache              0.0  
+src/ListUtils.scala:101:39:       indexDrop             non-negative measure                                                    valid from cache              0.0  
+src/RightBiasing.scala:588:9:     isLinear              non-negative measure                                                    valid from cache              0.0  
+src/RightBiasing.scala:590:9:     isLinear              body assertion: match exhaustiveness                                    valid from cache              0.0  
+src/RightBiasing.scala:594:32:    isLinear              measure decreases                                                       valid from cache              0.0  
+src/RightBiasing.scala:594:47:    isLinear              measure decreases                                                       valid from cache              0.0  
+src/RightBiasing.scala:595:28:    isLinear              measure decreases                                                       valid from cache              0.0  
+src/RightBiasing.scala:596:32:    isLinear              measure decreases                                                       valid from cache              0.0  
+src/RightBiasing.scala:596:47:    isLinear              measure decreases                                                       valid from cache              0.0  
+src/RightBiasing.scala:620:19:    isLinearMatch         non-negative measure                                                    valid from cache              0.0  
+src/RightBiasing.scala:622:9:     isLinearMatch         body assertion: match exhaustiveness                                    valid from cache              0.0  
+src/RightBiasing.scala:627:24:    isLinearMatch         body assertion                                                          valid from cache              0.0  
+src/RightBiasing.scala:628:24:    isLinearMatch         body assertion                                                          valid from cache              0.0  
+src/RightBiasing.scala:629:17:    isLinearMatch         measure decreases                                                       valid from cache              0.0  
+src/RightBiasing.scala:629:17:    isLinearMatch         precond. (call isLinearMatch((scrut.l): @DropVCs ))                     valid from cache              0.0  
+src/RightBiasing.scala:630:17:    isLinearMatch         measure decreases                                                       valid from cache              0.0  
+src/RightBiasing.scala:630:17:    isLinearMatch         precond. (call isLinearMatch((scrut.r): @DropVCs ))                     valid from cache              0.0  
+src/RightBiasing.scala:632:24:    isLinearMatch         body assertion                                                          valid from cache              0.0  
+src/RightBiasing.scala:633:17:    isLinearMatch         measure decreases                                                       valid from cache              0.0  
+src/RightBiasing.scala:633:17:    isLinearMatch         precond. (call isLinearMatch((scrut.l): @DropVCs ))                     valid from cache              0.0  
+src/RightBiasing.scala:635:24:    isLinearMatch         body assertion                                                          valid from cache              0.0  
+src/RightBiasing.scala:636:24:    isLinearMatch         body assertion                                                          valid from cache              0.0  
+src/RightBiasing.scala:637:17:    isLinearMatch         measure decreases                                                       valid from cache              0.0  
+src/RightBiasing.scala:637:17:    isLinearMatch         precond. (call isLinearMatch((scrut.l): @DropVCs ))                     valid from cache              0.0  
+src/RightBiasing.scala:638:17:    isLinearMatch         measure decreases                                                       valid from cache              0.0  
+src/RightBiasing.scala:638:17:    isLinearMatch         precond. (call isLinearMatch((scrut.r): @DropVCs ))                     valid from cache              0.0  
+src/RightBiasing.scala:640:16:    isLinearMatch         body assertion: match exhaustiveness                                    valid from cache              0.0  
+src/RightBiasing.scala:640:16:    isLinearMatch         body assertion: match exhaustiveness                                    valid from cache              0.0  
+src/RightBiasing.scala:640:16:    isLinearMatch         body assertion: match exhaustiveness                                    valid from cache              0.0  
+src/RightBiasing.scala:640:16:    isLinearMatch         body assertion: match exhaustiveness                                    valid from cache              0.0  
+src/RightBiasing.scala:640:16:    isLinearMatch         body assertion: match exhaustiveness                                    valid from cache              0.0  
+src/RightBiasing.scala:640:16:    isLinearMatch         body assertion: match exhaustiveness                                    valid from cache              0.0  
+src/RightBiasing.scala:640:16:    isLinearMatch         body assertion: match exhaustiveness                                    valid from cache              0.0  
+src/RightBiasing.scala:640:16:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:640:16:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:640:16:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:640:16:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:640:16:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:640:16:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:640:16:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:641:22:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:641:22:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:641:22:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:641:22:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:641:22:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:641:22:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:641:22:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:642:21:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:642:21:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:642:21:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:642:21:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:642:21:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:642:21:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:642:21:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:643:24:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:643:24:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:643:24:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:643:24:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:643:24:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:643:24:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:643:24:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:644:28:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:644:28:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:644:28:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:644:28:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:644:28:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:644:28:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:644:28:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:645:24:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:645:24:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:645:24:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:645:24:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:645:24:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:645:24:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:645:24:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:646:28:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:646:28:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:646:28:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:646:28:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:646:28:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:646:28:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:646:28:    isLinearMatch         postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:123:21:    isRightBiased         class invariant: inv                                                    valid             U:smt-z3    0.0  
+src/RightBiasing.scala:166:19:    rb_empty              non-negative measure                                                    valid             U:smt-z3    0.1  
+src/RightBiasing.scala:169:9:     rb_empty              body assertion: match exhaustiveness                                    valid from cache              0.0  
+src/RightBiasing.scala:169:9:     rb_empty              postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:172:40:    rb_empty              postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:172:47:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:173:34:    rb_empty              postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:173:41:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:175:32:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:176:32:    rb_empty              body assertion                                                          valid             U:smt-z3    0.3  
+src/RightBiasing.scala:177:32:    rb_empty              body assertion                                                          timeout           Pfolio      5.7  
+src/RightBiasing.scala:178:32:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:179:25:    rb_empty              precond. (call dropForAll[Tree](list.data, BigInt("1...)                valid             U:smt-z3    0.1  
+src/RightBiasing.scala:180:25:    rb_empty              measure decreases                                                       valid             U:smt-z3    0.1  
+src/RightBiasing.scala:180:25:    rb_empty              postcondition                                                           valid             U:smt-z3    0.2  
+src/RightBiasing.scala:180:25:    rb_empty              precond. (call rb_empty(x, VarList((scrut.t): @DropV...)                valid             U:smt-z3    0.3  
+src/RightBiasing.scala:180:37:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.2  
+src/RightBiasing.scala:185:32:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:186:32:    rb_empty              body assertion                                                          valid             U:smt-z3    0.2  
+src/RightBiasing.scala:187:32:    rb_empty              body assertion                                                          timeout           Pfolio      5.7  
+src/RightBiasing.scala:188:32:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:189:25:    rb_empty              precond. (call dropForAll[Tree](list.data, BigInt("1...)                valid             U:smt-z3    0.1  
+src/RightBiasing.scala:190:25:    rb_empty              measure decreases                                                       valid             U:smt-z3    0.1  
+src/RightBiasing.scala:190:25:    rb_empty              postcondition                                                           valid             U:smt-z3    0.2  
+src/RightBiasing.scala:190:25:    rb_empty              precond. (call rb_empty(x, VarList((scrut.t): @DropV...)                valid             U:smt-z3    0.3  
+src/RightBiasing.scala:190:37:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.2  
+src/RightBiasing.scala:194:36:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:195:29:    rb_empty              precond. (call dropNoContains[Tree](list.data, Neg(V...)                valid             U:smt-z3    0.0  
+src/RightBiasing.scala:196:36:    rb_empty              body assertion                                                          valid             U:smt-z3    0.2  
+src/RightBiasing.scala:197:29:    rb_empty              measure decreases                                                       valid             U:smt-z3    0.1  
+src/RightBiasing.scala:197:29:    rb_empty              postcondition                                                           valid             U:smt-z3    0.2  
+src/RightBiasing.scala:197:29:    rb_empty              precond. (call rb_empty(x, VarList((scrut.t): @DropV...)                valid             U:smt-z3    0.1  
+src/RightBiasing.scala:197:41:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.1  
+src/RightBiasing.scala:201:32:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:202:25:    rb_empty              precond. (call dropNoContains[Tree](list.data, Var((...)                valid             U:smt-z3    0.0  
+src/RightBiasing.scala:203:32:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:204:25:    rb_empty              measure decreases                                                       valid             U:smt-z3    0.1  
+src/RightBiasing.scala:204:25:    rb_empty              postcondition                                                           valid             U:smt-z3    0.2  
+src/RightBiasing.scala:204:25:    rb_empty              precond. (call rb_empty(x, VarList((scrut.t): @DropV...)                valid             U:smt-z3    0.1  
+src/RightBiasing.scala:204:37:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.1  
+src/RightBiasing.scala:207:102:   rb_empty              postcondition                                                           valid             U:smt-z3    0.0  
+src/RightBiasing.scala:207:109:   rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:210:40:    rb_empty              body assertion                                                          valid             U:smt-z3    0.0  
+src/RightBiasing.scala:211:33:    rb_empty              precond. (call dropNoContains[Tree](list.data, Neg({...)                valid             U:smt-z3    0.0  
+src/RightBiasing.scala:212:40:    rb_empty              body assertion                                                          valid             U:smt-z3    0.2  
+src/RightBiasing.scala:213:40:    rb_empty              body assertion                                                          timeout           Pfolio      5.0  
+src/RightBiasing.scala:214:33:    rb_empty              precond. (call dropForAll[Tree](list.data, BigInt("1...)                valid             U:smt-z3    0.1  
+src/RightBiasing.scala:215:33:    rb_empty              measure decreases                                                       valid             U:smt-z3    0.1  
+src/RightBiasing.scala:215:33:    rb_empty              postcondition                                                           valid             U:smt-z3    0.2  
+src/RightBiasing.scala:215:33:    rb_empty              precond. (call rb_empty(x, VarList((scrut.t): @DropV...)                valid             U:smt-z3    0.2  
+src/RightBiasing.scala:215:45:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.2  
+src/RightBiasing.scala:218:40:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:218:53:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.3  
+src/RightBiasing.scala:219:33:    rb_empty              measure decreases                                                       valid             U:smt-z3    0.1  
+src/RightBiasing.scala:219:33:    rb_empty              precond. (call rb_empty((scrut.r): @DropVCs , VarLis...)                valid             U:smt-z3    0.3  
+src/RightBiasing.scala:219:46:    rb_empty              class invariant: inv                                                    valid             U:smt-cvc5  0.1  
+src/RightBiasing.scala:220:33:    rb_empty              measure decreases                                                       valid             U:smt-z3    0.2  
+src/RightBiasing.scala:220:33:    rb_empty              postcondition                                                           valid             U:smt-z3    0.2  
+src/RightBiasing.scala:220:33:    rb_empty              precond. (call rb_empty(x, VarList((scrut.t): @DropV...)                valid             U:smt-z3    1.4  
+src/RightBiasing.scala:220:45:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.5  
+src/RightBiasing.scala:223:40:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:223:53:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.3  
+src/RightBiasing.scala:224:33:    rb_empty              measure decreases                                                       valid             U:smt-z3    0.1  
+src/RightBiasing.scala:224:33:    rb_empty              precond. (call rb_empty((scrut.r): @DropVCs , VarLis...)                valid             U:smt-z3    0.3  
+src/RightBiasing.scala:224:46:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.1  
+src/RightBiasing.scala:225:33:    rb_empty              measure decreases                                                       valid             U:smt-z3    0.2  
+src/RightBiasing.scala:225:33:    rb_empty              postcondition                                                           valid             U:smt-z3    0.3  
+src/RightBiasing.scala:225:33:    rb_empty              precond. (call rb_empty(x, VarList((scrut.t): @DropV...)                valid             U:smt-z3    1.5  
+src/RightBiasing.scala:225:45:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.4  
+src/RightBiasing.scala:228:40:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:228:53:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.3  
+src/RightBiasing.scala:229:33:    rb_empty              measure decreases                                                       valid             U:smt-z3    0.1  
+src/RightBiasing.scala:229:33:    rb_empty              precond. (call rb_empty((scrut.r): @DropVCs , VarLis...)                timeout           Pfolio      6.2  
+src/RightBiasing.scala:229:46:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.0  
+src/RightBiasing.scala:230:33:    rb_empty              measure decreases                                                       valid             U:smt-z3    0.2  
+src/RightBiasing.scala:230:33:    rb_empty              postcondition                                                           valid             U:smt-z3    0.3  
+src/RightBiasing.scala:230:33:    rb_empty              precond. (call rb_empty(x, VarList((scrut.t): @DropV...)                timeout           Pfolio      9.9  
+src/RightBiasing.scala:230:45:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.5  
+src/RightBiasing.scala:232:56:    rb_empty              postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:232:63:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:234:40:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:234:53:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.2  
+src/RightBiasing.scala:235:33:    rb_empty              measure decreases                                                       valid             U:smt-z3    0.2  
+src/RightBiasing.scala:235:33:    rb_empty              precond. (call rb_empty((scrut.l): @DropVCs , VarLis...)                valid             U:smt-z3    0.3  
+src/RightBiasing.scala:235:45:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.0  
+src/RightBiasing.scala:236:33:    rb_empty              measure decreases                                                       valid             U:smt-z3    0.3  
+src/RightBiasing.scala:236:33:    rb_empty              postcondition                                                           valid             U:smt-z3    0.3  
+src/RightBiasing.scala:236:33:    rb_empty              precond. (call rb_empty(x, VarList((scrut.t): @DropV...)                timeout           Pfolio      12.6 
+src/RightBiasing.scala:236:45:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.5  
+src/RightBiasing.scala:238:39:    rb_empty              postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:238:46:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:242:98:    rb_empty              postcondition                                                           valid             U:smt-z3    0.0  
+src/RightBiasing.scala:242:105:   rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:245:40:    rb_empty              body assertion                                                          valid             U:smt-z3    0.0  
+src/RightBiasing.scala:246:33:    rb_empty              precond. (call dropNoContains[Tree](list.data, {   v...)                valid             U:smt-z3    0.0  
+src/RightBiasing.scala:247:40:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:248:40:    rb_empty              body assertion                                                          timeout           Pfolio      5.1  
+src/RightBiasing.scala:249:33:    rb_empty              precond. (call dropForAll[Tree](list.data, BigInt("1...)                valid             U:smt-z3    0.1  
+src/RightBiasing.scala:250:33:    rb_empty              measure decreases                                                       valid             U:smt-z3    0.1  
+src/RightBiasing.scala:250:33:    rb_empty              postcondition                                                           valid             U:smt-z3    0.2  
+src/RightBiasing.scala:250:33:    rb_empty              precond. (call rb_empty(x, VarList((scrut.t): @DropV...)                valid             U:smt-z3    0.2  
+src/RightBiasing.scala:250:45:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.2  
+src/RightBiasing.scala:253:40:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:253:53:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.3  
+src/RightBiasing.scala:254:33:    rb_empty              measure decreases                                                       valid             U:smt-z3    0.1  
+src/RightBiasing.scala:254:33:    rb_empty              precond. (call rb_empty((scrut.r): @DropVCs , VarLis...)                valid             U:smt-z3    0.2  
+src/RightBiasing.scala:254:46:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.0  
+src/RightBiasing.scala:255:33:    rb_empty              measure decreases                                                       valid             U:smt-z3    0.2  
+src/RightBiasing.scala:255:33:    rb_empty              postcondition                                                           valid             U:smt-z3    0.2  
+src/RightBiasing.scala:255:33:    rb_empty              precond. (call rb_empty(x, VarList((scrut.t): @DropV...)                valid             U:smt-z3    1.7  
+src/RightBiasing.scala:255:45:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.4  
+src/RightBiasing.scala:258:40:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:258:53:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.3  
+src/RightBiasing.scala:259:33:    rb_empty              measure decreases                                                       valid             U:smt-z3    0.1  
+src/RightBiasing.scala:259:33:    rb_empty              precond. (call rb_empty((scrut.r): @DropVCs , VarLis...)                valid             U:smt-z3    0.3  
+src/RightBiasing.scala:259:46:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.1  
+src/RightBiasing.scala:260:33:    rb_empty              measure decreases                                                       valid             U:smt-z3    0.2  
+src/RightBiasing.scala:260:33:    rb_empty              postcondition                                                           valid             U:smt-z3    0.2  
+src/RightBiasing.scala:260:33:    rb_empty              precond. (call rb_empty(x, VarList((scrut.t): @DropV...)                valid             U:smt-z3    1.6  
+src/RightBiasing.scala:260:45:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.4  
+src/RightBiasing.scala:263:40:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:263:53:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.3  
+src/RightBiasing.scala:264:33:    rb_empty              measure decreases                                                       valid             U:smt-z3    0.1  
+src/RightBiasing.scala:264:33:    rb_empty              precond. (call rb_empty((scrut.r): @DropVCs , VarLis...)                timeout           Pfolio      6.1  
+src/RightBiasing.scala:264:46:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.0  
+src/RightBiasing.scala:265:33:    rb_empty              measure decreases                                                       valid             U:smt-z3    0.2  
+src/RightBiasing.scala:265:33:    rb_empty              postcondition                                                           valid             U:smt-z3    0.2  
+src/RightBiasing.scala:265:33:    rb_empty              precond. (call rb_empty(x, VarList((scrut.t): @DropV...)                timeout           Pfolio      11.0 
+src/RightBiasing.scala:265:45:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.4  
+src/RightBiasing.scala:267:51:    rb_empty              postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:267:58:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:269:40:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:269:53:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.2  
+src/RightBiasing.scala:270:33:    rb_empty              measure decreases                                                       valid             U:smt-z3    0.2  
+src/RightBiasing.scala:270:33:    rb_empty              precond. (call rb_empty((scrut.l): @DropVCs , VarLis...)                valid             U:smt-z3    0.3  
+src/RightBiasing.scala:270:45:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.0  
+src/RightBiasing.scala:271:33:    rb_empty              measure decreases                                                       valid             U:smt-z3    0.2  
+src/RightBiasing.scala:271:33:    rb_empty              postcondition                                                           valid             U:smt-z3    0.3  
+src/RightBiasing.scala:271:33:    rb_empty              precond. (call rb_empty(x, VarList((scrut.t): @DropV...)                timeout           Pfolio      14.0 
+src/RightBiasing.scala:271:45:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.4  
+src/RightBiasing.scala:273:39:    rb_empty              postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:273:46:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:277:65:    rb_empty              postcondition                                                           valid             U:smt-z3    0.0  
+src/RightBiasing.scala:277:72:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:279:60:    rb_empty              postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:279:67:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:280:40:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:280:53:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.3  
+src/RightBiasing.scala:281:33:    rb_empty              measure decreases                                                       valid             U:smt-z3    0.1  
+src/RightBiasing.scala:281:33:    rb_empty              precond. (call rb_empty((scrut.r): @DropVCs , VarLis...)                valid             U:smt-z3    0.2  
+src/RightBiasing.scala:281:46:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.0  
+src/RightBiasing.scala:282:33:    rb_empty              measure decreases                                                       valid             U:smt-z3    0.2  
+src/RightBiasing.scala:282:33:    rb_empty              postcondition                                                           valid             U:smt-z3    0.2  
+src/RightBiasing.scala:282:33:    rb_empty              precond. (call rb_empty(x, VarList((scrut.t): @DropV...)                valid             U:smt-z3    1.7  
+src/RightBiasing.scala:282:45:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.4  
+src/RightBiasing.scala:284:65:    rb_empty              postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:284:72:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:285:40:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:285:53:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.3  
+src/RightBiasing.scala:286:33:    rb_empty              measure decreases                                                       valid             U:smt-z3    0.1  
+src/RightBiasing.scala:286:33:    rb_empty              precond. (call rb_empty((scrut.r): @DropVCs , VarLis...)                valid             U:smt-z3    0.2  
+src/RightBiasing.scala:286:46:    rb_empty              class invariant: inv                                                    valid             U:smt-cvc5  0.0  
+src/RightBiasing.scala:287:33:    rb_empty              measure decreases                                                       valid             U:smt-z3    0.2  
+src/RightBiasing.scala:287:33:    rb_empty              postcondition                                                           valid             U:smt-z3    0.2  
+src/RightBiasing.scala:287:33:    rb_empty              precond. (call rb_empty(x, VarList((scrut.t): @DropV...)                valid             U:smt-z3    1.7  
+src/RightBiasing.scala:287:45:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.4  
+src/RightBiasing.scala:289:56:    rb_empty              postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:289:63:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:290:51:    rb_empty              postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:290:58:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:292:48:    rb_empty              postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:292:55:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:294:40:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:294:53:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.3  
+src/RightBiasing.scala:295:33:    rb_empty              measure decreases                                                       valid             U:smt-z3    0.1  
+src/RightBiasing.scala:295:33:    rb_empty              precond. (call rb_empty((scrut.r): @DropVCs , VarLis...)                timeout           Pfolio      7.1  
+src/RightBiasing.scala:295:46:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.0  
+src/RightBiasing.scala:296:33:    rb_empty              measure decreases                                                       valid             U:smt-z3    0.2  
+src/RightBiasing.scala:296:33:    rb_empty              postcondition                                                           valid             U:smt-z3    0.2  
+src/RightBiasing.scala:296:33:    rb_empty              precond. (call rb_empty(x, VarList((scrut.t): @DropV...)                timeout           Pfolio      12.3 
+src/RightBiasing.scala:296:45:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.4  
+src/RightBiasing.scala:300:48:    rb_empty              postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:300:55:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:302:40:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:302:53:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.3  
+src/RightBiasing.scala:303:33:    rb_empty              measure decreases                                                       valid             U:smt-z3    0.1  
+src/RightBiasing.scala:303:33:    rb_empty              precond. (call rb_empty((scrut.r): @DropVCs , VarLis...)                timeout           Pfolio      6.9  
+src/RightBiasing.scala:303:46:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.0  
+src/RightBiasing.scala:304:33:    rb_empty              measure decreases                                                       valid             U:smt-z3    0.2  
+src/RightBiasing.scala:304:33:    rb_empty              postcondition                                                           valid             U:smt-z3    0.2  
+src/RightBiasing.scala:304:33:    rb_empty              precond. (call rb_empty(x, VarList((scrut.t): @DropV...)                timeout           Pfolio      11.6 
+src/RightBiasing.scala:304:45:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.4  
+src/RightBiasing.scala:307:39:    rb_empty              postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:307:46:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:311:60:    rb_empty              postcondition                                                           valid             U:smt-z3    0.0  
+src/RightBiasing.scala:311:67:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:313:60:    rb_empty              postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:313:67:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:314:40:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:314:53:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.2  
+src/RightBiasing.scala:315:33:    rb_empty              measure decreases                                                       valid             U:smt-z3    0.1  
+src/RightBiasing.scala:315:33:    rb_empty              precond. (call rb_empty((scrut.r): @DropVCs , VarLis...)                valid             U:smt-z3    0.2  
+src/RightBiasing.scala:315:46:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.0  
+src/RightBiasing.scala:316:33:    rb_empty              measure decreases                                                       valid             U:smt-z3    0.2  
+src/RightBiasing.scala:316:33:    rb_empty              postcondition                                                           valid             U:smt-z3    0.2  
+src/RightBiasing.scala:316:33:    rb_empty              precond. (call rb_empty(x, VarList((scrut.t): @DropV...)                valid             U:smt-z3    1.7  
+src/RightBiasing.scala:316:45:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.4  
+src/RightBiasing.scala:318:65:    rb_empty              postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:318:72:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:319:40:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:319:53:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.3  
+src/RightBiasing.scala:320:33:    rb_empty              measure decreases                                                       valid             U:smt-z3    0.1  
+src/RightBiasing.scala:320:33:    rb_empty              precond. (call rb_empty((scrut.r): @DropVCs , VarLis...)                valid             U:smt-z3    0.2  
+src/RightBiasing.scala:320:46:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.0  
+src/RightBiasing.scala:321:33:    rb_empty              measure decreases                                                       valid             U:smt-z3    0.2  
+src/RightBiasing.scala:321:33:    rb_empty              postcondition                                                           valid             U:smt-z3    0.2  
+src/RightBiasing.scala:321:33:    rb_empty              precond. (call rb_empty(x, VarList((scrut.t): @DropV...)                valid             U:smt-z3    1.6  
+src/RightBiasing.scala:321:45:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.4  
+src/RightBiasing.scala:323:56:    rb_empty              postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:323:63:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:324:51:    rb_empty              postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:324:58:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:326:48:    rb_empty              postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:326:55:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:328:40:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:328:53:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.3  
+src/RightBiasing.scala:329:33:    rb_empty              measure decreases                                                       valid             U:smt-z3    0.2  
+src/RightBiasing.scala:329:33:    rb_empty              precond. (call rb_empty((scrut.r): @DropVCs , VarLis...)                timeout           Pfolio      6.9  
+src/RightBiasing.scala:329:46:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.0  
+src/RightBiasing.scala:330:33:    rb_empty              measure decreases                                                       valid             U:smt-z3    0.2  
+src/RightBiasing.scala:330:33:    rb_empty              postcondition                                                           valid             U:smt-z3    0.2  
+src/RightBiasing.scala:330:33:    rb_empty              precond. (call rb_empty(x, VarList((scrut.t): @DropV...)                timeout           Pfolio      9.8  
+src/RightBiasing.scala:330:45:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.4  
+src/RightBiasing.scala:334:48:    rb_empty              postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:334:55:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:336:40:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:336:53:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.3  
+src/RightBiasing.scala:337:33:    rb_empty              measure decreases                                                       valid             U:smt-z3    0.1  
+src/RightBiasing.scala:337:33:    rb_empty              precond. (call rb_empty((scrut.r): @DropVCs , VarLis...)                timeout           Pfolio      6.8  
+src/RightBiasing.scala:337:46:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.0  
+src/RightBiasing.scala:338:33:    rb_empty              measure decreases                                                       valid             U:smt-z3    0.2  
+src/RightBiasing.scala:338:33:    rb_empty              postcondition                                                           valid             U:smt-z3    0.2  
+src/RightBiasing.scala:338:33:    rb_empty              precond. (call rb_empty(x, VarList((scrut.t): @DropV...)                timeout           Pfolio      13.8 
+src/RightBiasing.scala:338:45:    rb_empty              class invariant: inv                                                    valid             U:smt-z3    0.4  
+src/RightBiasing.scala:341:39:    rb_empty              postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:341:46:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:344:31:    rb_empty              postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:344:38:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:348:27:    rb_empty              postcondition                                                           valid             U:smt-z3    0.0  
+src/RightBiasing.scala:348:34:    rb_empty              body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:600:19:    rb_implies_linearity  non-negative measure                                                    valid             U:smt-z3    0.1  
+src/RightBiasing.scala:601:9:     rb_implies_linearity  body assertion: match exhaustiveness                                    valid             U:smt-z3    0.1  
+src/RightBiasing.scala:601:9:     rb_implies_linearity  postcondition                                                           valid             U:smt-z3    0.1  
+src/RightBiasing.scala:602:26:    rb_implies_linearity  postcondition                                                           valid             U:smt-cvc5  0.1  
+src/RightBiasing.scala:603:25:    rb_implies_linearity  postcondition                                                           valid             U:smt-z3    0.1  
+src/RightBiasing.scala:604:30:    rb_implies_linearity  postcondition                                                           valid             U:smt-z3    0.1  
+src/RightBiasing.scala:605:45:    rb_implies_linearity  postcondition                                                           valid             U:smt-z3    0.1  
+src/RightBiasing.scala:607:17:    rb_implies_linearity  precond. (call rb_plus_both_rb(x.x, VarList(empty[Tr... (require 1/3))  valid             U:smt-cvc5  0.3  
+src/RightBiasing.scala:607:17:    rb_implies_linearity  precond. (call rb_plus_both_rb(x.x, VarList(empty[Tr... (require 2/3))  valid             U:smt-z3    0.1  
+src/RightBiasing.scala:607:17:    rb_implies_linearity  precond. (call rb_plus_both_rb(x.x, VarList(empty[Tr... (require 3/3))  valid             U:smt-z3    0.1  
+src/RightBiasing.scala:607:38:    rb_implies_linearity  class invariant: inv                                                    valid             U:smt-z3    0.1  
+src/RightBiasing.scala:608:24:    rb_implies_linearity  body assertion                                                          valid             U:smt-cvc5  0.1  
+src/RightBiasing.scala:609:24:    rb_implies_linearity  body assertion                                                          valid             U:smt-cvc5  0.1  
+src/RightBiasing.scala:610:17:    rb_implies_linearity  measure decreases                                                       valid             U:smt-z3    0.2  
+src/RightBiasing.scala:610:38:    rb_implies_linearity  class invariant: inv                                                    valid             U:smt-z3    0.1  
+src/RightBiasing.scala:611:17:    rb_implies_linearity  measure decreases                                                       valid             U:smt-z3    0.1  
+src/RightBiasing.scala:611:17:    rb_implies_linearity  postcondition                                                           valid             U:smt-cvc5  0.1  
+src/RightBiasing.scala:611:38:    rb_implies_linearity  class invariant: inv                                                    valid             U:smt-z3    0.1  
+src/RightBiasing.scala:613:28:    rb_implies_linearity  postcondition                                                           valid             U:smt-z3    0.2  
+src/RightBiasing.scala:614:32:    rb_implies_linearity  postcondition                                                           valid             U:smt-z3    0.2  
+src/RightBiasing.scala:561:19:    rb_plus_both_rb       non-negative measure                                                    valid             U:smt-z3    0.1  
+src/RightBiasing.scala:570:9:     rb_plus_both_rb       precond. (call rb_plus_both_rb_h(x, l))                                 valid             U:smt-z3    0.1  
+src/RightBiasing.scala:574:32:    rb_plus_both_rb       postcondition                                                           valid             U:smt-z3    0.2  
+src/RightBiasing.scala:575:23:    rb_plus_both_rb       postcondition                                                           valid             U:smt-z3    0.1  
+src/RightBiasing.scala:355:9:     rb_plus_both_rb_h     non-negative measure                                                    valid             U:smt-z3    0.1  
+src/RightBiasing.scala:357:13:    rb_plus_both_rb_h     body assertion: match exhaustiveness                                    valid             U:smt-z3    0.1  
+src/RightBiasing.scala:358:43:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:365:106:   rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.2  
+src/RightBiasing.scala:367:44:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.2  
+src/RightBiasing.scala:370:36:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.2  
+src/RightBiasing.scala:370:49:    rb_plus_both_rb_h     class invariant: inv                                                    valid             U:smt-z3    0.2  
+src/RightBiasing.scala:371:29:    rb_plus_both_rb_h     measure decreases                                                       valid             U:smt-z3    0.2  
+src/RightBiasing.scala:371:29:    rb_plus_both_rb_h     precond. (call rb_plus_both_rb_h((scrut.r): @DropVCs...)                valid             U:smt-z3    0.1  
+src/RightBiasing.scala:371:51:    rb_plus_both_rb_h     class invariant: inv                                                    valid             U:smt-z3    0.2  
+src/RightBiasing.scala:372:29:    rb_plus_both_rb_h     precond. (call rb_empty((scrut.r): @DropVCs , VarLis...)                valid             U:smt-z3    0.1  
+src/RightBiasing.scala:372:42:    rb_plus_both_rb_h     class invariant: inv                                                    valid             U:smt-z3    0.4  
+src/RightBiasing.scala:373:36:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.8  
+src/RightBiasing.scala:374:36:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.5  
+src/RightBiasing.scala:377:36:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.3  
+src/RightBiasing.scala:377:49:    rb_plus_both_rb_h     class invariant: inv                                                    valid             U:smt-z3    0.2  
+src/RightBiasing.scala:378:29:    rb_plus_both_rb_h     measure decreases                                                       valid             U:smt-z3    0.2  
+src/RightBiasing.scala:378:29:    rb_plus_both_rb_h     precond. (call rb_plus_both_rb_h((scrut.r): @DropVCs...)                valid             U:smt-z3    0.1  
+src/RightBiasing.scala:378:51:    rb_plus_both_rb_h     class invariant: inv                                                    valid             U:smt-z3    0.2  
+src/RightBiasing.scala:379:29:    rb_plus_both_rb_h     precond. (call rb_empty((scrut.r): @DropVCs , VarLis...)                valid             U:smt-z3    0.1  
+src/RightBiasing.scala:379:42:    rb_plus_both_rb_h     class invariant: inv                                                    valid             U:smt-z3    0.4  
+src/RightBiasing.scala:380:36:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.9  
+src/RightBiasing.scala:381:36:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.3  
+src/RightBiasing.scala:384:36:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.2  
+src/RightBiasing.scala:384:49:    rb_plus_both_rb_h     class invariant: inv                                                    valid             U:smt-z3    0.3  
+src/RightBiasing.scala:385:29:    rb_plus_both_rb_h     measure decreases                                                       valid             U:smt-z3    0.2  
+src/RightBiasing.scala:385:29:    rb_plus_both_rb_h     precond. (call rb_plus_both_rb_h((scrut.r): @DropVCs...)                valid             U:smt-z3    0.1  
+src/RightBiasing.scala:385:51:    rb_plus_both_rb_h     class invariant: inv                                                    valid             U:smt-z3    0.6  
+src/RightBiasing.scala:386:29:    rb_plus_both_rb_h     precond. (call rb_empty((scrut.r): @DropVCs , VarLis...)                valid             U:smt-z3    0.1  
+src/RightBiasing.scala:386:42:    rb_plus_both_rb_h     class invariant: inv                                                    timeout           Pfolio      5.9  
+src/RightBiasing.scala:387:36:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.4  
+src/RightBiasing.scala:388:36:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.3  
+src/RightBiasing.scala:390:60:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:392:36:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:392:49:    rb_plus_both_rb_h     class invariant: inv                                                    valid             U:smt-z3    0.1  
+src/RightBiasing.scala:393:29:    rb_plus_both_rb_h     measure decreases                                                       valid             U:smt-z3    0.2  
+src/RightBiasing.scala:393:29:    rb_plus_both_rb_h     precond. (call rb_plus_both_rb_h((scrut.r): @DropVCs...)                valid             U:smt-z3    0.1  
+src/RightBiasing.scala:393:51:    rb_plus_both_rb_h     class invariant: inv                                                    valid             U:smt-z3    0.2  
+src/RightBiasing.scala:394:29:    rb_plus_both_rb_h     precond. (call rb_empty((scrut.r): @DropVCs , VarLis...)                valid             U:smt-z3    0.1  
+src/RightBiasing.scala:394:42:    rb_plus_both_rb_h     class invariant: inv                                                    valid             U:smt-z3    0.4  
+src/RightBiasing.scala:395:36:    rb_plus_both_rb_h     body assertion                                                          timeout           Pfolio      9.3  
+src/RightBiasing.scala:396:36:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.3  
+src/RightBiasing.scala:398:43:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:400:28:    rb_plus_both_rb_h     body assertion                                                          timeout           Pfolio      10.0 
+src/RightBiasing.scala:401:28:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.3  
+src/RightBiasing.scala:405:102:   rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:407:50:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:410:36:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:410:49:    rb_plus_both_rb_h     class invariant: inv                                                    valid             U:smt-z3    0.1  
+src/RightBiasing.scala:411:29:    rb_plus_both_rb_h     precond. (call rb_empty((scrut.r): @DropVCs , VarLis...)                valid             U:smt-z3    0.1  
+src/RightBiasing.scala:411:42:    rb_plus_both_rb_h     class invariant: inv                                                    valid             U:smt-z3    0.2  
+src/RightBiasing.scala:412:36:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.2  
+src/RightBiasing.scala:413:29:    rb_plus_both_rb_h     measure decreases                                                       valid             U:smt-z3    0.5  
+src/RightBiasing.scala:413:29:    rb_plus_both_rb_h     precond. (call rb_plus_both_rb_h((scrut.r): @DropVCs...)                valid             U:smt-z3    0.1  
+src/RightBiasing.scala:413:51:    rb_plus_both_rb_h     class invariant: inv                                                    valid             U:smt-z3    0.5  
+src/RightBiasing.scala:414:36:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.7  
+src/RightBiasing.scala:415:36:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:419:36:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:419:49:    rb_plus_both_rb_h     class invariant: inv                                                    valid             U:smt-z3    0.2  
+src/RightBiasing.scala:420:29:    rb_plus_both_rb_h     precond. (call rb_empty((scrut.r): @DropVCs , VarLis...)                valid             U:smt-z3    0.1  
+src/RightBiasing.scala:420:42:    rb_plus_both_rb_h     class invariant: inv                                                    valid             U:smt-z3    0.2  
+src/RightBiasing.scala:421:36:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.2  
+src/RightBiasing.scala:422:29:    rb_plus_both_rb_h     measure decreases                                                       valid             U:smt-z3    0.5  
+src/RightBiasing.scala:422:29:    rb_plus_both_rb_h     precond. (call rb_plus_both_rb_h((scrut.r): @DropVCs...)                valid             U:smt-z3    0.1  
+src/RightBiasing.scala:422:51:    rb_plus_both_rb_h     class invariant: inv                                                    valid             U:smt-z3    0.4  
+src/RightBiasing.scala:423:36:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.7  
+src/RightBiasing.scala:424:36:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:428:36:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:428:49:    rb_plus_both_rb_h     class invariant: inv                                                    valid             U:smt-z3    0.3  
+src/RightBiasing.scala:429:29:    rb_plus_both_rb_h     precond. (call rb_empty((scrut.r): @DropVCs , VarLis...)                valid             U:smt-z3    0.1  
+src/RightBiasing.scala:429:42:    rb_plus_both_rb_h     class invariant: inv                                                    valid             U:smt-z3    0.6  
+src/RightBiasing.scala:430:36:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.2  
+src/RightBiasing.scala:431:29:    rb_plus_both_rb_h     measure decreases                                                       valid             U:smt-z3    0.5  
+src/RightBiasing.scala:431:29:    rb_plus_both_rb_h     precond. (call rb_plus_both_rb_h((scrut.r): @DropVCs...)                valid             U:smt-cvc5  0.1  
+src/RightBiasing.scala:431:51:    rb_plus_both_rb_h     class invariant: inv                                                    timeout           Pfolio      16.2 
+src/RightBiasing.scala:432:36:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.3  
+src/RightBiasing.scala:433:36:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:436:55:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:439:36:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:439:49:    rb_plus_both_rb_h     class invariant: inv                                                    valid             U:smt-z3    0.2  
+src/RightBiasing.scala:440:29:    rb_plus_both_rb_h     precond. (call rb_empty((scrut.r): @DropVCs , VarLis...)                valid             U:smt-cvc5  0.1  
+src/RightBiasing.scala:440:42:    rb_plus_both_rb_h     class invariant: inv                                                    valid             U:smt-z3    0.2  
+src/RightBiasing.scala:441:36:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.2  
+src/RightBiasing.scala:442:29:    rb_plus_both_rb_h     measure decreases                                                       valid             U:smt-z3    0.5  
+src/RightBiasing.scala:442:29:    rb_plus_both_rb_h     precond. (call rb_plus_both_rb_h((scrut.r): @DropVCs...)                valid             U:smt-z3    0.1  
+src/RightBiasing.scala:442:51:    rb_plus_both_rb_h     class invariant: inv                                                    valid             U:smt-z3    0.4  
+src/RightBiasing.scala:443:36:    rb_plus_both_rb_h     body assertion                                                          timeout           Pfolio      9.7  
+src/RightBiasing.scala:444:36:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:446:42:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:448:28:    rb_plus_both_rb_h     body assertion                                                          timeout           Pfolio      9.1  
+src/RightBiasing.scala:449:28:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.3  
+src/RightBiasing.scala:456:36:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:456:49:    rb_plus_both_rb_h     class invariant: inv                                                    valid             U:smt-z3    0.1  
+src/RightBiasing.scala:457:29:    rb_plus_both_rb_h     precond. (call rb_empty((scrut.r): @DropVCs , VarLis...)                valid             U:smt-z3    0.1  
+src/RightBiasing.scala:457:42:    rb_plus_both_rb_h     class invariant: inv                                                    valid             U:smt-z3    0.2  
+src/RightBiasing.scala:458:36:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.2  
+src/RightBiasing.scala:459:29:    rb_plus_both_rb_h     measure decreases                                                       valid             U:smt-z3    0.5  
+src/RightBiasing.scala:459:29:    rb_plus_both_rb_h     precond. (call rb_plus_both_rb_h((scrut.r): @DropVCs...)                valid             U:smt-z3    0.1  
+src/RightBiasing.scala:459:51:    rb_plus_both_rb_h     class invariant: inv                                                    valid             U:smt-z3    0.5  
+src/RightBiasing.scala:460:36:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.7  
+src/RightBiasing.scala:461:36:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:465:36:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:465:49:    rb_plus_both_rb_h     class invariant: inv                                                    valid             U:smt-z3    0.1  
+src/RightBiasing.scala:466:29:    rb_plus_both_rb_h     precond. (call rb_empty((scrut.r): @DropVCs , VarLis...)                valid             U:smt-z3    0.1  
+src/RightBiasing.scala:466:42:    rb_plus_both_rb_h     class invariant: inv                                                    valid             U:smt-z3    0.2  
+src/RightBiasing.scala:467:36:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.2  
+src/RightBiasing.scala:468:29:    rb_plus_both_rb_h     measure decreases                                                       valid             U:smt-z3    0.5  
+src/RightBiasing.scala:468:29:    rb_plus_both_rb_h     precond. (call rb_plus_both_rb_h((scrut.r): @DropVCs...)                valid             U:smt-z3    0.1  
+src/RightBiasing.scala:468:51:    rb_plus_both_rb_h     class invariant: inv                                                    valid             U:smt-z3    0.5  
+src/RightBiasing.scala:469:36:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.7  
+src/RightBiasing.scala:470:36:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:478:36:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:478:49:    rb_plus_both_rb_h     class invariant: inv                                                    valid             U:smt-z3    0.3  
+src/RightBiasing.scala:479:29:    rb_plus_both_rb_h     precond. (call rb_empty((scrut.r): @DropVCs , VarLis...)                valid             U:smt-z3    0.1  
+src/RightBiasing.scala:479:42:    rb_plus_both_rb_h     class invariant: inv                                                    valid             U:smt-z3    0.5  
+src/RightBiasing.scala:480:36:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.3  
+src/RightBiasing.scala:481:29:    rb_plus_both_rb_h     measure decreases                                                       valid             U:smt-z3    0.5  
+src/RightBiasing.scala:481:29:    rb_plus_both_rb_h     precond. (call rb_plus_both_rb_h((scrut.r): @DropVCs...)                valid             U:smt-z3    0.1  
+src/RightBiasing.scala:481:51:    rb_plus_both_rb_h     class invariant: inv                                                    timeout           Pfolio      9.3  
+src/RightBiasing.scala:482:36:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    3.1  
+src/RightBiasing.scala:483:36:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:490:36:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:490:49:    rb_plus_both_rb_h     class invariant: inv                                                    valid             U:smt-z3    0.3  
+src/RightBiasing.scala:491:29:    rb_plus_both_rb_h     precond. (call rb_empty((scrut.r): @DropVCs , VarLis...)                valid             U:smt-z3    0.1  
+src/RightBiasing.scala:491:42:    rb_plus_both_rb_h     class invariant: inv                                                    valid             U:smt-z3    0.5  
+src/RightBiasing.scala:492:36:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.2  
+src/RightBiasing.scala:493:29:    rb_plus_both_rb_h     measure decreases                                                       valid             U:smt-z3    0.5  
+src/RightBiasing.scala:493:29:    rb_plus_both_rb_h     precond. (call rb_plus_both_rb_h((scrut.r): @DropVCs...)                valid             U:smt-z3    0.1  
+src/RightBiasing.scala:493:51:    rb_plus_both_rb_h     class invariant: inv                                                    timeout           Pfolio      12.4 
+src/RightBiasing.scala:494:36:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    2.7  
+src/RightBiasing.scala:495:36:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:498:43:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-cvc5  0.1  
+src/RightBiasing.scala:500:28:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    2.7  
+src/RightBiasing.scala:501:28:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.3  
+src/RightBiasing.scala:504:60:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:506:60:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:507:32:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:507:45:    rb_plus_both_rb_h     class invariant: inv                                                    valid             U:smt-z3    0.1  
+src/RightBiasing.scala:508:25:    rb_plus_both_rb_h     precond. (call rb_empty((scrut.r): @DropVCs , VarLis...)                valid             U:smt-z3    0.1  
+src/RightBiasing.scala:508:38:    rb_plus_both_rb_h     class invariant: inv                                                    valid             U:smt-z3    0.2  
+src/RightBiasing.scala:509:32:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.2  
+src/RightBiasing.scala:510:25:    rb_plus_both_rb_h     measure decreases                                                       valid             U:smt-z3    0.5  
+src/RightBiasing.scala:510:25:    rb_plus_both_rb_h     precond. (call rb_plus_both_rb_h((scrut.r): @DropVCs...)                valid             U:smt-cvc5  0.1  
+src/RightBiasing.scala:510:47:    rb_plus_both_rb_h     class invariant: inv                                                    valid             U:smt-z3    0.5  
+src/RightBiasing.scala:511:32:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.7  
+src/RightBiasing.scala:512:32:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:514:65:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:515:32:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:515:45:    rb_plus_both_rb_h     class invariant: inv                                                    valid             U:smt-z3    0.2  
+src/RightBiasing.scala:516:25:    rb_plus_both_rb_h     precond. (call rb_empty((scrut.r): @DropVCs , VarLis...)                valid             U:smt-cvc5  0.1  
+src/RightBiasing.scala:516:38:    rb_plus_both_rb_h     class invariant: inv                                                    valid             U:smt-z3    0.2  
+src/RightBiasing.scala:517:32:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.2  
+src/RightBiasing.scala:518:25:    rb_plus_both_rb_h     measure decreases                                                       valid             U:smt-z3    0.5  
+src/RightBiasing.scala:518:25:    rb_plus_both_rb_h     precond. (call rb_plus_both_rb_h((scrut.r): @DropVCs...)                valid             U:smt-cvc5  0.1  
+src/RightBiasing.scala:518:47:    rb_plus_both_rb_h     class invariant: inv                                                    valid             U:smt-z3    0.4  
+src/RightBiasing.scala:519:32:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.7  
+src/RightBiasing.scala:520:32:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:522:56:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:523:51:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:527:32:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:527:45:    rb_plus_both_rb_h     class invariant: inv                                                    valid             U:smt-z3    0.3  
+src/RightBiasing.scala:528:25:    rb_plus_both_rb_h     precond. (call rb_empty((scrut.r): @DropVCs , VarLis...)                valid             U:smt-z3    0.1  
+src/RightBiasing.scala:528:38:    rb_plus_both_rb_h     class invariant: inv                                                    valid             U:smt-z3    0.5  
+src/RightBiasing.scala:529:32:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.2  
+src/RightBiasing.scala:530:25:    rb_plus_both_rb_h     measure decreases                                                       valid             U:smt-z3    0.5  
+src/RightBiasing.scala:530:25:    rb_plus_both_rb_h     precond. (call rb_plus_both_rb_h((scrut.r): @DropVCs...)                valid             U:smt-cvc5  0.1  
+src/RightBiasing.scala:530:47:    rb_plus_both_rb_h     class invariant: inv                                                    timeout           Pfolio      13.8 
+src/RightBiasing.scala:531:32:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    2.7  
+src/RightBiasing.scala:532:32:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:538:32:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:538:45:    rb_plus_both_rb_h     class invariant: inv                                                    valid             U:smt-z3    0.3  
+src/RightBiasing.scala:539:25:    rb_plus_both_rb_h     precond. (call rb_empty((scrut.r): @DropVCs , VarLis...)                valid             U:smt-cvc5  0.1  
+src/RightBiasing.scala:539:38:    rb_plus_both_rb_h     class invariant: inv                                                    valid             U:smt-z3    0.5  
+src/RightBiasing.scala:540:32:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.2  
+src/RightBiasing.scala:541:25:    rb_plus_both_rb_h     measure decreases                                                       valid             U:smt-z3    0.4  
+src/RightBiasing.scala:541:25:    rb_plus_both_rb_h     precond. (call rb_plus_both_rb_h((scrut.r): @DropVCs...)                valid             U:smt-cvc5  0.1  
+src/RightBiasing.scala:541:47:    rb_plus_both_rb_h     class invariant: inv                                                    timeout           Pfolio      13.7 
+src/RightBiasing.scala:542:32:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    2.9  
+src/RightBiasing.scala:543:32:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:546:39:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:548:24:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    2.6  
+src/RightBiasing.scala:549:24:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.3  
+src/RightBiasing.scala:551:40:    rb_plus_both_rb_h     body assertion                                                          valid             U:smt-z3    0.2  
+src/RightBiasing.scala:555:28:    rb_plus_both_rb_h     postcondition                                                           valid             U:smt-z3    0.0  
+src/RightBiasing.scala:555:28:    rb_plus_both_rb_h     postcondition                                                           valid             U:smt-z3    0.0  
+src/RightBiasing.scala:555:28:    rb_plus_both_rb_h     postcondition                                                           valid             U:smt-z3    0.6  
+src/RightBiasing.scala:555:28:    rb_plus_both_rb_h     postcondition                                                           valid             U:smt-z3    0.0  
+src/RightBiasing.scala:555:28:    rb_plus_both_rb_h     postcondition                                                           valid             U:smt-z3    0.1  
+src/RightBiasing.scala:555:28:    rb_plus_both_rb_h     postcondition                                                           valid             U:smt-z3    0.1  
+src/RightBiasing.scala:555:28:    rb_plus_both_rb_h     postcondition                                                           valid             U:smt-z3    0.2  
+src/RightBiasing.scala:555:28:    rb_plus_both_rb_h     postcondition                                                           valid             U:smt-z3    0.1  
+src/RightBiasing.scala:555:28:    rb_plus_both_rb_h     postcondition                                                           valid             U:smt-z3    0.1  
+src/RightBiasing.scala:555:28:    rb_plus_both_rb_h     postcondition                                                           valid             U:smt-z3    0.0  
+src/RightBiasing.scala:555:28:    rb_plus_both_rb_h     postcondition                                                           valid             U:smt-z3    0.1  
+src/RightBiasing.scala:555:28:    rb_plus_both_rb_h     postcondition                                                           valid             U:smt-z3    0.0  
+src/RightBiasing.scala:556:19:    rb_plus_both_rb_h     postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:556:19:    rb_plus_both_rb_h     postcondition                                                           valid             U:smt-cvc5  0.1  
+src/RightBiasing.scala:556:19:    rb_plus_both_rb_h     postcondition                                                           valid             U:smt-z3    0.1  
+src/RightBiasing.scala:556:19:    rb_plus_both_rb_h     postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:556:19:    rb_plus_both_rb_h     postcondition                                                           valid             U:smt-z3    0.1  
+src/RightBiasing.scala:556:19:    rb_plus_both_rb_h     postcondition                                                           valid             U:smt-z3    0.1  
+src/RightBiasing.scala:556:19:    rb_plus_both_rb_h     postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:556:19:    rb_plus_both_rb_h     postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:556:19:    rb_plus_both_rb_h     postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:556:19:    rb_plus_both_rb_h     postcondition                                                           valid             U:smt-z3    0.1  
+src/RightBiasing.scala:556:19:    rb_plus_both_rb_h     postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:556:19:    rb_plus_both_rb_h     postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:134:19:    rb_plus_is_plus       non-negative measure                                                    valid             U:smt-z3    0.1  
+src/RightBiasing.scala:141:9:     rb_plus_is_plus       body assertion: match exhaustiveness                                    valid             U:smt-z3    0.1  
+src/RightBiasing.scala:144:24:    rb_plus_is_plus       body assertion                                                          valid             U:smt-z3    0.1  
+src/RightBiasing.scala:146:24:    rb_plus_is_plus       body assertion                                                          valid             U:smt-z3    0.4  
+src/RightBiasing.scala:151:17:    rb_plus_is_plus       precond. (call rb_plus_both_rb(x, VarList(empty[Tree])) (require 1/3))  valid             U:smt-z3    0.1  
+src/RightBiasing.scala:151:17:    rb_plus_is_plus       precond. (call rb_plus_both_rb(x, VarList(empty[Tree])) (require 2/3))  valid             U:smt-z3    0.1  
+src/RightBiasing.scala:151:17:    rb_plus_is_plus       precond. (call rb_plus_both_rb(x, VarList(empty[Tree])) (require 3/3))  valid             U:smt-z3    0.1  
+src/RightBiasing.scala:151:36:    rb_plus_is_plus       class invariant: inv                                                    valid             U:smt-z3    0.2  
+src/RightBiasing.scala:152:17:    rb_plus_is_plus       measure decreases                                                       valid             U:smt-z3    0.2  
+src/RightBiasing.scala:152:17:    rb_plus_is_plus       precond. (call rb_plus_is_plus((scrut.r): @DropVCs ) (require 1/2))     valid             U:smt-z3    0.1  
+src/RightBiasing.scala:152:17:    rb_plus_is_plus       precond. (call rb_plus_is_plus((scrut.r): @DropVCs ) (require 2/2))     valid             U:smt-z3    0.1  
+src/RightBiasing.scala:155:16:    rb_plus_is_plus       body assertion: match exhaustiveness                                    valid from cache              0.0  
+src/RightBiasing.scala:155:16:    rb_plus_is_plus       body assertion: match exhaustiveness                                    valid from cache              0.0  
+src/RightBiasing.scala:155:16:    rb_plus_is_plus       body assertion: match exhaustiveness                                    valid from cache              0.0  
+src/RightBiasing.scala:155:16:    rb_plus_is_plus       postcondition                                                           valid             U:smt-z3    0.0  
+src/RightBiasing.scala:155:16:    rb_plus_is_plus       postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:155:16:    rb_plus_is_plus       postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:156:36:    rb_plus_is_plus       postcondition                                                           valid             U:smt-z3    0.1  
+src/RightBiasing.scala:156:36:    rb_plus_is_plus       postcondition                                                           valid             U:smt-z3    0.0  
+src/RightBiasing.scala:156:36:    rb_plus_is_plus       postcondition                                                           valid             U:smt-z3    0.0  
+src/RightBiasing.scala:157:28:    rb_plus_is_plus       postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:157:28:    rb_plus_is_plus       postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:157:28:    rb_plus_is_plus       postcondition                                                           valid             U:smt-z3    0.4  
+src/RightBiasing.scala:47:9:      rbhelper              non-negative measure                                                    valid from cache              0.0  
+src/RightBiasing.scala:58:36:     rbhelper              measure decreases                                                       valid             U:smt-z3    0.1  
+src/RightBiasing.scala:58:49:     rbhelper              class invariant: inv                                                    valid             U:smt-z3    0.1  
+src/RightBiasing.scala:59:41:     rbhelper              measure decreases                                                       valid             U:smt-z3    0.1  
+src/RightBiasing.scala:59:54:     rbhelper              class invariant: inv                                                    valid             U:smt-z3    0.1  
+src/RightBiasing.scala:60:43:     rbhelper              measure decreases                                                       valid             U:smt-z3    0.1  
+src/RightBiasing.scala:60:56:     rbhelper              class invariant: inv                                                    valid             U:smt-z3    0.1  
+src/RightBiasing.scala:63:25:     rbhelper              measure decreases                                                       valid             U:smt-z3    0.1  
+src/RightBiasing.scala:63:38:     rbhelper              class invariant: inv                                                    valid             U:smt-z3    0.1  
+src/RightBiasing.scala:72:36:     rbhelper              measure decreases                                                       valid             U:smt-z3    0.1  
+src/RightBiasing.scala:72:49:     rbhelper              class invariant: inv                                                    valid             U:smt-z3    0.1  
+src/RightBiasing.scala:73:42:     rbhelper              measure decreases                                                       valid             U:smt-z3    0.1  
+src/RightBiasing.scala:73:55:     rbhelper              class invariant: inv                                                    valid             U:smt-z3    0.1  
+src/RightBiasing.scala:74:48:     rbhelper              measure decreases                                                       valid             U:smt-z3    0.1  
+src/RightBiasing.scala:74:61:     rbhelper              class invariant: inv                                                    valid             U:smt-z3    0.1  
+src/RightBiasing.scala:77:25:     rbhelper              measure decreases                                                       valid             U:smt-z3    0.1  
+src/RightBiasing.scala:77:38:     rbhelper              class invariant: inv                                                    valid             U:smt-z3    0.1  
+src/RightBiasing.scala:85:63:     rbhelper              measure decreases                                                       valid             U:smt-z3    0.1  
+src/RightBiasing.scala:85:76:     rbhelper              class invariant: inv                                                    valid             U:smt-z3    0.1  
+src/RightBiasing.scala:86:68:     rbhelper              measure decreases                                                       valid             U:smt-z3    0.1  
+src/RightBiasing.scala:86:81:     rbhelper              class invariant: inv                                                    valid             U:smt-z3    0.1  
+src/RightBiasing.scala:91:25:     rbhelper              measure decreases                                                       valid             U:smt-z3    0.1  
+src/RightBiasing.scala:91:38:     rbhelper              class invariant: inv                                                    valid             U:smt-z3    0.1  
+src/RightBiasing.scala:95:25:     rbhelper              measure decreases                                                       valid             U:smt-z3    0.1  
+src/RightBiasing.scala:95:38:     rbhelper              class invariant: inv                                                    valid             U:smt-z3    0.1  
+src/RightBiasing.scala:103:63:    rbhelper              measure decreases                                                       valid             U:smt-z3    0.1  
+src/RightBiasing.scala:103:76:    rbhelper              class invariant: inv                                                    valid             U:smt-z3    0.1  
+src/RightBiasing.scala:104:68:    rbhelper              measure decreases                                                       valid             U:smt-z3    0.1  
+src/RightBiasing.scala:104:81:    rbhelper              class invariant: inv                                                    valid             U:smt-z3    0.1  
+src/RightBiasing.scala:109:25:    rbhelper              measure decreases                                                       valid             U:smt-z3    0.1  
+src/RightBiasing.scala:109:38:    rbhelper              class invariant: inv                                                    valid             U:smt-z3    0.1  
+src/RightBiasing.scala:113:25:    rbhelper              measure decreases                                                       valid             U:smt-z3    0.1  
+src/RightBiasing.scala:113:38:    rbhelper              class invariant: inv                                                    valid             U:smt-z3    0.1  
+src/RightBiasing.scala:652:9:     treeDepth             non-negative measure                                                    valid from cache              0.0  
+src/RightBiasing.scala:653:9:     treeDepth             body assertion: match exhaustiveness                                    trivial                       0.0  
+src/RightBiasing.scala:653:9:     treeDepth             postcondition                                                           trivial                       0.0  
+src/RightBiasing.scala:654:26:    treeDepth             postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:655:25:    treeDepth             postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:656:28:    treeDepth             postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:657:35:    treeDepth             measure decreases                                                       valid from cache              0.0  
+src/RightBiasing.scala:657:62:    treeDepth             measure decreases                                                       valid from cache              0.0  
+src/RightBiasing.scala:657:92:    treeDepth             measure decreases                                                       valid from cache              0.0  
+src/RightBiasing.scala:657:92:    treeDepth             postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:657:122:   treeDepth             measure decreases                                                       valid from cache              0.0  
+src/RightBiasing.scala:657:122:   treeDepth             postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:658:28:    treeDepth             measure decreases                                                       valid from cache              0.0  
+src/RightBiasing.scala:658:28:    treeDepth             postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:659:35:    treeDepth             measure decreases                                                       valid from cache              0.0  
+src/RightBiasing.scala:659:62:    treeDepth             measure decreases                                                       valid from cache              0.0  
+src/RightBiasing.scala:659:92:    treeDepth             measure decreases                                                       valid from cache              0.0  
+src/RightBiasing.scala:659:92:    treeDepth             postcondition                                                           valid from cache              0.0  
+src/RightBiasing.scala:659:122:   treeDepth             measure decreases                                                       valid from cache              0.0  
+src/RightBiasing.scala:659:122:   treeDepth             postcondition                                                           valid from cache              0.0  
+....................................................................................................................................................................
+total: 717  valid: 689  (213 from cache, 5 trivial) invalid: 0    unknown: 28   time:  378.71                                                                      
+
+Verification pipeline summary:
+  cache, anti-aliasing, imperative elimination, type encoding, smt-cvc5, smt-z3, 
+  non-batched
+Shutting down executor service.
