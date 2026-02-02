@@ -174,6 +174,9 @@ object Rings extends lisa.Main
     val ringDiv1 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`)) |- (10 | i(20))){
         have(thesis) by divInts.apply
     }
+    val ringDivN1 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`)) |- (-10 | i(20))){
+        have(thesis) by divInts.apply
+    }
 
     val ringInEq1 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`)) |- 0 <= `1`){
         have(thesis) by inEquality.apply
@@ -222,6 +225,10 @@ object Rings extends lisa.Main
     }
 
     val ringInDiv1 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R) |- !(i(2) | i(3))){
+        have(thesis) by inDivInts.apply
+    }
+
+    val ringInDivN1 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R) |- !(i(-2) | i(3))){
         have(thesis) by inDivInts.apply
     }
 

@@ -562,25 +562,54 @@ object EqReasoning extends lisa.Main {
         }
         case (tx, ty + tys) if (isVariableOrNeg(tx) && isOneOrNegOne(ty)) => {
           val (ires, iprf) = evalInsert(tx, tys) // tx + tys === ires
-          val typings = SSet(tx ∈ R, ty ∈ R, tys ∈ R)
-          val pprf1 = have(iprf)
-          res = RB(ty + ires.tval)
-          // it's at most 3-4 atoms so using Taut should be ok
-          val pprf2 = have(typings |- tx + (ty + tys) === ty + (tx + tys)) by Tautology.from(addInsertHelper of (x := tx, y := ty, z := tys))
-          val equalities = SSet(pprf1, pprf2).map(_.bot.firstElemR)
-          have(equalities |-  tx + (ty + tys) === tx + (ty + tys)) by Restate
-          thenHave(equalities |- tx + (ty + tys) ===  ty + (tx + tys)) by RightSubstEq.withParameters(
-            Seq((tx + (ty + tys), ty + (tx + tys))),
-            (Seq(a), tx + (ty + tys) === a)
-          )
-          thenHave(equalities |- tx + (ty + tys) === ty + ires.tval) by RightSubstEq.withParameters(
-            Seq((tx + tys, ires.tval)),
-            (Seq(a), (tx + (ty + tys) === ty + a))
-          )
-          var temp = evalRingCutHelper(pprf1, tx + (ty + tys)  === ty + ires.tval, equalities, lastStep)
-          have(temp._2)
-          temp = evalRingCutHelper(pprf2, tx + (ty + tys)  === ty + ires.tval, temp._1, lastStep)
-          have(temp._2)
+          ires.tval match {
+          case `0` => 
+            val typings = SSet(tx ∈ R, ty ∈ R, tys ∈ R)
+            res = RB(ty)
+            val pprf1 = have(iprf) // tx + tys === 0
+            val pprf2 = have(typings |- tx + (ty + tys) === ty + (tx + tys)) by Tautology.from(addInsertHelper of (x := tx, y := ty, z := tys))
+            val pprf3 = have(typings |- ty + `0` === ty) by Tautology.from(x_zero_x of (x := ty))
+            val equalities = SSet(pprf1, pprf2, pprf3).map(_.bot.firstElemR)
+            have(equalities |-  tx + (ty + tys) === tx + (ty + tys)) by Restate
+            thenHave(equalities |- tx + (ty + tys) ===  ty + (tx + tys)) by RightSubstEq.withParameters(
+              Seq((tx + (ty + tys), ty + (tx + tys))),
+              (Seq(a), tx + (ty + tys) === a)
+            )
+            thenHave(equalities |- tx + (ty + tys) === ty + `0`) by RightSubstEq.withParameters(
+              Seq((tx + tys, `0`)),
+              (Seq(a), (tx + (ty + tys) === ty + a))
+            )
+            thenHave(equalities |- tx + (ty + tys) === ty) by RightSubstEq.withParameters(
+              Seq((ty + `0`, ty)),
+              (Seq(a), (tx + (ty + tys) === a))
+            )
+            var temp = evalRingCutHelper(pprf1, tx + (ty + tys)  === ty, equalities, lastStep)
+            have(temp._2)
+            temp = evalRingCutHelper(pprf2, tx + (ty + tys)  === ty, temp._1, lastStep)
+            have(temp._2)
+            temp = evalRingCutHelper(pprf3, tx + (ty + tys)  === ty, temp._1, lastStep)
+            have(temp._2)
+          case _ => 
+            val typings = SSet(tx ∈ R, ty ∈ R, tys ∈ R)
+            val pprf1 = have(iprf)
+            res = RB(ty + ires.tval)
+            // it's at most 3-4 atoms so using Taut should be ok
+            val pprf2 = have(typings |- tx + (ty + tys) === ty + (tx + tys)) by Tautology.from(addInsertHelper of (x := tx, y := ty, z := tys))
+            val equalities = SSet(pprf1, pprf2).map(_.bot.firstElemR)
+            have(equalities |-  tx + (ty + tys) === tx + (ty + tys)) by Restate
+            thenHave(equalities |- tx + (ty + tys) ===  ty + (tx + tys)) by RightSubstEq.withParameters(
+              Seq((tx + (ty + tys), ty + (tx + tys))),
+              (Seq(a), tx + (ty + tys) === a)
+            )
+            thenHave(equalities |- tx + (ty + tys) === ty + ires.tval) by RightSubstEq.withParameters(
+              Seq((tx + tys, ires.tval)),
+              (Seq(a), (tx + (ty + tys) === ty + a))
+            )
+            var temp = evalRingCutHelper(pprf1, tx + (ty + tys)  === ty + ires.tval, equalities, lastStep)
+            have(temp._2)
+            temp = evalRingCutHelper(pprf2, tx + (ty + tys)  === ty + ires.tval, temp._1, lastStep)
+            have(temp._2)
+          }
         }
         case (tx, ty + tys)  if List(tx, ty).forall(isVariable) || List(tx, ty).forall(isNegVariable) => {
           myOrd.compare(tx, ty) match {
@@ -591,25 +620,54 @@ object EqReasoning extends lisa.Main {
             }
             case tcomp if tcomp > 0 => {
               val (ires, iprf) = evalInsert(tx, tys) // tx + tys === ires
-              val typings = SSet(tx ∈ R, ty ∈ R, tys ∈ R)
-              val pprf1 = have(iprf)
-              res = RB(ty + ires.tval)
-              // it's at most 3-4 atoms so using Taut should be ok
-              val pprf2 = have(typings |- tx + (ty + tys) === ty + (tx + tys)) by Tautology.from(addInsertHelper of (x := tx, y := ty, z := tys))
-              val equalities = SSet(pprf1, pprf2).map(_.bot.firstElemR)
-              have(equalities |-  tx + (ty + tys) === tx + (ty + tys)) by Restate
-              thenHave(equalities |- tx + (ty + tys) ===  ty + (tx + tys)) by RightSubstEq.withParameters(
-                Seq((tx + (ty + tys), ty + (tx + tys))),
-                (Seq(a), tx + (ty + tys) === a)
-              )
-              thenHave(equalities |- tx + (ty + tys) === ty + ires.tval) by RightSubstEq.withParameters(
-                Seq((tx + tys, ires.tval)),
-                (Seq(a), (tx + (ty + tys) === ty + a))
-              )
-              var temp = evalRingCutHelper(pprf1, tx + (ty + tys)  === ty + ires.tval, equalities, lastStep)
-              have(temp._2)
-              temp = evalRingCutHelper(pprf2, tx + (ty + tys)  === ty + ires.tval, temp._1, lastStep)
-              have(temp._2)
+              ires.tval match
+                case `0` => 
+                  res = RB(ty)
+                  val typings = SSet(tx ∈ R, ty ∈ R, tys ∈ R)
+                  val pprf1 = have(iprf) // tx + tys === 0
+                  val pprf2 = have(typings |- tx + (ty + tys) === ty + (tx + tys)) by Tautology.from(addInsertHelper of (x := tx, y := ty, z := tys))
+                  val pprf3 = have(typings |- ty + `0` === ty) by Tautology.from(x_zero_x of (x := ty))
+                  val equalities = SSet(pprf1, pprf2, pprf3).map(_.bot.firstElemR)
+                  have(equalities |-  tx + (ty + tys) === tx + (ty + tys)) by Restate
+                  thenHave(equalities |- tx + (ty + tys) ===  ty + (tx + tys)) by RightSubstEq.withParameters(
+                    Seq((tx + (ty + tys), ty + (tx + tys))),
+                    (Seq(a), tx + (ty + tys) === a)
+                  )
+                  thenHave(equalities |- tx + (ty + tys) === ty + `0`) by RightSubstEq.withParameters(
+                    Seq((tx + tys, `0`)),
+                    (Seq(a), (tx + (ty + tys) === ty + a))
+                  )
+                  thenHave(equalities |- tx + (ty + tys) === ty) by RightSubstEq.withParameters(
+                    Seq((ty + `0`, ty)),
+                    (Seq(a), (tx + (ty + tys) === a))
+                  )
+                  var temp = evalRingCutHelper(pprf1, tx + (ty + tys)  === ty, equalities, lastStep)
+                  have(temp._2)
+                  temp = evalRingCutHelper(pprf2, tx + (ty + tys)  === ty, temp._1, lastStep)
+                  have(temp._2)
+                  temp = evalRingCutHelper(pprf3, tx + (ty + tys)  === ty, temp._1, lastStep)
+                  have(temp._2)
+                case _ => 
+                  val typings = SSet(tx ∈ R, ty ∈ R, tys ∈ R)
+                  val pprf1 = have(iprf)
+                  res = RB(ty + ires.tval)
+                  // it's at most 3-4 atoms so using Taut should be ok
+                  val pprf2 = have(typings |- tx + (ty + tys) === ty + (tx + tys)) by Tautology.from(addInsertHelper of (x := tx, y := ty, z := tys))
+                  val equalities = SSet(pprf1, pprf2).map(_.bot.firstElemR)
+                  have(equalities |-  tx + (ty + tys) === tx + (ty + tys)) by Restate
+                  thenHave(equalities |- tx + (ty + tys) ===  ty + (tx + tys)) by RightSubstEq.withParameters(
+                    Seq((tx + (ty + tys), ty + (tx + tys))),
+                    (Seq(a), tx + (ty + tys) === a)
+                  )
+                  thenHave(equalities |- tx + (ty + tys) === ty + ires.tval) by RightSubstEq.withParameters(
+                    Seq((tx + tys, ires.tval)),
+                    (Seq(a), (tx + (ty + tys) === ty + a))
+                  )
+                  var temp = evalRingCutHelper(pprf1, tx + (ty + tys)  === ty + ires.tval, equalities, lastStep)
+                  have(temp._2)
+                  temp = evalRingCutHelper(pprf2, tx + (ty + tys)  === ty + ires.tval, temp._1, lastStep)
+                  have(temp._2)
+              
             }
             case _ => return (NRB(xint), proof.InvalidProofTactic("evalPlus failed!"))
           }
@@ -635,25 +693,53 @@ object EqReasoning extends lisa.Main {
             }
             case tcomp if tcomp > 0 => {
               val (ires, iprf) = evalInsert(tx, tys) // tx + tys === ires
-              val typings = SSet(tx ∈ R, ty ∈ R, tys ∈ R)
-              val pprf1 = have(iprf)
-              res = RB(ty + ires.tval)
-              // it's at most 3-4 atoms so using Taut should be ok
-              val pprf2 = have(typings |- tx + (ty + tys) === ty + (tx + tys)) by Tautology.from(addInsertHelper of (x := tx, y := ty, z := tys))
-              val equalities = SSet(pprf1, pprf2).map(_.bot.firstElemR)
-              have(equalities |-  tx + (ty + tys) === tx + (ty + tys)) by Restate
-              thenHave(equalities |- tx + (ty + tys) ===  ty + (tx + tys)) by RightSubstEq.withParameters(
-                Seq((tx + (ty + tys), ty + (tx + tys))),
-                (Seq(a), tx + (ty + tys) === a)
-              )
-              thenHave(equalities |- tx + (ty + tys) === ty + ires.tval) by RightSubstEq.withParameters(
-                Seq((tx + tys, ires.tval)),
-                (Seq(a), (tx + (ty + tys) === ty + a))
-              )
-              var temp = evalRingCutHelper(pprf1, tx + (ty + tys)  === ty + ires.tval, equalities, lastStep)
-              have(temp._2)
-              temp = evalRingCutHelper(pprf2, tx + (ty + tys)  === ty + ires.tval, temp._1, lastStep)
-              have(temp._2)
+              ires.tval match 
+                case `0` => 
+                  res = RB(ty)
+                  val typings = SSet(tx ∈ R, ty ∈ R, tys ∈ R)
+                  val pprf1 = have(iprf) // tx + tys === 0
+                  val pprf2 = have(typings |- tx + (ty + tys) === ty + (tx + tys)) by Tautology.from(addInsertHelper of (x := tx, y := ty, z := tys))
+                  val pprf3 = have(typings |- ty + `0` === ty) by Tautology.from(x_zero_x of (x := ty))
+                  val equalities = SSet(pprf1, pprf2, pprf3).map(_.bot.firstElemR)
+                  have(equalities |-  tx + (ty + tys) === tx + (ty + tys)) by Restate
+                  thenHave(equalities |- tx + (ty + tys) ===  ty + (tx + tys)) by RightSubstEq.withParameters(
+                    Seq((tx + (ty + tys), ty + (tx + tys))),
+                    (Seq(a), tx + (ty + tys) === a)
+                  )
+                  thenHave(equalities |- tx + (ty + tys) === ty + `0`) by RightSubstEq.withParameters(
+                    Seq((tx + tys, `0`)),
+                    (Seq(a), (tx + (ty + tys) === ty + a))
+                  )
+                  thenHave(equalities |- tx + (ty + tys) === ty) by RightSubstEq.withParameters(
+                    Seq((ty + `0`, ty)),
+                    (Seq(a), (tx + (ty + tys) === a))
+                  )
+                  var temp = evalRingCutHelper(pprf1, tx + (ty + tys)  === ty, equalities, lastStep)
+                  have(temp._2)
+                  temp = evalRingCutHelper(pprf2, tx + (ty + tys)  === ty, temp._1, lastStep)
+                  have(temp._2)
+                  temp = evalRingCutHelper(pprf3, tx + (ty + tys)  === ty, temp._1, lastStep)
+                  have(temp._2)
+                case _ => 
+                  val typings = SSet(tx ∈ R, ty ∈ R, tys ∈ R)
+                  val pprf1 = have(iprf)
+                  res = RB(ty + ires.tval)
+                  // it's at most 3-4 atoms so using Taut should be ok
+                  val pprf2 = have(typings |- tx + (ty + tys) === ty + (tx + tys)) by Tautology.from(addInsertHelper of (x := tx, y := ty, z := tys))
+                  val equalities = SSet(pprf1, pprf2).map(_.bot.firstElemR)
+                  have(equalities |-  tx + (ty + tys) === tx + (ty + tys)) by Restate
+                  thenHave(equalities |- tx + (ty + tys) ===  ty + (tx + tys)) by RightSubstEq.withParameters(
+                    Seq((tx + (ty + tys), ty + (tx + tys))),
+                    (Seq(a), tx + (ty + tys) === a)
+                  )
+                  thenHave(equalities |- tx + (ty + tys) === ty + ires.tval) by RightSubstEq.withParameters(
+                    Seq((tx + tys, ires.tval)),
+                    (Seq(a), (tx + (ty + tys) === ty + a))
+                  )
+                  var temp = evalRingCutHelper(pprf1, tx + (ty + tys)  === ty + ires.tval, equalities, lastStep)
+                  have(temp._2)
+                  temp = evalRingCutHelper(pprf2, tx + (ty + tys)  === ty + ires.tval, temp._1, lastStep)
+                  have(temp._2)
             }
             case _ => return (NRB(xint), proof.InvalidProofTactic("evalPlus failed!"))
           }

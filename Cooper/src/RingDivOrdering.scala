@@ -483,6 +483,13 @@ object RingDivOrdering extends lisa.Main {
     have(thesis) by Congruence.from(lastStep, double_negation_elimination of (x := y))
   }
 
+  val div_neg_iff = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- (-y | x) <=> (y | x)){
+    assume(ring(R, <=, <, +, *, -, |, `0`, `1`))
+    assume(x ∈ R)
+    assume(y ∈ R)
+    have(thesis) by Tautology.from(div_negy_x_if_div_y_x, div_y_x_if_div_negy_x)
+  }
+
 
   val x_neq_y_zero_neq_xmy_iff = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- ((x - y) !== 0) <=> (x !== y)){
     assume(ring(R, <=, <, +, *, -, |, `0`, `1`))

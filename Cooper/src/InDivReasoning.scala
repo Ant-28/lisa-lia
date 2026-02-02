@@ -13,6 +13,7 @@ import RingStructure.{*}
 import Utils.{*, given Ordering[?]}
 import InEqReasoning.inEquality
 import DivReasoning.divInts
+import RingDivOrdering.div_neg_iff
 
 object InDivReasoning extends lisa.Main {
   import RingElemConversions.*
@@ -46,27 +47,38 @@ object InDivReasoning extends lisa.Main {
             // ty | tx <=> ∃c. tx = c*ty
             // BigInts are used as an oracle.
             val tyv = ci(ty)
+            
+            val tyvp = if tyv < 0 then -tyv else tyv
             val txv = ci(tx)
             if ((txv % tyv) == 0) then return proof.InvalidProofTactic("Is divisible, use DivReasoning instead")
-            
-            val tcv = txv/tyv
-            val ddiv = tyv * tcv
+            val absty = ic(tyvp)
+            val tcv = txv/tyvp
+            val ddiv = tyvp * tcv
             val diff = txv - (ddiv)
             val tc  = ic(tcv)
             val tdiff = ic(diff)
             val tddiv = ic(ddiv)
             
             val l = have(0 < diff) by inEquality.apply
-            val r = have(diff < ty) by inEquality.apply
+            val r = have(diff < absty) by inEquality.apply
             val leq = have(tx === tddiv + tdiff) by evalRingEq.apply
-            val c = have(ty | tddiv) by divInts.apply
+
+            val c =   have(absty | tddiv ) by divInts.apply
+
             
             val txr = have(tddiv ∈ R) by typeCheck.apply
-            val tyr = have(ty ∈ R) by typeCheck.apply
+            val tyr = have(absty ∈ R) by typeCheck.apply
             val tdr = have(tdiff ∈ R) by typeCheck.apply
+            val txdr = have((tddiv + tdiff) ∈ R) by Tautology.from(add_closure of (x := tddiv, y := tdiff), txr, tdr)
 
-            val vs = have(!(ty | (tddiv + tdiff))) by Tautology.from(does_not_divide of (x := tddiv, y := tdiff, z := ty), txr, tyr, tdr, l, r, c)
-            have(!(ty | (tx))) by Congruence.from(vs, leq)
+            val vs = have(!(absty | (tddiv + tdiff))) by Tautology.from(does_not_divide of (x := tddiv, y := tdiff, z := absty), txr, tyr, tdr, l, r, c)
+            if tyv > 0 then 
+              have(absty === ty) by evalRingEq.apply
+              have(!(ty | (tx))) by Congruence.from(vs, leq, lastStep)
+            else 
+              val v1 = have(!(-absty | (tddiv + tdiff))) by Tautology.from(div_neg_iff of (y := absty, x := (tddiv + tdiff)), vs, tyr, txdr, neg_closure of (x:= absty))
+              val eq1 = have(-absty === ty) by evalRingEq.apply
+              have(!(ty | tx)) by Congruence.from(v1, eq1, leq)
             
           }
           case _ => return proof.InvalidProofTactic("Can only solve indivs")

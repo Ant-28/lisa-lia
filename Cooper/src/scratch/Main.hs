@@ -1,3 +1,5 @@
+{-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
+{-# HLINT ignore "Redundant bracket" #-}
 module Main (main) where
 import Prelude
 import GHC.IO (unsafePerformIO)
@@ -20,6 +22,15 @@ prettyPrint (Plus a b) = "(" ++ prettyPrint a ++ " + " ++ prettyPrint b ++ ")"
 prettyPrint (Mult a b) = "(" ++ prettyPrint a ++ " * " ++ prettyPrint b ++ ")"
 prettyPrint (Neg a) = "-(" ++ prettyPrint a ++ ")"
 prettyPrint (Var x) = x
+
+
+notSoPrettyPrint :: RingAst -> String 
+notSoPrettyPrint Zero = "[0]"
+notSoPrettyPrint One = "[1]"
+notSoPrettyPrint (Plus a b) = "[+ " ++ notSoPrettyPrint a ++ " " ++ notSoPrettyPrint b ++ " ]"
+notSoPrettyPrint (Mult a b) = "[* " ++ notSoPrettyPrint a ++ " " ++ notSoPrettyPrint b ++ " ]"
+notSoPrettyPrint (Neg a) = "[- " ++ notSoPrettyPrint a ++ " ]"
+notSoPrettyPrint (Var x) = "[" ++ x ++ "]"
 
 getVars :: RingAst -> String
 getVars (Var x) = x
@@ -150,21 +161,30 @@ evalInsert x y | isVar x && isNegVar y =
 evalInsert x@(Neg (Var z)) y@(Var a) = evalInsert y x
 
 
-evalInsert x (Plus y ys) | isVarOrNegation x && isOneOrNegOne y = RB (Plus y (u (evalInsert x ys)))
+evalInsert x (Plus y ys) | isVarOrNegation x && isOneOrNegOne y = case (evalInsert x ys) of
+  RB (Zero) -> RB (y)
+  RB (t) | isVarOrNegation (t) -> RB (Plus y t)
+  RB (Plus t1 t2) -> RB (Plus y (Plus t1 t2))
 
 evalInsert x (Plus y ys)  | all isVar [x, y] || all isNegVar [x, y] =
     let z = getVars x in
     let a = getVars y in
     if z < a
     then RB (Plus x y)
-    else RB (Plus y (u (evalInsert x ys)))
+    else case (evalInsert x ys)  of
+        RB(Zero) -> RB(y)
+        RB(t) | isVarOrNegation(t) -> RB(Plus y t)
+        RB(Plus t1 t2) -> RB(Plus y (Plus t1 t2))
 evalInsert x (Plus y ys) | (isVar x && isNegVar y) ||(isNegVar x && isVar y) =
     let z = getVars x in
     let a = getVars y in
     case (z, a) of
     (z, a) | z == a    -> RB ys
     (z, a) | z < a     -> RB (Plus x (Plus y ys))
-    (z, a)             -> RB (Plus y (u (evalInsert x ys)))
+    (z, a)             -> case (evalInsert x ys)  of
+        RB(Zero) -> RB(y)
+        RB(t) | isVarOrNegation(t) -> RB(Plus y t)
+        RB(Plus t1 t2) -> RB(Plus y (Plus t1 t2))
 -- evalInsert x@(Neg (Var z)) y@(Neg (Var a)) = if z < a then RB (Plus x y) else RB (Plus y x)
 -- evalInsert x@(Var z) y@(Plus av@One ys) = RB (Plus av (u (evalInsert x ys)))
 -- evalInsert x@(Var z) y@(Plus av@(Neg One) ys) = RB (Plus av (u (evalInsert x ys)))
