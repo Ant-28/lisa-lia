@@ -45,7 +45,10 @@ object ListUtils {
         assert(l.drop(k).tail == l.drop(k).drop(1))
     }.ensuring(res => l.drop(k).tail == l.drop(k+1))
 
-    // def nexistsImpliesForall[T](l: List[T], p: T => Boolean): Unit
+    def nexistsImpliesForall[T](l: List[T], p: T => Boolean): Unit = {
+        require(!l.exists(p))
+        unfold(l.exists)
+    }.ensuring(l.forall(!p(_)))
     
     def applyForallNot0(l: List[BigInt], k : BigInt) : Unit = {
         require(0 <= k && k < l.length)

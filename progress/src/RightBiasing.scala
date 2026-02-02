@@ -20,20 +20,20 @@ object RightBiasing {
     case object M extends Sign
 
 
-    def isVariable(x: Tree) = x match {
+    inline def isVariable(x: Tree) = x match {
                                         case Var(_) => true
                                         case _ => false 
                                     }
-    def isNegVariable(x: Tree) = x match {
+    inline def isNegVariable(x: Tree) = x match {
                                         case Neg(Var(_)) => true
                                         case _ => false 
                                     }
-    def isVarOrNegation(x: Tree) = isVariable(x) || isNegVariable(x)
-    def isOne(x: Tree) = x == One
-    def isNegOne(x: Tree) = x == Neg(One)
-    def isOneOrNegOne(x: Tree) = isOne(x) || isNegOne(x)
-    def isZero(x: Tree) = x == Zero
-    def isBaseTerm(x: Tree) = isVarOrNegation(x) || isOneOrNegOne(x) || isZero(x)
+    inline def isVarOrNegation(x: Tree) = isVariable(x) || isNegVariable(x)
+    inline def isOne(x: Tree) = x == One
+    inline def isNegOne(x: Tree) = x == Neg(One)
+    inline def isOneOrNegOne(x: Tree) = isOne(x) || isNegOne(x)
+    inline def isZero(x: Tree) = x == Zero
+    inline def isBaseTerm(x: Tree) = isVarOrNegation(x) || isOneOrNegOne(x) || isZero(x)
 
 
     
@@ -174,7 +174,8 @@ object RightBiasing {
                     case One =>  {
                         assert(h != Neg(One))
                         assert(!isVarOrNegation(h))
-                        assert(!list.data.exists(isVarOrNegation(_)))
+                        // assert(!list.data.exists(isVarOrNegation(_)))
+                        // nexistsImpliesForall(list.data, isVarOrNegation)
                         assert(list.data.forall(!isVarOrNegation(_)))
                         assert(cdr == list.data.drop(1))
                         dropForAll(list.data, 1, x => !isVarOrNegation(x))
@@ -185,6 +186,8 @@ object RightBiasing {
                     case Neg(One) => {
                         assert(h != (One))
                         assert(!isVarOrNegation(h))
+                        // assert(!list.data.exists(isVarOrNegation(_)))
+                        // nexistsImpliesForall(list.data, isVarOrNegation)
                         assert(list.data.forall(!isVarOrNegation(_)))
                         assert(cdr == list.data.drop(1))
                         dropForAll(list.data, 1, x => !isVarOrNegation(x))
@@ -211,6 +214,8 @@ object RightBiasing {
                                 assert(!list.data.contains(Neg(One)))
                                 dropNoContains(list.data, Neg(One))
                                 assert(cdr == list.data.drop(1))
+                                assert(!list.data.exists(isVarOrNegation(_)))
+                                unfold(!list.data.exists(isVarOrNegation(_))); nexistsImpliesForall(list.data, isVarOrNegation);
                                 assert(list.data.forall(!isVarOrNegation(_)))
                                 dropForAll(list.data, 1, x => !isVarOrNegation(x))
                                 rb_empty(x, VarList(cdr))
@@ -246,6 +251,8 @@ object RightBiasing {
                                 assert(!list.data.contains((One)))
                                 dropNoContains(list.data, (One))
                                 assert(cdr == list.data.drop(1))
+                                assert(!list.data.exists(isVarOrNegation(_)))
+                                unfold(!list.data.exists(isVarOrNegation(_))); nexistsImpliesForall(list.data, isVarOrNegation)
                                 assert(list.data.forall(!isVarOrNegation(_)))
                                 dropForAll(list.data, 1, x => !isVarOrNegation(x))
                                 rb_empty(x, VarList(cdr))
@@ -346,9 +353,21 @@ object RightBiasing {
                 
                 }
             }
-            case Nil() => assert(rbhelper(x, list) == isRightBiased(x))
-        
-            
+            case Nil() => assert(rbhelper(x, list) == rbhelper(x, VarList(list.data.drop(1))))
+
+    }.ensuring(rbhelper(x, VarList(list.data.drop(1))))
+
+    def rb_empty2(x: Tree, list: VarList) : Unit = {
+        decreases(treeDepth(x) + list.data.size)
+        require(rbhelper(x, list))
+        list.data match
+            case Cons(h, t) => {
+                rb_empty(x, list)
+                assert(t == list.data.drop(1))
+                assert(rbhelper(x, VarList(list.data.drop(1))))
+                rb_empty2(x, VarList(list.data.drop(1)))
+            }
+            case Nil() => ()
         
 
     }.ensuring(isRightBiased(x))
@@ -369,30 +388,30 @@ object RightBiasing {
                         case Var(s) => {
                             
                             assert(rbhelper(t2, VarList(list.data.::(t1))))
-                            rb_plus_both_rb_h(t2, VarList(list.data.::(t1)))
-                            rb_empty(t2, VarList(list.data.::(t1)))
+
+                            rb_empty2(t2, VarList(list.data.::(t1)))
                             assert(isRightBiased(t1))
                             assert(isRightBiased(t2))
                         }
                         case Neg(Var(s)) => {
                             assert(rbhelper(t2, VarList(list.data.::(t1))))
-                            rb_plus_both_rb_h(t2, VarList(list.data.::(t1)))
-                            rb_empty(t2, VarList(list.data.::(t1)))
+
+                            rb_empty2(t2, VarList(list.data.::(t1)))
                             assert(isRightBiased(t1))
                             assert(isRightBiased(t2))
                         }
                         case Plus(One, t3) => {
                             assert(rbhelper(t2, VarList(list.data.::(t1))))
-                            rb_plus_both_rb_h(t2, VarList(list.data.::(t1)))
-                            rb_empty(t2, VarList(list.data.::(t1)))
+
+                            rb_empty2(t2, VarList(list.data.::(t1)))
                             assert(isRightBiased(t1))
                             assert(isRightBiased(t2))
                         }
                         case Plus(Neg(One), t3) =>  assert(!rbhelper(x, list))
                         case Plus(t, t3) if isVarOrNegation(t) => {
                             assert(rbhelper(t2, VarList(list.data.::(t))))
-                            rb_plus_both_rb_h(t2, VarList(list.data.::(t)))
-                            rb_empty(t2, VarList(list.data.::(t)))
+
+                            rb_empty2(t2, VarList(list.data.::(t)))
                             assert(isRightBiased(t1))
                             assert(isRightBiased(t2))
                         }
@@ -409,27 +428,24 @@ object RightBiasing {
                         case Var(s) => {
                             
                             assert(rbhelper(t2, VarList(list.data.::(t1))))
-                            rb_empty(t2, VarList(list.data.::(t1)))
-                            assert(isRightBiased(t2))
-                            rb_plus_both_rb_h(t2, VarList(list.data.::(t1)))
+                            rb_empty2(t2, VarList(list.data.::(t1)))
+
                             assert(isRightBiased(t1))
                             assert(isRightBiased(t2))
                         }
                         case Neg(Var(s)) =>  {
                             
                             assert(rbhelper(t2, VarList(list.data.::(t1))))
-                            rb_empty(t2, VarList(list.data.::(t1)))
-                            assert(isRightBiased(t2))
-                            rb_plus_both_rb_h(t2, VarList(list.data.::(t1)))
+                            rb_empty2(t2, VarList(list.data.::(t1)))
+
                             assert(isRightBiased(t1))
                             assert(isRightBiased(t2))
                         }
                         case Plus(Neg(One), t3) => {
                             
                             assert(rbhelper(t2, VarList(list.data.::(t1))))
-                            rb_empty(t2, VarList(list.data.::(t1)))
-                            assert(isRightBiased(t2))
-                            rb_plus_both_rb_h(t2, VarList(list.data.::(t1)))
+                            rb_empty2(t2, VarList(list.data.::(t1)))
+
                             assert(isRightBiased(t1))
                             assert(isRightBiased(t2))
                             
@@ -438,9 +454,8 @@ object RightBiasing {
                         case Plus(t, t3) if isVarOrNegation(t) => {
                             
                             assert(rbhelper(t2, VarList(list.data.::(t))))
-                            rb_empty(t2, VarList(list.data.::(t)))
-                            assert(isRightBiased(t2))
-                            rb_plus_both_rb_h(t2, VarList(list.data.::(t)))
+                            rb_empty2(t2, VarList(list.data.::(t)))
+
                             assert(isRightBiased(t1))
                             assert(isRightBiased(t2))
                         }
@@ -455,18 +470,14 @@ object RightBiasing {
                         case Var(sp) => if s > sp then () else {
                             
                             assert(rbhelper(t2, VarList(list.data.::(t1))))
-                            rb_empty(t2, VarList(list.data.::(t1)))
-                            assert(isRightBiased(t2))
-                            rb_plus_both_rb_h(t2, VarList(list.data.::(t1)))
+                            rb_empty2(t2, VarList(list.data.::(t1)))
                             assert(isRightBiased(t1))
                             assert(isRightBiased(t2))
                         }
                         case Neg(Var(sp)) => if s > sp then () else {
                             
                             assert(rbhelper(t2, VarList(list.data.::(t1))))
-                            rb_empty(t2, VarList(list.data.::(t1)))
-                            assert(isRightBiased(t2))
-                            rb_plus_both_rb_h(t2, VarList(list.data.::(t1)))
+                            rb_empty2(t2, VarList(list.data.::(t1)))
                             assert(isRightBiased(t1))
                             assert(isRightBiased(t2))
                         }
@@ -477,9 +488,7 @@ object RightBiasing {
                             {
                             
                             assert(rbhelper(t2, VarList(list.data.::(t))))
-                            rb_empty(t2, VarList(list.data.::(t)))
-                            assert(isRightBiased(t2))
-                            rb_plus_both_rb_h(t2, VarList(list.data.::(t)))
+                            rb_empty2(t2, VarList(list.data.::(t)))
                             assert(isRightBiased(t1))
                             assert(isRightBiased(t2))
                         }
@@ -489,9 +498,7 @@ object RightBiasing {
                             {
                             
                             assert(rbhelper(t2, VarList(list.data.::(t))))
-                            rb_empty(t2, VarList(list.data.::(t)))
-                            assert(isRightBiased(t2))
-                            rb_plus_both_rb_h(t2, VarList(list.data.::(t)))
+                            rb_empty2(t2, VarList(list.data.::(t)))
                             assert(isRightBiased(t1))
                             assert(isRightBiased(t2))
                         }
@@ -506,17 +513,13 @@ object RightBiasing {
                 t2 match {
                     case Var(sp) => if s > sp then  assert(!rbhelper(x, list)) else {
                         assert(rbhelper(t2, VarList(list.data.::(t1))))
-                        rb_empty(t2, VarList(list.data.::(t1)))
-                        assert(isRightBiased(t2))
-                        rb_plus_both_rb_h(t2, VarList(list.data.::(t1)))
+                        rb_empty2(t2, VarList(list.data.::(t1)))
                         assert(isRightBiased(t1))
                         assert(isRightBiased(t2))
                     }
                     case Neg(Var(sp)) => if s > sp then  assert(!rbhelper(x, list)) else {
                         assert(rbhelper(t2, VarList(list.data.::(t1))))
-                        rb_empty(t2, VarList(list.data.::(t1)))
-                        assert(isRightBiased(t2))
-                        rb_plus_both_rb_h(t2, VarList(list.data.::(t1)))
+                        rb_empty2(t2, VarList(list.data.::(t1)))
                         assert(isRightBiased(t1))
                         assert(isRightBiased(t2))
                     }
@@ -526,20 +529,18 @@ object RightBiasing {
                         if s > sp then () else
                         {
                         assert(rbhelper(t2, VarList(list.data.::(t))))
-                        rb_empty(t2, VarList(list.data.::(t)))
-                        assert(isRightBiased(t2))
-                        rb_plus_both_rb_h(t2, VarList(list.data.::(t)))
+                        rb_empty2(t2, VarList(list.data.::(t)))
                         assert(isRightBiased(t1))
                         assert(isRightBiased(t2))
+                        
+                        
                     }
                     }
                     case Plus(t@Neg(Var(sp)), t3) => {
                         if s > sp then () else
                         {
                         assert(rbhelper(t2, VarList(list.data.::(t))))
-                        rb_empty(t2, VarList(list.data.::(t)))
-                        assert(isRightBiased(t2))
-                        rb_plus_both_rb_h(t2, VarList(list.data.::(t)))
+                        rb_empty2(t2, VarList(list.data.::(t)))
                         assert(isRightBiased(t1))
                         assert(isRightBiased(t2))
                     }
