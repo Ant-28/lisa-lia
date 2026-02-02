@@ -1,15 +1,381 @@
-info Compiling with standard Scala 3.7.2 compiler front end...info Finished compiling                                       
-info Preprocessing the symbols...                             info Preprocessing finished                                   
-info Running phase ConstructsUsage                            info Running phase PartialFunctions                           info Running phase XlangLowering                              info Running phase InnerClasses                               info Running phase Laws                                       info Running phase SuperInvariants                            info Running phase SuperCalls                                 info Running phase Sealing                                    info Running phase MethodLifting                              info Running phase MergeInvariants                            info Running phase FieldAccessors                             info Running phase ValueClasses                               info Running phase MethodsLowering                            info Running phase ExceptionLifting                           info Running phase EffectElaboration                          info Running phase AntiAliasing                               info Running phase ReturnElimination                          info Running phase ImperativeCodeElimination                  info Running phase ImperativeCleanup                          info Running phase AdtSpecialization                          info Running phase RefinementLifting                          info Running phase TypeEncoding                               info Running phase InvariantInitialization                    info Running phase FunctionClosure                            info Running phase FunctionSpecialization                     info Running phase UnfoldOpaque                               info Running phase CallSiteInline                             info Running phase ChooseInjector                             info Running phase ChooseEncoder                              info Running phase FunctionInlining                           info Running phase TraceInductElimination                     info Running phase SizedADTExtraction                         info Running phase InductElimination                          info Running phase MeasureInference                           info Inferring measure for isLinear...                        info Inferring measure for contains...                        info Inferring measure for treeDepth...                       info Inferring measure for dropNoContains...                  info Inferring measure for rbhelper...                        info Running phase PartialEvaluation                          info Finished lowering the symbols                            
-info Generating VCs for 36 functions...                       info Finished generating VCs                                  
+
+info Compiling with standard Scala 3.7.2 compiler front end...
+info Finished compiling                                       
+
+info Preprocessing the symbols...                             
+info Preprocessing finished                                   
+
+info Running phase ConstructsUsage                            
+info Running phase PartialFunctions                           
+info Running phase XlangLowering                              
+info Running phase InnerClasses                               
+info Running phase Laws                                       
+info Running phase SuperInvariants                            
+info Running phase SuperCalls                                 
+info Running phase Sealing                                    
+info Running phase MethodLifting                              
+info Running phase MergeInvariants                            
+info Running phase FieldAccessors                             
+info Running phase ValueClasses                               
+info Running phase MethodsLowering                            
+info Running phase ExceptionLifting                           
+info Running phase EffectElaboration                          
+info Running phase AntiAliasing                               
+info Running phase ReturnElimination                          
+info Running phase ImperativeCodeElimination                  
+info Running phase ImperativeCleanup                          
+info Running phase AdtSpecialization                          
+info Running phase RefinementLifting                          
+info Running phase TypeEncoding                               
+info Running phase InvariantInitialization                    
+info Running phase FunctionClosure                            
+info Running phase FunctionSpecialization                     
+info Running phase UnfoldOpaque                               
+info Running phase CallSiteInline                             
+info Running phase ChooseInjector                             
+info Running phase ChooseEncoder                              
+info Running phase FunctionInlining                           
+info Running phase TraceInductElimination                     
+info Running phase SizedADTExtraction                         
+info Running phase InductElimination                          
+info Running phase MeasureInference                           
+info Inferring measure for isLinear...                        
+info Inferring measure for contains...                        
+info Inferring measure for treeDepth...                       
+info Inferring measure for dropNoContains...                  
+info Inferring measure for rbhelper...                        
+info Running phase PartialEvaluation                          
+info Finished lowering the symbols                            
+
+info Generating VCs for 36 functions...                       
+info Finished generating VCs                                  
 Starting verification...
-info  Verified: 0 / 723info Verifying: 723 verification conditions:info  Verified: 1 / 723                     info  Verified: 2 / 723                     info  Verified: 3 / 723                     info  Verified: 4 / 723                     info  Verified: 5 / 723                     info  Verified: 6 / 723                     info  Verified: 7 / 723                     info  Verified: 8 / 723                     info  Verified: 9 / 723                     info  Verified: 10 / 723                    info  Verified: 11 / 723                    info  Verified: 12 / 723                    info  Verified: 13 / 723                    info  Verified: 14 / 723                    info  Verified: 15 / 723                    info  Verified: 16 / 723                    info  Verified: 17 / 723                    info  Verified: 18 / 723                    info  Verified: 19 / 723                    info  Verified: 20 / 723                    info  Verified: 21 / 723                    info  Verified: 22 / 723                    info  Verified: 23 / 723                    info  Verified: 24 / 723                    info  Verified: 25 / 723                    info  Verified: 26 / 723                    info  Verified: 27 / 723                    info  Verified: 28 / 723                    info  Verified: 29 / 723                    info  Verified: 30 / 723                    info  Verified: 31 / 723                    info  Verified: 32 / 723                    info  Verified: 33 / 723                    info  Verified: 34 / 723                    info  Verified: 35 / 723                    info  Verified: 36 / 723                    info  Verified: 37 / 723                    info  Verified: 38 / 723                    info  Verified: 39 / 723                    info  Verified: 40 / 723                    info  Verified: 41 / 723                    info  Verified: 42 / 723                    info  Verified: 43 / 723                    info  Verified: 44 / 723                    info  Verified: 45 / 723                    info  Verified: 46 / 723                    info  Verified: 47 / 723                    info  Verified: 48 / 723                    info  Verified: 49 / 723                    info  Verified: 50 / 723                    info  Verified: 51 / 723                    info  Verified: 52 / 723                    info  Verified: 53 / 723                    info  Verified: 54 / 723                    info  Verified: 55 / 723                    info  Verified: 56 / 723                    info  Verified: 57 / 723                    info  Verified: 58 / 723                    info  Verified: 59 / 723                    info  Verified: 60 / 723                    info  Verified: 61 / 723                    info  Verified: 62 / 723                    info  Verified: 63 / 723                    info  Verified: 64 / 723                    info  Verified: 65 / 723                    info  Verified: 66 / 723                    info  Verified: 67 / 723                    info  Verified: 68 / 723                    info  Verified: 69 / 723                    info  Verified: 70 / 723                    info  Verified: 71 / 723                    info  Verified: 72 / 723                    info  Verified: 73 / 723                    info  Verified: 74 / 723                    info  Verified: 75 / 723                    info  Verified: 76 / 723                    info  Verified: 77 / 723                    info  Verified: 78 / 723                    info  Verified: 79 / 723                    info  Verified: 80 / 723                    info  Verified: 81 / 723                    info  Verified: 82 / 723                    info  Verified: 83 / 723                    info  Verified: 84 / 723                    info  Verified: 85 / 723                    info  Verified: 86 / 723                    info  Verified: 87 / 723                    info  Verified: 88 / 723                    info  Verified: 89 / 723                    info  Verified: 90 / 723                    info  Verified: 91 / 723                    info  Verified: 92 / 723                    info  Verified: 93 / 723                    info  Verified: 94 / 723                    info  Verified: 95 / 723                    info  Verified: 96 / 723                    info  Verified: 97 / 723                    info  Verified: 98 / 723                    info  Verified: 99 / 723                    info  Verified: 100 / 723                   info  Verified: 101 / 723                   info  Verified: 102 / 723                   info  Verified: 103 / 723                   info  Verified: 104 / 723                   info  Verified: 105 / 723                   info  Verified: 106 / 723                   info  Verified: 107 / 723                   info  Verified: 108 / 723                   info  Verified: 109 / 723                   info  Verified: 110 / 723                   info  Verified: 111 / 723                   info  Verified: 112 / 723                   info  Verified: 113 / 723                   info  Verified: 114 / 723                   info  Verified: 115 / 723                   info  Verified: 116 / 723                   info  Verified: 117 / 723                   info  Verified: 118 / 723                   info  Verified: 119 / 723                   info  Verified: 120 / 723                   info  Verified: 121 / 723                   info  Verified: 122 / 723                   info  Verified: 123 / 723                   info  Verified: 124 / 723                   info  Verified: 125 / 723                   info  Verified: 126 / 723                   info  Verified: 127 / 723                   info  Verified: 128 / 723                   info  Verified: 129 / 723                   info  Verified: 130 / 723                   info  Verified: 131 / 723                   info  Verified: 132 / 723                   info  Verified: 133 / 723                   info  Verified: 134 / 723                   info  Verified: 135 / 723                   info  Verified: 136 / 723                   info  Verified: 137 / 723                   info  Verified: 138 / 723                   info  Verified: 139 / 723                   info  Verified: 140 / 723                   info  Verified: 141 / 723                   info  Verified: 142 / 723                   info  Verified: 143 / 723                   info  Verified: 144 / 723                   info  Verified: 145 / 723                   info  Verified: 146 / 723                   info  Verified: 147 / 723                   info  Verified: 148 / 723                   info  Verified: 149 / 723                   info  Verified: 150 / 723                   info  Verified: 151 / 723                   info  Verified: 152 / 723                   info  Verified: 153 / 723                   info  Verified: 154 / 723                   info  Verified: 155 / 723                   info  Verified: 156 / 723                   info  Verified: 157 / 723                   info  Verified: 158 / 723                   info  Verified: 159 / 723                   info  Verified: 160 / 723                   info  Verified: 161 / 723                   info  Verified: 162 / 723                   info  Verified: 163 / 723                   info  Verified: 164 / 723                   info  Verified: 165 / 723                   info  Verified: 166 / 723                   info  Verified: 167 / 723                   info  Verified: 168 / 723                   info  Verified: 169 / 723                   info  Verified: 170 / 723                   info  Verified: 171 / 723                   info  Verified: 172 / 723                   info  Verified: 173 / 723                   info  Verified: 174 / 723                   info  Verified: 175 / 723                   info  Verified: 176 / 723                   info  Verified: 177 / 723                   info  Verified: 178 / 723                   info  Verified: 179 / 723                   info  Verified: 180 / 723                   info  Verified: 181 / 723                   info  Verified: 182 / 723                   info  Verified: 183 / 723                   info  Verified: 184 / 723                   info  Verified: 185 / 723                   info  Verified: 186 / 723                   info  Verified: 187 / 723                   info  Verified: 188 / 723                   info  Verified: 189 / 723                   info  Verified: 190 / 723                   info  Verified: 191 / 723                   info  Verified: 192 / 723                   info  Verified: 193 / 723                   info  Verified: 194 / 723                   info  Verified: 195 / 723                   info  Verified: 196 / 723                   info  Verified: 197 / 723                   info  Verified: 198 / 723                   info  Verified: 199 / 723                   info  Verified: 200 / 723                   info  Verified: 201 / 723                   info  Verified: 202 / 723                   info  Verified: 203 / 723                   info  Verified: 204 / 723                   info  Verified: 205 / 723                   info  Verified: 206 / 723                   info  Verified: 207 / 723                   info  Verified: 208 / 723                   info  Verified: 209 / 723                   info  Verified: 210 / 723                   info  Verified: 211 / 723                   info  Verified: 212 / 723                   info  Verified: 213 / 723                   info  Verified: 214 / 723                   info  Verified: 215 / 723                   info  Verified: 216 / 723                   info  Verified: 217 / 723                   info  Verified: 218 / 723                   info  Verified: 219 / 723                   info  Verified: 220 / 723                   info  Verified: 221 / 723                   info  Verified: 222 / 723                   info  Verified: 223 / 723                   info  Verified: 224 / 723                   info  Verified: 225 / 723                   info  Verified: 226 / 723                   info  Verified: 227 / 723                   info  Verified: 228 / 723                   info  Verified: 229 / 723                   info  Verified: 230 / 723                   info  Verified: 231 / 723                   info  Verified: 232 / 723                   info  Verified: 233 / 723                   info  Verified: 234 / 723                   info  Verified: 235 / 723                   info  Verified: 236 / 723                   info  Verified: 237 / 723                   info  Verified: 238 / 723                   info  Verified: 239 / 723                   info  Verified: 240 / 723                   info  Verified: 241 / 723                   info  Verified: 242 / 723                   info  Verified: 243 / 723                   info  Verified: 244 / 723                   info  Verified: 245 / 723                   info  Verified: 246 / 723                   info  Verified: 247 / 723                   info  Verified: 248 / 723                   info  Verified: 249 / 723                   info  Verified: 250 / 723                   info  Verified: 251 / 723                   info  Verified: 252 / 723                   info  Verified: 253 / 723                   info  Verified: 254 / 723                   info  Verified: 255 / 723                   info  Verified: 256 / 723                   info  Verified: 257 / 723                   info  Verified: 258 / 723                   info  Verified: 259 / 723                   info  Verified: 260 / 723                   info  Verified: 261 / 723                   info  Verified: 262 / 723                   info  Verified: 263 / 723                   info  Verified: 264 / 723                   info  Verified: 265 / 723                   info  Verified: 266 / 723                   info  Verified: 267 / 723                   info  Verified: 268 / 723                   info  Verified: 269 / 723                   info  Verified: 270 / 723                   info  Verified: 271 / 723                   info  Verified: 272 / 723                   info  Verified: 273 / 723                   info  Verified: 274 / 723                   info  Verified: 275 / 723                   info  Verified: 276 / 723                   info  Verified: 277 / 723                   info  Verified: 278 / 723                   info  Verified: 279 / 723                   info  Verified: 280 / 723                   info  Verified: 281 / 723                   info  Verified: 282 / 723                   info  Verified: 283 / 723                   info  Verified: 284 / 723                   info  Verified: 285 / 723                   info  Verified: 286 / 723                   info  Verified: 287 / 723                   info  Verified: 288 / 723                   info  Verified: 289 / 723                   info  Verified: 290 / 723                   info  Verified: 291 / 723                   info  Verified: 292 / 723                   info  Verified: 293 / 723                   info  Verified: 294 / 723                   info  Verified: 295 / 723                   info  Verified: 296 / 723                   info  Verified: 297 / 723                   info  Verified: 298 / 723                   info  Verified: 299 / 723                   info  Verified: 300 / 723                   info  Verified: 301 / 723                   info  Verified: 302 / 723                   info  Verified: 303 / 723                   info  Verified: 304 / 723                   info  Verified: 305 / 723                   info  Verified: 306 / 723                   info  Verified: 307 / 723                   info  Verified: 308 / 723                   info  Verified: 309 / 723                   info  Verified: 310 / 723                   info  Verified: 311 / 723                   info  Verified: 312 / 723                   info  Verified: 313 / 723                   info  Verified: 314 / 723                   info  Verified: 315 / 723                   info  Verified: 316 / 723                   
+
+info  Verified: 0 / 723
+info Verifying: 723 verification conditions:
+info  Verified: 1 / 723                     
+info  Verified: 2 / 723                     
+info  Verified: 3 / 723                     
+info  Verified: 4 / 723                     
+info  Verified: 5 / 723                     
+info  Verified: 6 / 723                     
+info  Verified: 7 / 723                     
+info  Verified: 8 / 723                     
+info  Verified: 9 / 723                     
+info  Verified: 10 / 723                    
+info  Verified: 11 / 723                    
+info  Verified: 12 / 723                    
+info  Verified: 13 / 723                    
+info  Verified: 14 / 723                    
+info  Verified: 15 / 723                    
+info  Verified: 16 / 723                    
+info  Verified: 17 / 723                    
+info  Verified: 18 / 723                    
+info  Verified: 19 / 723                    
+info  Verified: 20 / 723                    
+info  Verified: 21 / 723                    
+info  Verified: 22 / 723                    
+info  Verified: 23 / 723                    
+info  Verified: 24 / 723                    
+info  Verified: 25 / 723                    
+info  Verified: 26 / 723                    
+info  Verified: 27 / 723                    
+info  Verified: 28 / 723                    
+info  Verified: 29 / 723                    
+info  Verified: 30 / 723                    
+info  Verified: 31 / 723                    
+info  Verified: 32 / 723                    
+info  Verified: 33 / 723                    
+info  Verified: 34 / 723                    
+info  Verified: 35 / 723                    
+info  Verified: 36 / 723                    
+info  Verified: 37 / 723                    
+info  Verified: 38 / 723                    
+info  Verified: 39 / 723                    
+info  Verified: 40 / 723                    
+info  Verified: 41 / 723                    
+info  Verified: 42 / 723                    
+info  Verified: 43 / 723                    
+info  Verified: 44 / 723                    
+info  Verified: 45 / 723                    
+info  Verified: 46 / 723                    
+info  Verified: 47 / 723                    
+info  Verified: 48 / 723                    
+info  Verified: 49 / 723                    
+info  Verified: 50 / 723                    
+info  Verified: 51 / 723                    
+info  Verified: 52 / 723                    
+info  Verified: 53 / 723                    
+info  Verified: 54 / 723                    
+info  Verified: 55 / 723                    
+info  Verified: 56 / 723                    
+info  Verified: 57 / 723                    
+info  Verified: 58 / 723                    
+info  Verified: 59 / 723                    
+info  Verified: 60 / 723                    
+info  Verified: 61 / 723                    
+info  Verified: 62 / 723                    
+info  Verified: 63 / 723                    
+info  Verified: 64 / 723                    
+info  Verified: 65 / 723                    
+info  Verified: 66 / 723                    
+info  Verified: 67 / 723                    
+info  Verified: 68 / 723                    
+info  Verified: 69 / 723                    
+info  Verified: 70 / 723                    
+info  Verified: 71 / 723                    
+info  Verified: 72 / 723                    
+info  Verified: 73 / 723                    
+info  Verified: 74 / 723                    
+info  Verified: 75 / 723                    
+info  Verified: 76 / 723                    
+info  Verified: 77 / 723                    
+info  Verified: 78 / 723                    
+info  Verified: 79 / 723                    
+info  Verified: 80 / 723                    
+info  Verified: 81 / 723                    
+info  Verified: 82 / 723                    
+info  Verified: 83 / 723                    
+info  Verified: 84 / 723                    
+info  Verified: 85 / 723                    
+info  Verified: 86 / 723                    
+info  Verified: 87 / 723                    
+info  Verified: 88 / 723                    
+info  Verified: 89 / 723                    
+info  Verified: 90 / 723                    
+info  Verified: 91 / 723                    
+info  Verified: 92 / 723                    
+info  Verified: 93 / 723                    
+info  Verified: 94 / 723                    
+info  Verified: 95 / 723                    
+info  Verified: 96 / 723                    
+info  Verified: 97 / 723                    
+info  Verified: 98 / 723                    
+info  Verified: 99 / 723                    
+info  Verified: 100 / 723                   
+info  Verified: 101 / 723                   
+info  Verified: 102 / 723                   
+info  Verified: 103 / 723                   
+info  Verified: 104 / 723                   
+info  Verified: 105 / 723                   
+info  Verified: 106 / 723                   
+info  Verified: 107 / 723                   
+info  Verified: 108 / 723                   
+info  Verified: 109 / 723                   
+info  Verified: 110 / 723                   
+info  Verified: 111 / 723                   
+info  Verified: 112 / 723                   
+info  Verified: 113 / 723                   
+info  Verified: 114 / 723                   
+info  Verified: 115 / 723                   
+info  Verified: 116 / 723                   
+info  Verified: 117 / 723                   
+info  Verified: 118 / 723                   
+info  Verified: 119 / 723                   
+info  Verified: 120 / 723                   
+info  Verified: 121 / 723                   
+info  Verified: 122 / 723                   
+info  Verified: 123 / 723                   
+info  Verified: 124 / 723                   
+info  Verified: 125 / 723                   
+info  Verified: 126 / 723                   
+info  Verified: 127 / 723                   
+info  Verified: 128 / 723                   
+info  Verified: 129 / 723                   
+info  Verified: 130 / 723                   
+info  Verified: 131 / 723                   
+info  Verified: 132 / 723                   
+info  Verified: 133 / 723                   
+info  Verified: 134 / 723                   
+info  Verified: 135 / 723                   
+info  Verified: 136 / 723                   
+info  Verified: 137 / 723                   
+info  Verified: 138 / 723                   
+info  Verified: 139 / 723                   
+info  Verified: 140 / 723                   
+info  Verified: 141 / 723                   
+info  Verified: 142 / 723                   
+info  Verified: 143 / 723                   
+info  Verified: 144 / 723                   
+info  Verified: 145 / 723                   
+info  Verified: 146 / 723                   
+info  Verified: 147 / 723                   
+info  Verified: 148 / 723                   
+info  Verified: 149 / 723                   
+info  Verified: 150 / 723                   
+info  Verified: 151 / 723                   
+info  Verified: 152 / 723                   
+info  Verified: 153 / 723                   
+info  Verified: 154 / 723                   
+info  Verified: 155 / 723                   
+info  Verified: 156 / 723                   
+info  Verified: 157 / 723                   
+info  Verified: 158 / 723                   
+info  Verified: 159 / 723                   
+info  Verified: 160 / 723                   
+info  Verified: 161 / 723                   
+info  Verified: 162 / 723                   
+info  Verified: 163 / 723                   
+info  Verified: 164 / 723                   
+info  Verified: 165 / 723                   
+info  Verified: 166 / 723                   
+info  Verified: 167 / 723                   
+info  Verified: 168 / 723                   
+info  Verified: 169 / 723                   
+info  Verified: 170 / 723                   
+info  Verified: 171 / 723                   
+info  Verified: 172 / 723                   
+info  Verified: 173 / 723                   
+info  Verified: 174 / 723                   
+info  Verified: 175 / 723                   
+info  Verified: 176 / 723                   
+info  Verified: 177 / 723                   
+info  Verified: 178 / 723                   
+info  Verified: 179 / 723                   
+info  Verified: 180 / 723                   
+info  Verified: 181 / 723                   
+info  Verified: 182 / 723                   
+info  Verified: 183 / 723                   
+info  Verified: 184 / 723                   
+info  Verified: 185 / 723                   
+info  Verified: 186 / 723                   
+info  Verified: 187 / 723                   
+info  Verified: 188 / 723                   
+info  Verified: 189 / 723                   
+info  Verified: 190 / 723                   
+info  Verified: 191 / 723                   
+info  Verified: 192 / 723                   
+info  Verified: 193 / 723                   
+info  Verified: 194 / 723                   
+info  Verified: 195 / 723                   
+info  Verified: 196 / 723                   
+info  Verified: 197 / 723                   
+info  Verified: 198 / 723                   
+info  Verified: 199 / 723                   
+info  Verified: 200 / 723                   
+info  Verified: 201 / 723                   
+info  Verified: 202 / 723                   
+info  Verified: 203 / 723                   
+info  Verified: 204 / 723                   
+info  Verified: 205 / 723                   
+info  Verified: 206 / 723                   
+info  Verified: 207 / 723                   
+info  Verified: 208 / 723                   
+info  Verified: 209 / 723                   
+info  Verified: 210 / 723                   
+info  Verified: 211 / 723                   
+info  Verified: 212 / 723                   
+info  Verified: 213 / 723                   
+info  Verified: 214 / 723                   
+info  Verified: 215 / 723                   
+info  Verified: 216 / 723                   
+info  Verified: 217 / 723                   
+info  Verified: 218 / 723                   
+info  Verified: 219 / 723                   
+info  Verified: 220 / 723                   
+info  Verified: 221 / 723                   
+info  Verified: 222 / 723                   
+info  Verified: 223 / 723                   
+info  Verified: 224 / 723                   
+info  Verified: 225 / 723                   
+info  Verified: 226 / 723                   
+info  Verified: 227 / 723                   
+info  Verified: 228 / 723                   
+info  Verified: 229 / 723                   
+info  Verified: 230 / 723                   
+info  Verified: 231 / 723                   
+info  Verified: 232 / 723                   
+info  Verified: 233 / 723                   
+info  Verified: 234 / 723                   
+info  Verified: 235 / 723                   
+info  Verified: 236 / 723                   
+info  Verified: 237 / 723                   
+info  Verified: 238 / 723                   
+info  Verified: 239 / 723                   
+info  Verified: 240 / 723                   
+info  Verified: 241 / 723                   
+info  Verified: 242 / 723                   
+info  Verified: 243 / 723                   
+info  Verified: 244 / 723                   
+info  Verified: 245 / 723                   
+info  Verified: 246 / 723                   
+info  Verified: 247 / 723                   
+info  Verified: 248 / 723                   
+info  Verified: 249 / 723                   
+info  Verified: 250 / 723                   
+info  Verified: 251 / 723                   
+info  Verified: 252 / 723                   
+info  Verified: 253 / 723                   
+info  Verified: 254 / 723                   
+info  Verified: 255 / 723                   
+info  Verified: 256 / 723                   
+info  Verified: 257 / 723                   
+info  Verified: 258 / 723                   
+info  Verified: 259 / 723                   
+info  Verified: 260 / 723                   
+info  Verified: 261 / 723                   
+info  Verified: 262 / 723                   
+info  Verified: 263 / 723                   
+info  Verified: 264 / 723                   
+info  Verified: 265 / 723                   
+info  Verified: 266 / 723                   
+info  Verified: 267 / 723                   
+info  Verified: 268 / 723                   
+info  Verified: 269 / 723                   
+info  Verified: 270 / 723                   
+info  Verified: 271 / 723                   
+info  Verified: 272 / 723                   
+info  Verified: 273 / 723                   
+info  Verified: 274 / 723                   
+info  Verified: 275 / 723                   
+info  Verified: 276 / 723                   
+info  Verified: 277 / 723                   
+info  Verified: 278 / 723                   
+info  Verified: 279 / 723                   
+info  Verified: 280 / 723                   
+info  Verified: 281 / 723                   
+info  Verified: 282 / 723                   
+info  Verified: 283 / 723                   
+info  Verified: 284 / 723                   
+info  Verified: 285 / 723                   
+info  Verified: 286 / 723                   
+info  Verified: 287 / 723                   
+info  Verified: 288 / 723                   
+info  Verified: 289 / 723                   
+info  Verified: 290 / 723                   
+info  Verified: 291 / 723                   
+info  Verified: 292 / 723                   
+info  Verified: 293 / 723                   
+info  Verified: 294 / 723                   
+info  Verified: 295 / 723                   
+info  Verified: 296 / 723                   
+info  Verified: 297 / 723                   
+info  Verified: 298 / 723                   
+info  Verified: 299 / 723                   
+info  Verified: 300 / 723                   
+info  Verified: 301 / 723                   
+info  Verified: 302 / 723                   
+info  Verified: 303 / 723                   
+info  Verified: 304 / 723                   
+info  Verified: 305 / 723                   
+info  Verified: 306 / 723                   
+info  Verified: 307 / 723                   
+info  Verified: 308 / 723                   
+info  Verified: 309 / 723                   
+info  Verified: 310 / 723                   
+info  Verified: 311 / 723                   
+info  Verified: 312 / 723                   
+info  Verified: 313 / 723                   
+info  Verified: 314 / 723                   
+info  Verified: 315 / 723                   
+info  Verified: 316 / 723                   
 warning:  - Result for 'precond. (call rb_empty((scrut.r): @DropVCs , VarLis...)' VC for rb_empty @235:33:
 warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || x.isInstanceOf[Var] || x.isInstanceOf[Neg] && x.l.isInstanceOf[Var] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[One] || (contains[Tree](list.data, Neg(One())) || exists[Tree](list.data, (_$7: Tree) => _$7.isInstanceOf[Var] || _$7.isInstanceOf[Neg] && _$7.l.isInstanceOf[Var])) || x.r.isInstanceOf[One] || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || !x.r.isInstanceOf[Plus] || !x.r.l.isInstanceOf[One] || !rbhelper(x.r, VarList(::[Tree](list.data, x.l))) || rbhelper(x.r, list)
 src/RightBiasing.scala:235:33: warning:  => TIMEOUT
                                            rb_empty(t2, VarList(list.data))   
                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-info  Verified: 316 / 723
+
+info  Verified: 316 / 723
 warning:  - Result for 'precond. (call rb_empty(x, VarList((scrut.t): @DropV...)' VC for rb_empty @236:33:
 warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || x.isInstanceOf[Var] || x.isInstanceOf[Neg] && x.l.isInstanceOf[Var] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[One] || (contains[Tree](list.data, Neg(One())) || exists[Tree](list.data, (_$7: Tree) => _$7.isInstanceOf[Var] || _$7.isInstanceOf[Neg] && _$7.l.isInstanceOf[Var])) || x.r.isInstanceOf[One] || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || !x.r.isInstanceOf[Plus] || !x.r.l.isInstanceOf[One] || !rbhelper(x.r, VarList(::[Tree](list.data, x.l))) || {
   val tmp: Unit = rb_empty(x.r, list)
@@ -18,7 +384,9 @@ warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[M
 src/RightBiasing.scala:236:33: warning:  => TIMEOUT
                                            rb_empty(x, VarList(cdr)) 
                                            ^^^^^^^^^^^^^^^^^^^^^^^^^
-info  Verified: 316 / 723info  Verified: 317 / 723
+
+info  Verified: 316 / 723
+info  Verified: 317 / 723
 warning:  - Result for 'precond. (call rb_empty(x, VarList((scrut.t): @DropV...)' VC for rb_empty @242:33:
 warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || x.isInstanceOf[Var] || x.isInstanceOf[Neg] && x.l.isInstanceOf[Var] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[One] || (contains[Tree](list.data, Neg(One())) || exists[Tree](list.data, (_$7: Tree) => _$7.isInstanceOf[Var] || _$7.isInstanceOf[Neg] && _$7.l.isInstanceOf[Var])) || x.r.isInstanceOf[One] || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Neg] && x.r.l.l.isInstanceOf[One] || !x.r.isInstanceOf[Plus] || !x.r.l.isInstanceOf[Var] && (!x.r.l.isInstanceOf[Neg] || !x.r.l.l.isInstanceOf[Var]) || !rbhelper(x.r, VarList(::[Tree](list.data, x.r.l))) || {
   val tmp: Unit = rb_empty(x.r.l, list)
@@ -27,13 +395,23 @@ warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[M
 src/RightBiasing.scala:242:33: warning:  => TIMEOUT
                                            rb_empty(x, VarList(cdr))   
                                            ^^^^^^^^^^^^^^^^^^^^^^^^^
-info  Verified: 317 / 723info  Verified: 318 / 723info  Verified: 319 / 723info  Verified: 320 / 723info  Verified: 321 / 723info  Verified: 322 / 723info  Verified: 323 / 723info  Verified: 324 / 723info  Verified: 325 / 723
+
+info  Verified: 317 / 723
+info  Verified: 318 / 723
+info  Verified: 319 / 723
+info  Verified: 320 / 723
+info  Verified: 321 / 723
+info  Verified: 322 / 723
+info  Verified: 323 / 723
+info  Verified: 324 / 723
+info  Verified: 325 / 723
 warning:  - Result for 'precond. (call rb_empty((scrut.r): @DropVCs , VarLis...)' VC for rb_empty @272:33:
 warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || x.isInstanceOf[Var] || x.isInstanceOf[Neg] && x.l.isInstanceOf[Var] || x.isInstanceOf[Plus] && x.l.isInstanceOf[One] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[Neg] || !x.l.l.isInstanceOf[One] || (contains[Tree](list.data, One()) || exists[Tree](list.data, (_$11: Tree) => _$11.isInstanceOf[Var] || _$11.isInstanceOf[Neg] && _$11.l.isInstanceOf[Var])) || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[One] || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || !x.r.isInstanceOf[Plus] || !x.r.l.isInstanceOf[Neg] || !x.r.l.l.isInstanceOf[One] || !rbhelper(x.r, VarList(::[Tree](list.data, x.l))) || rbhelper(x.r, list)
 src/RightBiasing.scala:272:33: warning:  => TIMEOUT
                                            rb_empty(t2, VarList(list.data))  
                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-info  Verified: 325 / 723
+
+info  Verified: 325 / 723
 warning:  - Result for 'precond. (call rb_empty(x, VarList((scrut.t): @DropV...)' VC for rb_empty @273:33:
 warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || x.isInstanceOf[Var] || x.isInstanceOf[Neg] && x.l.isInstanceOf[Var] || x.isInstanceOf[Plus] && x.l.isInstanceOf[One] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[Neg] || !x.l.l.isInstanceOf[One] || (contains[Tree](list.data, One()) || exists[Tree](list.data, (_$11: Tree) => _$11.isInstanceOf[Var] || _$11.isInstanceOf[Neg] && _$11.l.isInstanceOf[Var])) || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[One] || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || !x.r.isInstanceOf[Plus] || !x.r.l.isInstanceOf[Neg] || !x.r.l.l.isInstanceOf[One] || !rbhelper(x.r, VarList(::[Tree](list.data, x.l))) || {
   val tmp: Unit = rb_empty(x.r, list)
@@ -42,7 +420,9 @@ warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[M
 src/RightBiasing.scala:273:33: warning:  => TIMEOUT
                                            rb_empty(x, VarList(cdr))  
                                            ^^^^^^^^^^^^^^^^^^^^^^^^^
-info  Verified: 325 / 723info  Verified: 326 / 723
+
+info  Verified: 325 / 723
+info  Verified: 326 / 723
 warning:  - Result for 'precond. (call rb_empty(x, VarList((scrut.t): @DropV...)' VC for rb_empty @279:33:
 warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || x.isInstanceOf[Var] || x.isInstanceOf[Neg] && x.l.isInstanceOf[Var] || x.isInstanceOf[Plus] && x.l.isInstanceOf[One] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[Neg] || !x.l.l.isInstanceOf[One] || (contains[Tree](list.data, One()) || exists[Tree](list.data, (_$11: Tree) => _$11.isInstanceOf[Var] || _$11.isInstanceOf[Neg] && _$11.l.isInstanceOf[Var])) || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[One] || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Neg] && x.r.l.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[One] || !x.r.isInstanceOf[Plus] || !x.r.l.isInstanceOf[Var] && (!x.r.l.isInstanceOf[Neg] || !x.r.l.l.isInstanceOf[Var]) || !rbhelper(x.r, VarList(::[Tree](list.data, x.r.l))) || {
   val tmp: Unit = rb_empty(x.r.l, list)
@@ -51,13 +431,19 @@ warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[M
 src/RightBiasing.scala:279:33: warning:  => TIMEOUT
                                            rb_empty(x, VarList(cdr))  
                                            ^^^^^^^^^^^^^^^^^^^^^^^^^
-info  Verified: 326 / 723info  Verified: 327 / 723info  Verified: 328 / 723info  Verified: 329 / 723info  Verified: 330 / 723
+
+info  Verified: 326 / 723
+info  Verified: 327 / 723
+info  Verified: 328 / 723
+info  Verified: 329 / 723
+info  Verified: 330 / 723
 warning:  - Result for 'precond. (call rb_empty((scrut.r): @DropVCs , VarLis...)' VC for rb_empty @303:33:
 warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || x.isInstanceOf[Var] || x.isInstanceOf[Neg] && x.l.isInstanceOf[Var] || x.isInstanceOf[Plus] && x.l.isInstanceOf[One] || x.isInstanceOf[Plus] && x.l.isInstanceOf[Neg] && x.l.l.isInstanceOf[One] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[Var] || contains[Tree](list.data, Neg(Var(x.l.s))) || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Neg] && x.r.l.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[One] || !x.r.isInstanceOf[Plus] || !x.r.l.isInstanceOf[Var] || x.l.s > x.r.l.s || !rbhelper(x.r, VarList(::[Tree](list.data, x.r.l))) || rbhelper(x.r, list)
 src/RightBiasing.scala:303:33: warning:  => TIMEOUT
                                            rb_empty(t2, VarList(list.data))
                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-info  Verified: 330 / 723
+
+info  Verified: 330 / 723
 warning:  - Result for 'precond. (call rb_empty(x, VarList((scrut.t): @DropV...)' VC for rb_empty @304:33:
 warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || x.isInstanceOf[Var] || x.isInstanceOf[Neg] && x.l.isInstanceOf[Var] || x.isInstanceOf[Plus] && x.l.isInstanceOf[One] || x.isInstanceOf[Plus] && x.l.isInstanceOf[Neg] && x.l.l.isInstanceOf[One] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[Var] || contains[Tree](list.data, Neg(Var(x.l.s))) || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Neg] && x.r.l.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[One] || !x.r.isInstanceOf[Plus] || !x.r.l.isInstanceOf[Var] || x.l.s > x.r.l.s || !rbhelper(x.r, VarList(::[Tree](list.data, x.r.l))) || {
   val tmp: Unit = rb_empty(x.r, list)
@@ -66,13 +452,15 @@ warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[M
 src/RightBiasing.scala:304:33: warning:  => TIMEOUT
                                            rb_empty(x, VarList(cdr))    
                                            ^^^^^^^^^^^^^^^^^^^^^^^^^
-info  Verified: 330 / 723
+
+info  Verified: 330 / 723
 warning:  - Result for 'precond. (call rb_empty((scrut.r): @DropVCs , VarLis...)' VC for rb_empty @311:33:
 warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || x.isInstanceOf[Var] || x.isInstanceOf[Neg] && x.l.isInstanceOf[Var] || x.isInstanceOf[Plus] && x.l.isInstanceOf[One] || x.isInstanceOf[Plus] && x.l.isInstanceOf[Neg] && x.l.l.isInstanceOf[One] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[Var] || contains[Tree](list.data, Neg(Var(x.l.s))) || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Neg] && x.r.l.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Var] || !x.r.isInstanceOf[Plus] || !x.r.l.isInstanceOf[Neg] || !x.r.l.l.isInstanceOf[Var] || x.l.s > x.r.l.l.s || !rbhelper(x.r, VarList(::[Tree](list.data, x.r.l))) || rbhelper(x.r, list)
 src/RightBiasing.scala:311:33: warning:  => TIMEOUT
                                            rb_empty(t2, VarList(list.data))   
                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-info  Verified: 330 / 723
+
+info  Verified: 330 / 723
 warning:  - Result for 'precond. (call rb_empty(x, VarList((scrut.t): @DropV...)' VC for rb_empty @312:33:
 warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || x.isInstanceOf[Var] || x.isInstanceOf[Neg] && x.l.isInstanceOf[Var] || x.isInstanceOf[Plus] && x.l.isInstanceOf[One] || x.isInstanceOf[Plus] && x.l.isInstanceOf[Neg] && x.l.l.isInstanceOf[One] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[Var] || contains[Tree](list.data, Neg(Var(x.l.s))) || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Neg] && x.r.l.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Var] || !x.r.isInstanceOf[Plus] || !x.r.l.isInstanceOf[Neg] || !x.r.l.l.isInstanceOf[Var] || x.l.s > x.r.l.l.s || !rbhelper(x.r, VarList(::[Tree](list.data, x.r.l))) || {
   val tmp: Unit = rb_empty(x.r, list)
@@ -81,13 +469,19 @@ warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[M
 src/RightBiasing.scala:312:33: warning:  => TIMEOUT
                                            rb_empty(x, VarList(cdr)) 
                                            ^^^^^^^^^^^^^^^^^^^^^^^^^
-info  Verified: 330 / 723info  Verified: 331 / 723info  Verified: 332 / 723info  Verified: 333 / 723info  Verified: 334 / 723
+
+info  Verified: 330 / 723
+info  Verified: 331 / 723
+info  Verified: 332 / 723
+info  Verified: 333 / 723
+info  Verified: 334 / 723
 warning:  - Result for 'precond. (call rb_empty((scrut.r): @DropVCs , VarLis...)' VC for rb_empty @337:33:
 warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || x.isInstanceOf[Var] || x.isInstanceOf[Neg] && x.l.isInstanceOf[Var] || x.isInstanceOf[Plus] && x.l.isInstanceOf[One] || x.isInstanceOf[Plus] && x.l.isInstanceOf[Neg] && x.l.l.isInstanceOf[One] || x.isInstanceOf[Plus] && x.l.isInstanceOf[Var] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[Neg] || !x.l.l.isInstanceOf[Var] || contains[Tree](list.data, Var(x.l.l.s)) || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Neg] && x.r.l.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[One] || !x.r.isInstanceOf[Plus] || !x.r.l.isInstanceOf[Var] || x.l.l.s > x.r.l.s || !rbhelper(x.r, VarList(::[Tree](list.data, x.r.l))) || rbhelper(x.r, list)
 src/RightBiasing.scala:337:33: warning:  => TIMEOUT
                                            rb_empty(t2, VarList(list.data))    
                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-info  Verified: 334 / 723
+
+info  Verified: 334 / 723
 warning:  - Result for 'precond. (call rb_empty(x, VarList((scrut.t): @DropV...)' VC for rb_empty @338:33:
 warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || x.isInstanceOf[Var] || x.isInstanceOf[Neg] && x.l.isInstanceOf[Var] || x.isInstanceOf[Plus] && x.l.isInstanceOf[One] || x.isInstanceOf[Plus] && x.l.isInstanceOf[Neg] && x.l.l.isInstanceOf[One] || x.isInstanceOf[Plus] && x.l.isInstanceOf[Var] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[Neg] || !x.l.l.isInstanceOf[Var] || contains[Tree](list.data, Var(x.l.l.s)) || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Neg] && x.r.l.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[One] || !x.r.isInstanceOf[Plus] || !x.r.l.isInstanceOf[Var] || x.l.l.s > x.r.l.s || !rbhelper(x.r, VarList(::[Tree](list.data, x.r.l))) || {
   val tmp: Unit = rb_empty(x.r, list)
@@ -96,13 +490,15 @@ warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[M
 src/RightBiasing.scala:338:33: warning:  => TIMEOUT
                                            rb_empty(x, VarList(cdr))
                                            ^^^^^^^^^^^^^^^^^^^^^^^^^
-info  Verified: 334 / 723
+
+info  Verified: 334 / 723
 warning:  - Result for 'precond. (call rb_empty((scrut.r): @DropVCs , VarLis...)' VC for rb_empty @345:33:
 warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || x.isInstanceOf[Var] || x.isInstanceOf[Neg] && x.l.isInstanceOf[Var] || x.isInstanceOf[Plus] && x.l.isInstanceOf[One] || x.isInstanceOf[Plus] && x.l.isInstanceOf[Neg] && x.l.l.isInstanceOf[One] || x.isInstanceOf[Plus] && x.l.isInstanceOf[Var] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[Neg] || !x.l.l.isInstanceOf[Var] || contains[Tree](list.data, Var(x.l.l.s)) || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Neg] && x.r.l.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Var] || !x.r.isInstanceOf[Plus] || !x.r.l.isInstanceOf[Neg] || !x.r.l.l.isInstanceOf[Var] || x.l.l.s > x.r.l.l.s || !rbhelper(x.r, VarList(::[Tree](list.data, x.r.l))) || rbhelper(x.r, list)
 src/RightBiasing.scala:345:33: warning:  => TIMEOUT
                                            rb_empty(t2, VarList(list.data))   
                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-info  Verified: 334 / 723
+
+info  Verified: 334 / 723
 warning:  - Result for 'precond. (call rb_empty(x, VarList((scrut.t): @DropV...)' VC for rb_empty @346:33:
 warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || x.isInstanceOf[Var] || x.isInstanceOf[Neg] && x.l.isInstanceOf[Var] || x.isInstanceOf[Plus] && x.l.isInstanceOf[One] || x.isInstanceOf[Plus] && x.l.isInstanceOf[Neg] && x.l.l.isInstanceOf[One] || x.isInstanceOf[Plus] && x.l.isInstanceOf[Var] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[Neg] || !x.l.l.isInstanceOf[Var] || contains[Tree](list.data, Var(x.l.l.s)) || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Neg] && x.r.l.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Var] || !x.r.isInstanceOf[Plus] || !x.r.l.isInstanceOf[Neg] || !x.r.l.l.isInstanceOf[Var] || x.l.l.s > x.r.l.l.s || !rbhelper(x.r, VarList(::[Tree](list.data, x.r.l))) || {
   val tmp: Unit = rb_empty(x.r, list)
@@ -111,7 +507,26 @@ warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[M
 src/RightBiasing.scala:346:33: warning:  => TIMEOUT
                                            rb_empty(x, VarList(cdr)) 
                                            ^^^^^^^^^^^^^^^^^^^^^^^^^
-info  Verified: 334 / 723info  Verified: 335 / 723info  Verified: 336 / 723info  Verified: 337 / 723info  Verified: 338 / 723info  Verified: 339 / 723info  Verified: 340 / 723info  Verified: 341 / 723info  Verified: 342 / 723info  Verified: 343 / 723info  Verified: 344 / 723info  Verified: 345 / 723info  Verified: 346 / 723info  Verified: 347 / 723info  Verified: 348 / 723info  Verified: 349 / 723info  Verified: 350 / 723info  Verified: 351 / 723info  Verified: 352 / 723
+
+info  Verified: 334 / 723
+info  Verified: 335 / 723
+info  Verified: 336 / 723
+info  Verified: 337 / 723
+info  Verified: 338 / 723
+info  Verified: 339 / 723
+info  Verified: 340 / 723
+info  Verified: 341 / 723
+info  Verified: 342 / 723
+info  Verified: 343 / 723
+info  Verified: 344 / 723
+info  Verified: 345 / 723
+info  Verified: 346 / 723
+info  Verified: 347 / 723
+info  Verified: 348 / 723
+info  Verified: 349 / 723
+info  Verified: 350 / 723
+info  Verified: 351 / 723
+info  Verified: 352 / 723
 warning:  - Result for 'body assertion' VC for rb_empty @219:40:
 warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || x.isInstanceOf[Var] || x.isInstanceOf[Neg] && x.l.isInstanceOf[Var] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[One] || (contains[Tree](list.data, Neg(One())) || exists[Tree](list.data, (_$7: Tree) => _$7.isInstanceOf[Var] || _$7.isInstanceOf[Neg] && _$7.l.isInstanceOf[Var])) || !x.r.isInstanceOf[One] || contains[Tree](list.data, Neg(One())) || {
   val tmp: Unit = dropNoContains[Tree](list.data, Neg(One()))
@@ -124,7 +539,18 @@ warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[M
 src/RightBiasing.scala:219:40: warning:  => TIMEOUT
                                            assert(list.data.forall(!isVarOrNegation(_)))
                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-info  Verified: 352 / 723info  Verified: 353 / 723info  Verified: 354 / 723info  Verified: 355 / 723info  Verified: 356 / 723info  Verified: 357 / 723info  Verified: 358 / 723info  Verified: 359 / 723info  Verified: 360 / 723info  Verified: 361 / 723info  Verified: 362 / 723
+
+info  Verified: 352 / 723
+info  Verified: 353 / 723
+info  Verified: 354 / 723
+info  Verified: 355 / 723
+info  Verified: 356 / 723
+info  Verified: 357 / 723
+info  Verified: 358 / 723
+info  Verified: 359 / 723
+info  Verified: 360 / 723
+info  Verified: 361 / 723
+info  Verified: 362 / 723
 warning:  - Result for 'body assertion' VC for rb_empty @256:40:
 warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || x.isInstanceOf[Var] || x.isInstanceOf[Neg] && x.l.isInstanceOf[Var] || x.isInstanceOf[Plus] && x.l.isInstanceOf[One] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[Neg] || !x.l.l.isInstanceOf[One] || (contains[Tree](list.data, One()) || exists[Tree](list.data, (_$11: Tree) => _$11.isInstanceOf[Var] || _$11.isInstanceOf[Neg] && _$11.l.isInstanceOf[Var])) || !x.r.isInstanceOf[Neg] || !x.r.l.isInstanceOf[One] || contains[Tree](list.data, One()) || {
   val tmp: Unit = dropNoContains[Tree](list.data, One())
@@ -137,7 +563,87 @@ warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[M
 src/RightBiasing.scala:256:40: warning:  => TIMEOUT
                                            assert(list.data.forall(!isVarOrNegation(_)))
                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-info  Verified: 362 / 723info  Verified: 363 / 723info  Verified: 364 / 723info  Verified: 365 / 723info  Verified: 366 / 723info  Verified: 367 / 723info  Verified: 368 / 723info  Verified: 369 / 723info  Verified: 370 / 723info  Verified: 371 / 723info  Verified: 372 / 723info  Verified: 373 / 723info  Verified: 374 / 723info  Verified: 375 / 723info  Verified: 376 / 723info  Verified: 377 / 723info  Verified: 378 / 723info  Verified: 379 / 723info  Verified: 380 / 723info  Verified: 381 / 723info  Verified: 382 / 723info  Verified: 383 / 723info  Verified: 384 / 723info  Verified: 385 / 723info  Verified: 386 / 723info  Verified: 387 / 723info  Verified: 388 / 723info  Verified: 389 / 723info  Verified: 390 / 723info  Verified: 391 / 723info  Verified: 392 / 723info  Verified: 393 / 723info  Verified: 394 / 723info  Verified: 395 / 723info  Verified: 396 / 723info  Verified: 397 / 723info  Verified: 398 / 723info  Verified: 399 / 723info  Verified: 400 / 723info  Verified: 401 / 723info  Verified: 402 / 723info  Verified: 403 / 723info  Verified: 404 / 723info  Verified: 405 / 723info  Verified: 406 / 723info  Verified: 407 / 723info  Verified: 408 / 723info  Verified: 409 / 723info  Verified: 410 / 723info  Verified: 411 / 723info  Verified: 412 / 723info  Verified: 413 / 723info  Verified: 414 / 723info  Verified: 415 / 723info  Verified: 416 / 723info  Verified: 417 / 723info  Verified: 418 / 723info  Verified: 419 / 723info  Verified: 420 / 723info  Verified: 421 / 723info  Verified: 422 / 723info  Verified: 423 / 723info  Verified: 424 / 723info  Verified: 425 / 723info  Verified: 426 / 723info  Verified: 427 / 723info  Verified: 428 / 723info  Verified: 429 / 723info  Verified: 430 / 723info  Verified: 431 / 723info  Verified: 432 / 723info  Verified: 433 / 723info  Verified: 434 / 723info  Verified: 435 / 723info  Verified: 436 / 723info  Verified: 437 / 723info  Verified: 438 / 723info  Verified: 439 / 723info  Verified: 440 / 723info  Verified: 441 / 723
+
+info  Verified: 362 / 723
+info  Verified: 363 / 723
+info  Verified: 364 / 723
+info  Verified: 365 / 723
+info  Verified: 366 / 723
+info  Verified: 367 / 723
+info  Verified: 368 / 723
+info  Verified: 369 / 723
+info  Verified: 370 / 723
+info  Verified: 371 / 723
+info  Verified: 372 / 723
+info  Verified: 373 / 723
+info  Verified: 374 / 723
+info  Verified: 375 / 723
+info  Verified: 376 / 723
+info  Verified: 377 / 723
+info  Verified: 378 / 723
+info  Verified: 379 / 723
+info  Verified: 380 / 723
+info  Verified: 381 / 723
+info  Verified: 382 / 723
+info  Verified: 383 / 723
+info  Verified: 384 / 723
+info  Verified: 385 / 723
+info  Verified: 386 / 723
+info  Verified: 387 / 723
+info  Verified: 388 / 723
+info  Verified: 389 / 723
+info  Verified: 390 / 723
+info  Verified: 391 / 723
+info  Verified: 392 / 723
+info  Verified: 393 / 723
+info  Verified: 394 / 723
+info  Verified: 395 / 723
+info  Verified: 396 / 723
+info  Verified: 397 / 723
+info  Verified: 398 / 723
+info  Verified: 399 / 723
+info  Verified: 400 / 723
+info  Verified: 401 / 723
+info  Verified: 402 / 723
+info  Verified: 403 / 723
+info  Verified: 404 / 723
+info  Verified: 405 / 723
+info  Verified: 406 / 723
+info  Verified: 407 / 723
+info  Verified: 408 / 723
+info  Verified: 409 / 723
+info  Verified: 410 / 723
+info  Verified: 411 / 723
+info  Verified: 412 / 723
+info  Verified: 413 / 723
+info  Verified: 414 / 723
+info  Verified: 415 / 723
+info  Verified: 416 / 723
+info  Verified: 417 / 723
+info  Verified: 418 / 723
+info  Verified: 419 / 723
+info  Verified: 420 / 723
+info  Verified: 421 / 723
+info  Verified: 422 / 723
+info  Verified: 423 / 723
+info  Verified: 424 / 723
+info  Verified: 425 / 723
+info  Verified: 426 / 723
+info  Verified: 427 / 723
+info  Verified: 428 / 723
+info  Verified: 429 / 723
+info  Verified: 430 / 723
+info  Verified: 431 / 723
+info  Verified: 432 / 723
+info  Verified: 433 / 723
+info  Verified: 434 / 723
+info  Verified: 435 / 723
+info  Verified: 436 / 723
+info  Verified: 437 / 723
+info  Verified: 438 / 723
+info  Verified: 439 / 723
+info  Verified: 440 / 723
+info  Verified: 441 / 723
 warning:  - Result for 'postcondition' VC for rb_empty @236:33:
 warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || x.isInstanceOf[Var] || x.isInstanceOf[Neg] && x.l.isInstanceOf[Var] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[One] || (contains[Tree](list.data, Neg(One())) || exists[Tree](list.data, (_$7: Tree) => _$7.isInstanceOf[Var] || _$7.isInstanceOf[Neg] && _$7.l.isInstanceOf[Var])) || x.r.isInstanceOf[One] || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || !x.r.isInstanceOf[Plus] || !x.r.l.isInstanceOf[One] || !rbhelper(x.r, VarList(::[Tree](list.data, x.l))) || {
   val tmp: Unit = rb_empty(x.r, list)
@@ -147,7 +653,16 @@ warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[M
 src/RightBiasing.scala:236:33: warning:  => TIMEOUT
                                            rb_empty(x, VarList(cdr)) 
                                            ^^^^^^^^^^^^^^^^^^^^^^^^^
-info  Verified: 441 / 723info  Verified: 442 / 723info  Verified: 443 / 723info  Verified: 444 / 723info  Verified: 445 / 723info  Verified: 446 / 723info  Verified: 447 / 723info  Verified: 448 / 723info  Verified: 449 / 723
+
+info  Verified: 441 / 723
+info  Verified: 442 / 723
+info  Verified: 443 / 723
+info  Verified: 444 / 723
+info  Verified: 445 / 723
+info  Verified: 446 / 723
+info  Verified: 447 / 723
+info  Verified: 448 / 723
+info  Verified: 449 / 723
 warning:  - Result for 'postcondition' VC for rb_empty @242:33:
 warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || x.isInstanceOf[Var] || x.isInstanceOf[Neg] && x.l.isInstanceOf[Var] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[One] || (contains[Tree](list.data, Neg(One())) || exists[Tree](list.data, (_$7: Tree) => _$7.isInstanceOf[Var] || _$7.isInstanceOf[Neg] && _$7.l.isInstanceOf[Var])) || x.r.isInstanceOf[One] || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Neg] && x.r.l.l.isInstanceOf[One] || !x.r.isInstanceOf[Plus] || !x.r.l.isInstanceOf[Var] && (!x.r.l.isInstanceOf[Neg] || !x.r.l.l.isInstanceOf[Var]) || !rbhelper(x.r, VarList(::[Tree](list.data, x.r.l))) || {
   val tmp: Unit = rb_empty(x.r.l, list)
@@ -157,7 +672,36 @@ warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[M
 src/RightBiasing.scala:242:33: warning:  => TIMEOUT
                                            rb_empty(x, VarList(cdr))   
                                            ^^^^^^^^^^^^^^^^^^^^^^^^^
-info  Verified: 449 / 723info  Verified: 450 / 723info  Verified: 451 / 723info  Verified: 452 / 723info  Verified: 453 / 723info  Verified: 454 / 723info  Verified: 455 / 723info  Verified: 456 / 723info  Verified: 457 / 723info  Verified: 458 / 723info  Verified: 459 / 723info  Verified: 460 / 723info  Verified: 461 / 723info  Verified: 462 / 723info  Verified: 463 / 723info  Verified: 464 / 723info  Verified: 465 / 723info  Verified: 466 / 723info  Verified: 467 / 723info  Verified: 468 / 723info  Verified: 469 / 723info  Verified: 470 / 723info  Verified: 471 / 723info  Verified: 472 / 723info  Verified: 473 / 723info  Verified: 474 / 723info  Verified: 475 / 723info  Verified: 476 / 723info  Verified: 477 / 723
+
+info  Verified: 449 / 723
+info  Verified: 450 / 723
+info  Verified: 451 / 723
+info  Verified: 452 / 723
+info  Verified: 453 / 723
+info  Verified: 454 / 723
+info  Verified: 455 / 723
+info  Verified: 456 / 723
+info  Verified: 457 / 723
+info  Verified: 458 / 723
+info  Verified: 459 / 723
+info  Verified: 460 / 723
+info  Verified: 461 / 723
+info  Verified: 462 / 723
+info  Verified: 463 / 723
+info  Verified: 464 / 723
+info  Verified: 465 / 723
+info  Verified: 466 / 723
+info  Verified: 467 / 723
+info  Verified: 468 / 723
+info  Verified: 469 / 723
+info  Verified: 470 / 723
+info  Verified: 471 / 723
+info  Verified: 472 / 723
+info  Verified: 473 / 723
+info  Verified: 474 / 723
+info  Verified: 475 / 723
+info  Verified: 476 / 723
+info  Verified: 477 / 723
 warning:  - Result for 'postcondition' VC for rb_empty @273:33:
 warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || x.isInstanceOf[Var] || x.isInstanceOf[Neg] && x.l.isInstanceOf[Var] || x.isInstanceOf[Plus] && x.l.isInstanceOf[One] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[Neg] || !x.l.l.isInstanceOf[One] || (contains[Tree](list.data, One()) || exists[Tree](list.data, (_$11: Tree) => _$11.isInstanceOf[Var] || _$11.isInstanceOf[Neg] && _$11.l.isInstanceOf[Var])) || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[One] || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || !x.r.isInstanceOf[Plus] || !x.r.l.isInstanceOf[Neg] || !x.r.l.l.isInstanceOf[One] || !rbhelper(x.r, VarList(::[Tree](list.data, x.l))) || {
   val tmp: Unit = rb_empty(x.r, list)
@@ -167,7 +711,16 @@ warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[M
 src/RightBiasing.scala:273:33: warning:  => TIMEOUT
                                            rb_empty(x, VarList(cdr))  
                                            ^^^^^^^^^^^^^^^^^^^^^^^^^
-info  Verified: 477 / 723info  Verified: 478 / 723info  Verified: 479 / 723info  Verified: 480 / 723info  Verified: 481 / 723info  Verified: 482 / 723info  Verified: 483 / 723info  Verified: 484 / 723info  Verified: 485 / 723
+
+info  Verified: 477 / 723
+info  Verified: 478 / 723
+info  Verified: 479 / 723
+info  Verified: 480 / 723
+info  Verified: 481 / 723
+info  Verified: 482 / 723
+info  Verified: 483 / 723
+info  Verified: 484 / 723
+info  Verified: 485 / 723
 warning:  - Result for 'postcondition' VC for rb_empty @279:33:
 warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || x.isInstanceOf[Var] || x.isInstanceOf[Neg] && x.l.isInstanceOf[Var] || x.isInstanceOf[Plus] && x.l.isInstanceOf[One] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[Neg] || !x.l.l.isInstanceOf[One] || (contains[Tree](list.data, One()) || exists[Tree](list.data, (_$11: Tree) => _$11.isInstanceOf[Var] || _$11.isInstanceOf[Neg] && _$11.l.isInstanceOf[Var])) || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[One] || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Neg] && x.r.l.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[One] || !x.r.isInstanceOf[Plus] || !x.r.l.isInstanceOf[Var] && (!x.r.l.isInstanceOf[Neg] || !x.r.l.l.isInstanceOf[Var]) || !rbhelper(x.r, VarList(::[Tree](list.data, x.r.l))) || {
   val tmp: Unit = rb_empty(x.r.l, list)
@@ -177,7 +730,42 @@ warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[M
 src/RightBiasing.scala:279:33: warning:  => TIMEOUT
                                            rb_empty(x, VarList(cdr))  
                                            ^^^^^^^^^^^^^^^^^^^^^^^^^
-info  Verified: 485 / 723info  Verified: 486 / 723info  Verified: 487 / 723info  Verified: 488 / 723info  Verified: 489 / 723info  Verified: 490 / 723info  Verified: 491 / 723info  Verified: 492 / 723info  Verified: 493 / 723info  Verified: 494 / 723info  Verified: 495 / 723info  Verified: 496 / 723info  Verified: 497 / 723info  Verified: 498 / 723info  Verified: 499 / 723info  Verified: 500 / 723info  Verified: 501 / 723info  Verified: 502 / 723info  Verified: 503 / 723info  Verified: 504 / 723info  Verified: 505 / 723info  Verified: 506 / 723info  Verified: 507 / 723info  Verified: 508 / 723info  Verified: 509 / 723info  Verified: 510 / 723info  Verified: 511 / 723info  Verified: 512 / 723info  Verified: 513 / 723info  Verified: 514 / 723info  Verified: 515 / 723info  Verified: 516 / 723info  Verified: 517 / 723info  Verified: 518 / 723info  Verified: 519 / 723
+
+info  Verified: 485 / 723
+info  Verified: 486 / 723
+info  Verified: 487 / 723
+info  Verified: 488 / 723
+info  Verified: 489 / 723
+info  Verified: 490 / 723
+info  Verified: 491 / 723
+info  Verified: 492 / 723
+info  Verified: 493 / 723
+info  Verified: 494 / 723
+info  Verified: 495 / 723
+info  Verified: 496 / 723
+info  Verified: 497 / 723
+info  Verified: 498 / 723
+info  Verified: 499 / 723
+info  Verified: 500 / 723
+info  Verified: 501 / 723
+info  Verified: 502 / 723
+info  Verified: 503 / 723
+info  Verified: 504 / 723
+info  Verified: 505 / 723
+info  Verified: 506 / 723
+info  Verified: 507 / 723
+info  Verified: 508 / 723
+info  Verified: 509 / 723
+info  Verified: 510 / 723
+info  Verified: 511 / 723
+info  Verified: 512 / 723
+info  Verified: 513 / 723
+info  Verified: 514 / 723
+info  Verified: 515 / 723
+info  Verified: 516 / 723
+info  Verified: 517 / 723
+info  Verified: 518 / 723
+info  Verified: 519 / 723
 warning:  - Result for 'postcondition' VC for rb_empty @304:33:
 warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || x.isInstanceOf[Var] || x.isInstanceOf[Neg] && x.l.isInstanceOf[Var] || x.isInstanceOf[Plus] && x.l.isInstanceOf[One] || x.isInstanceOf[Plus] && x.l.isInstanceOf[Neg] && x.l.l.isInstanceOf[One] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[Var] || contains[Tree](list.data, Neg(Var(x.l.s))) || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Neg] && x.r.l.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[One] || !x.r.isInstanceOf[Plus] || !x.r.l.isInstanceOf[Var] || x.l.s > x.r.l.s || !rbhelper(x.r, VarList(::[Tree](list.data, x.r.l))) || {
   val tmp: Unit = rb_empty(x.r, list)
@@ -187,7 +775,16 @@ warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[M
 src/RightBiasing.scala:304:33: warning:  => TIMEOUT
                                            rb_empty(x, VarList(cdr))    
                                            ^^^^^^^^^^^^^^^^^^^^^^^^^
-info  Verified: 519 / 723info  Verified: 520 / 723info  Verified: 521 / 723info  Verified: 522 / 723info  Verified: 523 / 723info  Verified: 524 / 723info  Verified: 525 / 723info  Verified: 526 / 723info  Verified: 527 / 723
+
+info  Verified: 519 / 723
+info  Verified: 520 / 723
+info  Verified: 521 / 723
+info  Verified: 522 / 723
+info  Verified: 523 / 723
+info  Verified: 524 / 723
+info  Verified: 525 / 723
+info  Verified: 526 / 723
+info  Verified: 527 / 723
 warning:  - Result for 'postcondition' VC for rb_empty @312:33:
 warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || x.isInstanceOf[Var] || x.isInstanceOf[Neg] && x.l.isInstanceOf[Var] || x.isInstanceOf[Plus] && x.l.isInstanceOf[One] || x.isInstanceOf[Plus] && x.l.isInstanceOf[Neg] && x.l.l.isInstanceOf[One] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[Var] || contains[Tree](list.data, Neg(Var(x.l.s))) || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Neg] && x.r.l.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Var] || !x.r.isInstanceOf[Plus] || !x.r.l.isInstanceOf[Neg] || !x.r.l.l.isInstanceOf[Var] || x.l.s > x.r.l.l.s || !rbhelper(x.r, VarList(::[Tree](list.data, x.r.l))) || {
   val tmp: Unit = rb_empty(x.r, list)
@@ -197,7 +794,42 @@ warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[M
 src/RightBiasing.scala:312:33: warning:  => TIMEOUT
                                            rb_empty(x, VarList(cdr)) 
                                            ^^^^^^^^^^^^^^^^^^^^^^^^^
-info  Verified: 527 / 723info  Verified: 528 / 723info  Verified: 529 / 723info  Verified: 530 / 723info  Verified: 531 / 723info  Verified: 532 / 723info  Verified: 533 / 723info  Verified: 534 / 723info  Verified: 535 / 723info  Verified: 536 / 723info  Verified: 537 / 723info  Verified: 538 / 723info  Verified: 539 / 723info  Verified: 540 / 723info  Verified: 541 / 723info  Verified: 542 / 723info  Verified: 543 / 723info  Verified: 544 / 723info  Verified: 545 / 723info  Verified: 546 / 723info  Verified: 547 / 723info  Verified: 548 / 723info  Verified: 549 / 723info  Verified: 550 / 723info  Verified: 551 / 723info  Verified: 552 / 723info  Verified: 553 / 723info  Verified: 554 / 723info  Verified: 555 / 723info  Verified: 556 / 723info  Verified: 557 / 723info  Verified: 558 / 723info  Verified: 559 / 723info  Verified: 560 / 723info  Verified: 561 / 723
+
+info  Verified: 527 / 723
+info  Verified: 528 / 723
+info  Verified: 529 / 723
+info  Verified: 530 / 723
+info  Verified: 531 / 723
+info  Verified: 532 / 723
+info  Verified: 533 / 723
+info  Verified: 534 / 723
+info  Verified: 535 / 723
+info  Verified: 536 / 723
+info  Verified: 537 / 723
+info  Verified: 538 / 723
+info  Verified: 539 / 723
+info  Verified: 540 / 723
+info  Verified: 541 / 723
+info  Verified: 542 / 723
+info  Verified: 543 / 723
+info  Verified: 544 / 723
+info  Verified: 545 / 723
+info  Verified: 546 / 723
+info  Verified: 547 / 723
+info  Verified: 548 / 723
+info  Verified: 549 / 723
+info  Verified: 550 / 723
+info  Verified: 551 / 723
+info  Verified: 552 / 723
+info  Verified: 553 / 723
+info  Verified: 554 / 723
+info  Verified: 555 / 723
+info  Verified: 556 / 723
+info  Verified: 557 / 723
+info  Verified: 558 / 723
+info  Verified: 559 / 723
+info  Verified: 560 / 723
+info  Verified: 561 / 723
 warning:  - Result for 'postcondition' VC for rb_empty @338:33:
 warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || x.isInstanceOf[Var] || x.isInstanceOf[Neg] && x.l.isInstanceOf[Var] || x.isInstanceOf[Plus] && x.l.isInstanceOf[One] || x.isInstanceOf[Plus] && x.l.isInstanceOf[Neg] && x.l.l.isInstanceOf[One] || x.isInstanceOf[Plus] && x.l.isInstanceOf[Var] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[Neg] || !x.l.l.isInstanceOf[Var] || contains[Tree](list.data, Var(x.l.l.s)) || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Neg] && x.r.l.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[One] || !x.r.isInstanceOf[Plus] || !x.r.l.isInstanceOf[Var] || x.l.l.s > x.r.l.s || !rbhelper(x.r, VarList(::[Tree](list.data, x.r.l))) || {
   val tmp: Unit = rb_empty(x.r, list)
@@ -207,7 +839,16 @@ warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[M
 src/RightBiasing.scala:338:33: warning:  => TIMEOUT
                                            rb_empty(x, VarList(cdr))
                                            ^^^^^^^^^^^^^^^^^^^^^^^^^
-info  Verified: 561 / 723info  Verified: 562 / 723info  Verified: 563 / 723info  Verified: 564 / 723info  Verified: 565 / 723info  Verified: 566 / 723info  Verified: 567 / 723info  Verified: 568 / 723info  Verified: 569 / 723
+
+info  Verified: 561 / 723
+info  Verified: 562 / 723
+info  Verified: 563 / 723
+info  Verified: 564 / 723
+info  Verified: 565 / 723
+info  Verified: 566 / 723
+info  Verified: 567 / 723
+info  Verified: 568 / 723
+info  Verified: 569 / 723
 warning:  - Result for 'postcondition' VC for rb_empty @346:33:
 warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[Mult] || x.isInstanceOf[Zero] || x.isInstanceOf[One] || x.isInstanceOf[Neg] && x.l.isInstanceOf[One] || x.isInstanceOf[Var] || x.isInstanceOf[Neg] && x.l.isInstanceOf[Var] || x.isInstanceOf[Plus] && x.l.isInstanceOf[One] || x.isInstanceOf[Plus] && x.l.isInstanceOf[Neg] && x.l.l.isInstanceOf[One] || x.isInstanceOf[Plus] && x.l.isInstanceOf[Var] || !x.isInstanceOf[Plus] || !x.l.isInstanceOf[Neg] || !x.l.l.isInstanceOf[Var] || contains[Tree](list.data, Var(x.l.l.s)) || x.r.isInstanceOf[Var] || x.r.isInstanceOf[Neg] && x.r.l.isInstanceOf[Var] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Neg] && x.r.l.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[One] || x.r.isInstanceOf[Plus] && x.r.l.isInstanceOf[Var] || !x.r.isInstanceOf[Plus] || !x.r.l.isInstanceOf[Neg] || !x.r.l.l.isInstanceOf[Var] || x.l.l.s > x.r.l.l.s || !rbhelper(x.r, VarList(::[Tree](list.data, x.r.l))) || {
   val tmp: Unit = rb_empty(x.r, list)
@@ -217,7 +858,138 @@ warning: !rbhelper(x, list) || !list.data.isInstanceOf[Cons] || x.isInstanceOf[M
 src/RightBiasing.scala:346:33: warning:  => TIMEOUT
                                            rb_empty(x, VarList(cdr)) 
                                            ^^^^^^^^^^^^^^^^^^^^^^^^^
-info  Verified: 569 / 723info  Verified: 570 / 723info  Verified: 571 / 723info  Verified: 572 / 723info  Verified: 573 / 723info  Verified: 574 / 723info  Verified: 575 / 723info  Verified: 576 / 723info  Verified: 577 / 723info  Verified: 578 / 723info  Verified: 579 / 723info  Verified: 580 / 723info  Verified: 581 / 723info  Verified: 582 / 723info  Verified: 583 / 723info  Verified: 584 / 723info  Verified: 585 / 723info  Verified: 586 / 723info  Verified: 587 / 723info  Verified: 588 / 723info  Verified: 589 / 723info  Verified: 590 / 723info  Verified: 591 / 723info  Verified: 592 / 723info  Verified: 593 / 723info  Verified: 594 / 723info  Verified: 595 / 723info  Verified: 596 / 723info  Verified: 597 / 723info  Verified: 598 / 723info  Verified: 599 / 723info  Verified: 600 / 723info  Verified: 601 / 723info  Verified: 602 / 723info  Verified: 603 / 723info  Verified: 604 / 723info  Verified: 605 / 723info  Verified: 606 / 723info  Verified: 607 / 723info  Verified: 608 / 723info  Verified: 609 / 723info  Verified: 610 / 723info  Verified: 611 / 723info  Verified: 612 / 723info  Verified: 613 / 723info  Verified: 614 / 723info  Verified: 615 / 723info  Verified: 616 / 723info  Verified: 617 / 723info  Verified: 618 / 723info  Verified: 619 / 723info  Verified: 620 / 723info  Verified: 621 / 723info  Verified: 622 / 723info  Verified: 623 / 723info  Verified: 624 / 723info  Verified: 625 / 723info  Verified: 626 / 723info  Verified: 627 / 723info  Verified: 628 / 723info  Verified: 629 / 723info  Verified: 630 / 723info  Verified: 631 / 723info  Verified: 632 / 723info  Verified: 633 / 723info  Verified: 634 / 723info  Verified: 635 / 723info  Verified: 636 / 723info  Verified: 637 / 723info  Verified: 638 / 723info  Verified: 639 / 723info  Verified: 640 / 723info  Verified: 641 / 723info  Verified: 642 / 723info  Verified: 643 / 723info  Verified: 644 / 723info  Verified: 645 / 723info  Verified: 646 / 723info  Verified: 647 / 723info  Verified: 648 / 723info  Verified: 649 / 723info  Verified: 650 / 723info  Verified: 651 / 723info  Verified: 652 / 723info  Verified: 653 / 723info  Verified: 654 / 723info  Verified: 655 / 723info  Verified: 656 / 723info  Verified: 657 / 723info  Verified: 658 / 723info  Verified: 659 / 723info  Verified: 660 / 723info  Verified: 661 / 723info  Verified: 662 / 723info  Verified: 663 / 723info  Verified: 664 / 723info  Verified: 665 / 723info  Verified: 666 / 723info  Verified: 667 / 723info  Verified: 668 / 723info  Verified: 669 / 723info  Verified: 670 / 723info  Verified: 671 / 723info  Verified: 672 / 723info  Verified: 673 / 723info  Verified: 674 / 723info  Verified: 675 / 723info  Verified: 676 / 723info  Verified: 677 / 723info  Verified: 678 / 723info  Verified: 679 / 723info  Verified: 680 / 723info  Verified: 681 / 723info  Verified: 682 / 723info  Verified: 683 / 723info  Verified: 684 / 723info  Verified: 685 / 723info  Verified: 686 / 723info  Verified: 687 / 723info  Verified: 688 / 723info  Verified: 689 / 723info  Verified: 690 / 723info  Verified: 691 / 723info  Verified: 692 / 723info  Verified: 693 / 723info  Verified: 694 / 723info  Verified: 695 / 723info  Verified: 696 / 723info  Verified: 697 / 723info  Verified: 698 / 723info  Verified: 699 / 723
+
+info  Verified: 569 / 723
+info  Verified: 570 / 723
+info  Verified: 571 / 723
+info  Verified: 572 / 723
+info  Verified: 573 / 723
+info  Verified: 574 / 723
+info  Verified: 575 / 723
+info  Verified: 576 / 723
+info  Verified: 577 / 723
+info  Verified: 578 / 723
+info  Verified: 579 / 723
+info  Verified: 580 / 723
+info  Verified: 581 / 723
+info  Verified: 582 / 723
+info  Verified: 583 / 723
+info  Verified: 584 / 723
+info  Verified: 585 / 723
+info  Verified: 586 / 723
+info  Verified: 587 / 723
+info  Verified: 588 / 723
+info  Verified: 589 / 723
+info  Verified: 590 / 723
+info  Verified: 591 / 723
+info  Verified: 592 / 723
+info  Verified: 593 / 723
+info  Verified: 594 / 723
+info  Verified: 595 / 723
+info  Verified: 596 / 723
+info  Verified: 597 / 723
+info  Verified: 598 / 723
+info  Verified: 599 / 723
+info  Verified: 600 / 723
+info  Verified: 601 / 723
+info  Verified: 602 / 723
+info  Verified: 603 / 723
+info  Verified: 604 / 723
+info  Verified: 605 / 723
+info  Verified: 606 / 723
+info  Verified: 607 / 723
+info  Verified: 608 / 723
+info  Verified: 609 / 723
+info  Verified: 610 / 723
+info  Verified: 611 / 723
+info  Verified: 612 / 723
+info  Verified: 613 / 723
+info  Verified: 614 / 723
+info  Verified: 615 / 723
+info  Verified: 616 / 723
+info  Verified: 617 / 723
+info  Verified: 618 / 723
+info  Verified: 619 / 723
+info  Verified: 620 / 723
+info  Verified: 621 / 723
+info  Verified: 622 / 723
+info  Verified: 623 / 723
+info  Verified: 624 / 723
+info  Verified: 625 / 723
+info  Verified: 626 / 723
+info  Verified: 627 / 723
+info  Verified: 628 / 723
+info  Verified: 629 / 723
+info  Verified: 630 / 723
+info  Verified: 631 / 723
+info  Verified: 632 / 723
+info  Verified: 633 / 723
+info  Verified: 634 / 723
+info  Verified: 635 / 723
+info  Verified: 636 / 723
+info  Verified: 637 / 723
+info  Verified: 638 / 723
+info  Verified: 639 / 723
+info  Verified: 640 / 723
+info  Verified: 641 / 723
+info  Verified: 642 / 723
+info  Verified: 643 / 723
+info  Verified: 644 / 723
+info  Verified: 645 / 723
+info  Verified: 646 / 723
+info  Verified: 647 / 723
+info  Verified: 648 / 723
+info  Verified: 649 / 723
+info  Verified: 650 / 723
+info  Verified: 651 / 723
+info  Verified: 652 / 723
+info  Verified: 653 / 723
+info  Verified: 654 / 723
+info  Verified: 655 / 723
+info  Verified: 656 / 723
+info  Verified: 657 / 723
+info  Verified: 658 / 723
+info  Verified: 659 / 723
+info  Verified: 660 / 723
+info  Verified: 661 / 723
+info  Verified: 662 / 723
+info  Verified: 663 / 723
+info  Verified: 664 / 723
+info  Verified: 665 / 723
+info  Verified: 666 / 723
+info  Verified: 667 / 723
+info  Verified: 668 / 723
+info  Verified: 669 / 723
+info  Verified: 670 / 723
+info  Verified: 671 / 723
+info  Verified: 672 / 723
+info  Verified: 673 / 723
+info  Verified: 674 / 723
+info  Verified: 675 / 723
+info  Verified: 676 / 723
+info  Verified: 677 / 723
+info  Verified: 678 / 723
+info  Verified: 679 / 723
+info  Verified: 680 / 723
+info  Verified: 681 / 723
+info  Verified: 682 / 723
+info  Verified: 683 / 723
+info  Verified: 684 / 723
+info  Verified: 685 / 723
+info  Verified: 686 / 723
+info  Verified: 687 / 723
+info  Verified: 688 / 723
+info  Verified: 689 / 723
+info  Verified: 690 / 723
+info  Verified: 691 / 723
+info  Verified: 692 / 723
+info  Verified: 693 / 723
+info  Verified: 694 / 723
+info  Verified: 695 / 723
+info  Verified: 696 / 723
+info  Verified: 697 / 723
+info  Verified: 698 / 723
+info  Verified: 699 / 723
 Done in 767.13s
   
  stainless summary 
