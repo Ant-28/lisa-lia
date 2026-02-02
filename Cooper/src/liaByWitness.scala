@@ -111,12 +111,35 @@ object liaByWitness extends lisa.Main {
             // println(makeNewGoal(rengoal, bvars))
             val simprf = simplRecurse(makeNewGoal(rengoal, bvars))
             if !simprf.isValid then return proof.InvalidProofTactic(s"simplRecurse Failed! ${simprf.toString()}")
-            have(simprf)
-            bvars.zipWithIndex.reverse.map((i, j) => 
-              
-              thenHave(∃(i.asInstanceOf[lisa.utils.fol.FOL.Variable[lisa.utils.fol.FOL.Ind]], makeNewGoal(rengoal, bvars.drop(j + 1)))) by RightExists
+            val p = have(simprf)
+            
+            val leftList = bvars.zipWithIndex.map((i, j) => (bvars.dropRight(j + 1)))
+            val rightList = bvars.zipWithIndex.map((i, j) => (bvars.drop(j))).reverse
+            leftList.zip(rightList).map((l, r) => {
 
-            )
+              val res = r.foldRight(makeNewGoal(rengoal, l))((l1: Expr[Ind], r1 : Expr[Prop]) => ∃(l1.asInstanceOf[lisa.utils.fol.FOL.Variable[lisa.utils.fol.FOL.Ind]], r1))
+              thenHave(res) by RightExists
+
+            })
+            // bvars.zipWithIndex.foldRight(p)((i, j) => 
+            //   println(j.bot)
+            //   println(i)
+            //   // println(j)
+            //   println("bvars, bvars dropright")
+            //   println(bvars)
+            //   println(bvars.dropRight((bvars.length) - (i._2)))
+            //   println(makeNewGoal(rengoal, bvars.dropRight((bvars.length) - (i._2 + 1))))
+
+            //   val res = bvars.dropRight((bvars.length) - (i._2)).foldRight(makeNewGoal(rengoal, bvars.dropRight((bvars.length) - (i._2 + 1))))((l: Expr[Ind], r : Expr[Prop]) => ∃(l.asInstanceOf[lisa.utils.fol.FOL.Variable[lisa.utils.fol.FOL.Ind]], r))
+            //   println("lastStep")
+            //   println(lastStep.bot)
+            //   println(res)
+            //   // println(∃(bvars.reverse(j).asInstanceOf[lisa.utils.fol.FOL.Variable[lisa.utils.fol.FOL.Ind]], ))
+              
+            //   val p2 = thenHave(res) by RightExists
+            //   println(p2.bot)
+            //   p2
+            // )
             have(goal) by Tautology.from(lastStep, finalGoal)
                 
         }

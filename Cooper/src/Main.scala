@@ -250,6 +250,12 @@ object Rings extends lisa.Main
     val ringConjunct3 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R) |- ∃(x, x + 3 === 5)){
         have(liaByWitnessProof.apply(thesis)(List(2)))
     }
+
+    val ringConjunct4 = Theorem((ring(R, <=, <, +, *, -, |, `0`, `1`), x ∈ R, y ∈ R) |- ∃(y, ∃(x, x + y === 5))){
+        have(liaByWitnessProof.apply(thesis)(List(2,3)))
+    }
+
+
   
     val R2 = variable[Ind >>: Prop]
     // val test2 = Theorem(∀(x, P(x)) <=> ∀(y, P(y))){
